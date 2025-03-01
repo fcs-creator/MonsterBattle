@@ -2,13 +2,19 @@ using UnityEngine;
 
 public class Body : MonoBehaviour
 {
-    Rigidbody2D rbParent;               //親のRigidbody
-    PolygonCollider2D bodyCollider;     
-    
+    PolygonCollider2D bodyCollider;
+    Rigidbody2D rbParent;
+
     void Awake()
     {
-        //質量をセットするため親のリジッドボディを取得
-        rbParent = transform.parent.GetComponent<Rigidbody2D>();
+        //親のリジッドボディを取得
+        rbParent = transform.parent.gameObject.GetComponent<Rigidbody2D>();
+        rbParent.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rbParent.gravityScale = Parameters.GRAVITY_SCALE;
+        rbParent.freezeRotation = true;
+
+        //物理マテリアルの設定
+        rbParent.sharedMaterial = Resources.Load<PhysicsMaterial2D>("MonsterPhysicsMaterial");
 
         // タグの設定
         gameObject.tag = Tags.Body;

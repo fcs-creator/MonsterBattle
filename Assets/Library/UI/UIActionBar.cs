@@ -1,27 +1,44 @@
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using TMPro;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
-public class UIHPBar : MonoBehaviour
+public class UIActionBar : MonoBehaviour
 {
     public Transform Character { get; set; } // キャラクターのTransform
     public Vector3 Offset { get; set; }      // キャラクターからのオフセット
-    public float Hp { get; private set; }    // 現在のHP
-
-    Image gauge;                    // ゲージの画像
-    const float MAX_HP = 100.0f;    // 最大HP
+    TextMeshProUGUI text;                    // ゲージの画像
 
     void Awake()
     {
-        Hp = MAX_HP;
-    }
-
-    void Start()
-    {
-        gauge = transform.Find("Gauge").GetComponent<Image>();
+        text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        gameObject.SetActive(false);
     }
 
     void Update()
+    {
+        UpdatePosition();
+    }
+
+    // テキストを表示するメソッド
+    public void SendText(string value)
+    {
+        UpdatePosition();
+
+        text.text = value;
+
+        gameObject.SetActive(true);
+
+        Invoke("Hide", 1);
+    }
+
+    void Hide() 
+    {
+        gameObject.SetActive(false);
+    }
+
+    void UpdatePosition() 
     {
         if (Character != null)
         {
@@ -41,7 +58,7 @@ public class UIHPBar : MonoBehaviour
                     out localPoint
                 );
 
-                // HPバーの位置を更新
+                //バーの位置を更新
                 transform.localPosition = localPoint;
             }
             else
@@ -52,26 +69,6 @@ public class UIHPBar : MonoBehaviour
         else
         {
             Debug.LogError("Character Transform is not assigned.");
-
-
         }
-    }
-
-    // ダメージを受けるメソッド
-    public void TakeDamage(float damage)
-    {
-        SetHp(Hp-damage);
-    }
-
-    // HPを更新するメソッド
-    public void SetHp(float value)
-    {
-        Hp = Mathf.Clamp(value, 0, MAX_HP);
-        gauge.fillAmount = Hp / MAX_HP;
-    }
-
-    public bool IsEmpty() 
-    {
-        return Hp <= 0;
     }
 }

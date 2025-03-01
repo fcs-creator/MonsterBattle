@@ -12,7 +12,7 @@ public class FireBall : Magic
         Type = MagicType.FireBall;
         Damage = Parameters.FIREBALL_DAMAGE;
         rb = GetComponent<Rigidbody2D>();
-        Destroy(gameObject, Parameters.FIREBALL_DAMAGE);
+        Destroy(gameObject, Parameters.FIREBALL_DESTOROY_WAIT_TIME);
         
         //èWíeó¶ÇåvéZÇµÇƒî≠éÀ
         float grouping = Parameters.FIREBALL_SHOT_GROUPING;

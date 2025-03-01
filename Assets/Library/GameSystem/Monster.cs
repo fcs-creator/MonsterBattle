@@ -7,10 +7,11 @@ using System.Threading;
 
 public class Monster : MonoBehaviour
 {
-    public Monster Enemy { get; set; }
-    public List<Monster> Enemies { get; set; }
-    public MagicBook MagicBook { get; set; }
-    public UIHPBar HpBar { get; private set; }      //HPバー
+    public Monster Enemy { get; set; }                  //最も近い敵
+    public List<Monster> Enemies { get; set; }          //全ての敵
+    public MagicBook MagicBook { get; set; }            //魔法の書
+    public UIHPBar HpBar { get; private set; }          //HPバー
+    public UIActionBar ActionBar { get; private set; }  //アクションバー
 
     public bool IsAttacking { get; private set; }                                               //攻撃中か
     public bool IsGuarding { get; private set; }                                                //防御中か
@@ -24,24 +25,23 @@ public class Monster : MonoBehaviour
     
     Body body;          //本体
     Weapon weapon;      //武器
-    GameObject shield;  //ガード
-    Rigidbody2D rb;     
-
-    private int EnemyCheckCount = 0;
+    GameObject shield;  //シールド
+    Rigidbody2D rb;
+    　
+    int EnemyCheckCount = 0;
 
     //敵の情報
     public Vector2 Position { get { return new Vector2(transform.position.x, transform.position.y); } }
     public Vector2 Direction { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).normalized; } }
     public float Distance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
 
-    //タスクのキャンセル用の
-    private List<CancellationTokenSource> cancellationTokenSources = new List<CancellationTokenSource>();
+    //タスクキャンセル用
+    List<CancellationTokenSource> cancellationTokenSources = new List<CancellationTokenSource>();
 
     void Awake()
     {
-        // 全体のRigidbodyを設定
+        //物理挙動を追加
         rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.freezeRotation = true;
 
         // 本体の設定
         body = transform.Find("Body").AddComponent<Body>();
@@ -50,11 +50,11 @@ public class Monster : MonoBehaviour
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
 
         // シールドの設定
-        shield = transform.Find("Shield").gameObject;
-        shield.tag = Tags.Shield;
-        shield.AddComponent<PolygonCollider2D>().autoTiling = true;
-        shield.SetActive(false);
-
+        //shield = transform.Find("Shield").gameObject;
+        //shield.tag = Tags.Shield;
+        //shield.AddComponent<PolygonCollider2D>().autoTiling = true;
+        //shield.SetActive(false);
+    
         IsDead = false;
         EnemyCheckCount = 0;
     }
@@ -82,6 +82,8 @@ public class Monster : MonoBehaviour
         while (!IsDead)
         {
             await ActionLoop();
+
+            await Task.Yield();
         }
     }
 
@@ -101,11 +103,6 @@ public class Monster : MonoBehaviour
         UpdateEnemies();
 
         HpBar.Character = transform;
-
-        if (!IsGrounded) 
-        {
-            rb.linearVelocity += new Vector2(0.0f, Parameters.GRAVITY * Time.fixedDeltaTime);
-        }
 
         //最高速度を指定
         Vector2 maxVelocity = new Vector2(Parameters.MAX_VELOCITY_X, Parameters.MAX_VELOCITY_Y);
@@ -146,6 +143,8 @@ public class Monster : MonoBehaviour
     // 攻撃
     async virtual protected Task Attack() 
     {
+        ActionBar.SendText("Attack");
+
         IsAttacking = true;
 
         await weapon.ExecuteAttack();
@@ -158,6 +157,8 @@ public class Monster : MonoBehaviour
     // ガード
     async virtual protected Task Guard() 
     {
+        ActionBar.SendText("Guard");
+
         IsGuarding = true;
 
         shield.SetActive(true);
@@ -170,15 +171,17 @@ public class Monster : MonoBehaviour
     }
 
     //ダッシュ：相手に向かって進む
-    async virtual protected Task Dash(float force = 10.0f) 
+    async virtual protected Task Dash(float force) 
     {
+        ActionBar.SendText("Dash");
+
         IsDashing = true;
 
         //相手を見る
         LookAtEnemy();
 
         //相手に向かって進む
-        rb.AddForce(Direction.normalized * force, ForceMode2D.Impulse);
+        rb.AddForce(Direction.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_DASH);
 
@@ -186,31 +189,38 @@ public class Monster : MonoBehaviour
     }
 
     //バックステップ：相手から離れる
-    async virtual protected Task BackStep(float force = 10.0f)
+    async virtual protected Task BackStep(float force)
     {
+        ActionBar.SendText("BackStep");
+
         IsBackSteping = true;
 
         //相手を見る
         LookAtEnemy();
 
         //相手から離れる
-        rb.AddForce(-Direction.normalized * force, ForceMode2D.Impulse);
+        rb.AddForce(-Direction.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
         
         await Wait(Parameters.ACTION_INTERVAL_BACKSTEP);
     }
 
-    //ジャンプ
-    async virtual protected Task Jump(float force) 
+    //ジャンプ (100で画面上まで飛ぶ)
+    async virtual protected Task Jump(float height) 
     {
+        ActionBar.SendText("Jump");
+
         if (IsGrounded)
         {
             IsJumping = true;
-            rb.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
+
+            // 必要なジャンプ力を計算
+            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
+
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
         }
 
         await Wait(Parameters.ACTION_INTERVAL_JUMP);
     }
-
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -244,7 +254,7 @@ public class Monster : MonoBehaviour
                     if (IsGuarding)
                     {
                         HpBar.TakeDamage(weapon.Damage * Parameters.WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING);
-                        rb.AddForce(direction * weapon.StrikeForce * Parameters.WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING, ForceMode2D.Impulse);
+                        rb.AddForce(direction * weapon.StrikeForce * Parameters.WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING,ForceMode2D.Impulse);
                     }
                     else
                     {
@@ -277,9 +287,26 @@ public class Monster : MonoBehaviour
                 HpBar.TakeDamage(magic.Damage);
             }
         }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        GameObject obj = collision.gameObject;
 
         //敵との接触時のノックバック処理
-        if (HasComponent<Monster>(obj)) 
+        if (HasComponent<Monster>(obj))
+        {
+            IsJumping = false;
+            Knockback(obj);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        GameObject obj = collider.gameObject;
+
+        //敵との接触時のノックバック処理
+        if (HasComponent<Monster>(obj))
         {
             IsJumping = false;
             Knockback(obj);
@@ -314,8 +341,9 @@ public class Monster : MonoBehaviour
     {
         if (HasComponent<Rigidbody2D>(enemy) && HasComponent<Rigidbody2D>(gameObject))
         { 
-            gameObject.GetComponent<Rigidbody2D>().AddForce(Direction * -Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
-            enemy.GetComponent<Rigidbody2D>().AddForce(Direction * Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
+            Vector2 direction = (enemy.transform.position - gameObject.transform.position).normalized;
+            gameObject.GetComponent<Rigidbody2D>().AddForce(direction * -Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
+            enemy.GetComponent<Rigidbody2D>().AddForce(direction * Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
         }
     }
 
@@ -349,6 +377,11 @@ public class Monster : MonoBehaviour
     public void SetHpBar(UIHPBar hpBar)
     {
         this.HpBar = hpBar;
+    }
+
+    public void SetActionBar(UIActionBar actionBar)
+    {
+        this.ActionBar = actionBar;
     }
 
     //敵の情報の更新

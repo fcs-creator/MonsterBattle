@@ -14,8 +14,11 @@ public class UIRestult : MonoBehaviour
 
             if (monsterBody)
             {
-                monsterImage.transform.localScale = monsterBody.localScale;
-                monsterImage.GetComponent<Image>().sprite = monsterBody.GetComponent<SpriteRenderer>().sprite;
+                //monsterImage.transform.localScale = monsterBody.localScale;
+                Image image = monsterImage.GetComponent<Image>();
+                image.sprite= monsterBody.GetComponent<SpriteRenderer>().sprite;
+                RectTransform rectTransform = image.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(512, 512);
             }
             
             monsterName.GetComponent<TMP_Text>().text = monster.gameObject.name;
