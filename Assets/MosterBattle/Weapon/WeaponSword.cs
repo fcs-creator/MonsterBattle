@@ -5,11 +5,9 @@ public class WeaponSword : Weapon
 {
     async protected override Task Attack() 
     {
-        await Rotate(0, 120, 0.5f);
+        await Rotate(0, 120, 0.1f);
 
-        WarpDefault();
-
-        await Rotate(140, -180, 0.5f);
+        await Rotate(140, -180, 0.1f);
 
     }
 }

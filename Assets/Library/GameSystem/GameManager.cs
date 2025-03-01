@@ -21,7 +21,8 @@ public static class Parameters
     public const float ACTION_INTERVAL_DASH = 1.0f;                             //ダッシュ
     public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //バックステップ
     public const float ACTION_INTERVAL_JUMP = 0.2f;                             //ジャンプ
-    public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //攻撃
+    public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
+    public const float ACTION_INTERVAL_SHOT = 3.0f;                             //武器を投げる
     public const float ACTION_INTERVAL_GUARD = 1.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
     public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //バックステップ判定を解除する速度

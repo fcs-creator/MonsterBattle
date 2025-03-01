@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Rotatingsword : MonoBehaviour
@@ -8,9 +10,33 @@ public class Rotatingsword : MonoBehaviour
     public float radius = 7f; // ”¼Œa
     public float rotationSpeed = 100.0f; // ‰ñ“]‘¬“x
 
-    void start()
+    Rigidbody2D rb;
+
+    void Start()
     {
+        rb = transform.parent.gameObject.GetComponent<Rigidbody2D>();
+
         radius = (transform.position - centerObject.position).magnitude;
+
+        _ = Execute();
+    }
+
+    async protected Task Execute()
+    {
+        while (true)
+        {
+            await AddForce();
+        }
+    }
+
+    async protected Task AddForce() 
+    {
+        float x = Random.Range(-1.0f, 1.0f);
+        float y = Random.Range(-1.0f, 1.0f);
+
+        rb.AddForce(new Vector2(x, y) * 50, ForceMode2D.Impulse);
+
+        await Task.Delay(1000);
     }
 
     void Update()

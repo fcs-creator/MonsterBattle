@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 using System.Drawing;
+using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class Weapon : MonoBehaviour
 {
@@ -26,15 +28,15 @@ public class Weapon : MonoBehaviour
         // 1つ上の階層にいるモンスターのオブジェクトを探してセット
         Owner = transform.parent.GetComponent<Monster>();
 
+        // 物理挙動を追加して無効にしておく
+        rb = gameObject.AddComponent<Rigidbody2D>();
+        rb.simulated = false;
+
         //武器のダメージ
         Damage = Parameters.WEAPON_DAMAGE;
 
         //武器の吹き飛ばす力
         StrikeForce = Parameters.WEAPON_STRIKE_FORCE;
-
-        // 物理挙動を使えるようにしておく
-        rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
         // 初期の位置、回転、スケールを保存
         defaultLocalPosition = transform.localPosition;
@@ -86,7 +88,7 @@ public class Weapon : MonoBehaviour
         {
             Debug.Log(gameObject.name);
             Debug.LogError("Error: Weapon Owner is null");
-            
+
             return;
         }
 
@@ -130,8 +132,10 @@ public class Weapon : MonoBehaviour
     //初期位置にワープ
     public void WarpDefault()
     {
-        transform.SetParent(Owner.transform);
+        //物理挙動をリセット
+        ResetRigidbody();
 
+        transform.SetParent(Owner.transform);
         transform.localPosition = defaultLocalPosition;
         transform.rotation = defaultRotation;
         transform.localScale = defaultLocalScale;
@@ -159,6 +163,9 @@ public class Weapon : MonoBehaviour
     //武器を初期位置にリセットする
     async protected Task Default()
     {
+        //物理挙動をリセット
+        ResetRigidbody();
+
         //現在の状態
         Vector3 currentPosition = transform.position;
         Quaternion currentRotation = transform.rotation;
@@ -192,6 +199,8 @@ public class Weapon : MonoBehaviour
     //武器を指定された(x, y)位置にs秒で移動させる
     async protected Task Move(float x, float y, float s)
     {
+        Owner.ActionBar.SendText("Weapon-Move");
+
         Vector2 start = transform.localPosition;
         Vector2 target = start + new Vector2(x, y);
         float elapsedTime = 0f;
@@ -226,6 +235,7 @@ public class Weapon : MonoBehaviour
             float zRotation = Mathf.Lerp(initialRotation, targetRotation, t);
             // Z軸回りで回転させる
             transform.rotation = Quaternion.Euler(0, 0, zRotation);
+            // With the following line
             await Task.Yield();
         }
 
@@ -233,9 +243,13 @@ public class Weapon : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, targetRotation);
     }
 
-    async protected Task RotateAround(float startAngle, float rotAngle, float second) 
+    //武器をモンスターの周囲で回転させる(上方向が基準で0°)
+    async protected Task Rotate(float startAngle, float rotAngle, float second) 
     {
-        transform.SetParent(null);
+        Owner.ActionBar.SendText("Weapon-Rotate");
+
+        if (!Owner.IsFacingRight)
+            transform.localScale = new Vector2(defaultLocalScale.x * -1, defaultLocalScale.y);
 
         //時計回りかどうか判定
         bool clockwise = true;
@@ -248,17 +262,16 @@ public class Weapon : MonoBehaviour
         if ((clockwise && startAngle < 0) || (!clockwise && startAngle > 0))
             addStartAngle *= -1;
 
-        float startAngleToward = addStartAngle + 90.0f + transform.localEulerAngles.z;
+        float startAngleToward = addStartAngle + 90.0f;// + transform.localEulerAngles.z;
 
-        //武器の初期位置をキャラクターの真上に設置
-        float radius = Vector2.Distance(Owner.transform.position, transform.position);
-        transform.position = Owner.transform.position + new Vector3(radius, 0, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+        transform.position = Owner.transform.position + new Vector3(orbitRadius, 0, 0);
         transform.RotateAround(Owner.transform.position, Vector3.forward, startAngleToward);
 
         bool stop = false;
         float currentRotAngle = 0;
         float step;
+
+        Transform centerObject = Owner.transform;
 
         while (!stop)
         {
@@ -280,11 +293,10 @@ public class Weapon : MonoBehaviour
             }
             else
             {
-                // 武器オブジェクトを親オブジェクトの周りに回転
-                transform.RotateAround(Owner.transform.position, Vector3.forward, step);
-
-                // 回転半径を保つための位置調整
-                transform.position = Owner.transform.position + initialOffset.normalized * orbitRadius;
+                //位置：半径を元に移動して補正する
+                Vector3 desiredPosition = (transform.position - centerObject.position).normalized * orbitRadius + centerObject.position;
+                transform.position = desiredPosition;
+                transform.RotateAround(centerObject.position, Vector3.forward, step);
             }
 
             await Task.Yield();
@@ -293,140 +305,49 @@ public class Weapon : MonoBehaviour
         WarpDefault();
     }
 
-    async protected Task RotateParent(float startAngle, float rotAngle, float second) 
+    //武器をモンスターの周囲を1回転する
+    async protected Task Rotation360()
     {
-        //現在の位置と回転を保存
-        Vector2 currentPosition = transform.localPosition;
-        Quaternion currentRotation = transform.rotation;
+        Transform centerObject = Owner.transform;
 
-        //時計回りかどうか判定
-        bool clockwise = true;
-        if ((Owner.IsFacingRight && rotAngle < 0) || (!Owner.IsFacingRight && rotAngle >= 0))
-            clockwise = false;
+        float rotationSpeed = 400.0f; // 回転速度
+        float angle = 0;
+        float angleAmount = 0;
 
-        //開始角度の調整
-        float addStartAngle = startAngle;
-
-        if ((clockwise && startAngle < 0) || (!clockwise && startAngle > 0))
-            addStartAngle *= -1;
-
-        float startAngleToward = addStartAngle + 90.0f + transform.localEulerAngles.z;
-
-        ////武器の初期位置をキャラクターの真上に設置
-        //float radius = Vector2.Distance(Owner.transform.position, transform.position);
-        //transform.position = Owner.transform.position + new Vector3(radius, 0, 0);
-        //transform.rotation = Quaternion.Euler(0, 0, 0);
-        //transform.RotateAround(Owner.transform.position, Vector3.forward, startAngleToward);
-
-        //仮の親をセット
-        GameObject tmpParent = new GameObject();
-        tmpParent.transform.position = Owner.transform.position;
-        transform.SetParent(tmpParent.transform);
-        tmpParent.transform.SetParent(Owner.transform);
-
-        bool stop = false;
-        float currentRotAngle = 0;
-        float step;
-
-        while (!stop)
+        while (angleAmount < 360)
         {
-            tmpParent.transform.position = Owner.transform.position;
+            //回転：中心が基準
+            angle = rotationSpeed * Time.deltaTime;
+            transform.RotateAround(centerObject.position, Vector3.forward, angle);
 
-            //フレーム毎の回転量を計算
-            step = (rotAngle / second) * Time.deltaTime;
+            //位置：半径を元に移動して補正する
+            Vector3 desiredPosition = (transform.position - centerObject.position).normalized * orbitRadius + centerObject.position;
+            transform.position = desiredPosition;
 
-            //条件に応じて逆回転
-            if ((clockwise && rotAngle > 0) || (!clockwise && rotAngle < 0))
-                step *= -1;
-
-            //現在までの回転総量の加算
-            currentRotAngle += Mathf.Abs(step);
-
-            //回転量が指定量に達したら終了
-            if (currentRotAngle >= Mathf.Abs(rotAngle))
-            {
-                currentRotAngle = rotAngle;
-                stop = true;
-            }
-            else
-            {
-                float rz = tmpParent.transform.eulerAngles.z;
-                tmpParent.transform.rotation = Quaternion.Euler(0, 0, rz + step);
-            }
-
+            angleAmount += angle;
             await Task.Yield();
         }
-
-        //仮親から元の親にセットし直す
-        transform.SetParent(Owner.transform);
-        transform.localPosition = currentPosition;
-        transform.rotation = currentRotation;
-
-        Destroy(tmpParent);
-
-    }
-
-    //武器を周囲で回転させる startAngle:回転開始角度(頂点が0度), 回転量：rotAngle, 回転にかかる秒数：second   
-    async protected Task Rotate(float startAngle, float rotAngle, float second)
-    {
-        //時計回りかどうか判定
-        bool clockwise = true;
-        if ((Owner.IsFacingRight && rotAngle < 0) || (!Owner.IsFacingRight && rotAngle >= 0))
-            clockwise = false;
-
-        //開始角度の調整
-        float addStartAngle = startAngle;
-
-        if ((clockwise && startAngle < 0) || (!clockwise && startAngle > 0))
-            addStartAngle *= -1;
-
-        float startAngleToward = addStartAngle + 90.0f + transform.localEulerAngles.z;
-
-        //武器の初期位置をキャラクターの真上に設置
-        float radius = Vector2.Distance(Owner.transform.position, transform.position);
-        transform.position = Owner.transform.position + new Vector3(radius, 0, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        transform.RotateAround(Owner.transform.position, Vector3.forward, startAngleToward);
-
-        bool stop = false;
-        float currentRotAngle = 0;
-        float step;
-
-        while (!stop)
-        {
-            //フレーム毎の回転量を計算
-            step = (rotAngle / second) * Time.deltaTime;
-
-            //条件に応じて逆回転
-            if ((clockwise && rotAngle > 0) || (!clockwise && rotAngle < 0))
-                step *= -1;
-
-            //現在までの回転総量の加算
-            currentRotAngle += Mathf.Abs(step);
-
-            //回転量が指定量に達したら終了
-            if (currentRotAngle >= Mathf.Abs(rotAngle))
-            {
-                currentRotAngle = rotAngle;
-                stop = true;
-            }
-            else
-            {
-                transform.RotateAround(Owner.transform.position, Vector3.forward, step);
-            }
-
-            await Task.Yield();
-        }
-
-        WarpDefault();
     }
 
     //武器を指定された方向に飛ばす
     async protected Task Shot(Vector2 direction, float power)
     {
+        Owner.ActionBar.SendText("Weapon-Shot");
 
+        //モンスターの向きによって武器飛ばす方向を変える
+        float dir = 1;   
+        if (!Owner.IsFacingRight) 
+        {
+            dir *= -1;
+        }
 
-        await Task.Yield();
+        // 物理挙動を使えるようにして飛ばす
+        rb.simulated = true;
+        rb.AddForce(direction * power * dir, ForceMode2D.Impulse);
+
+        await Wait(Parameters.ACTION_INTERVAL_SHOT);
+
+        await Default();
     }
 
     //武器をモンスターによる制御から切り離す
@@ -442,31 +363,6 @@ public class Weapon : MonoBehaviour
         transform.position = worldPosition;
 
         await Task.Yield();
-    }
-
-    static (Vector2, Quaternion) RotateAround(Vector2 point, Vector2 pivot, float angle)
-    {
-        // 角度をラジアンに変換
-        float radians = angle * Mathf.Deg2Rad;
-
-        // 回転行列の計算
-        float cos = Mathf.Cos(radians);
-        float sin = Mathf.Sin(radians);
-
-        // 元の点を中心点の原点に移動
-        Vector2 translatedPoint = point - pivot;
-
-        // 新しい座標を計算
-        float newX = translatedPoint.x * cos - translatedPoint.y * sin;
-        float newY = translatedPoint.x * sin + translatedPoint.y * cos;
-
-        // 新しい座標を作成
-        Vector2 rotatedPoint = new Vector2(newX, newY) + pivot;
-
-        // 回転をクォータニオンで表現
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
-
-        return (rotatedPoint, rotation);
     }
 
     private bool HasComponent<T>(GameObject obj) where T : Component
@@ -499,5 +395,13 @@ public class Weapon : MonoBehaviour
         {
             weapon.SetActive(value);
         }
+    }
+
+    //物理挙動をリセット
+    void ResetRigidbody() 
+    {
+        rb.simulated = false;
+        rb.linearVelocity = new Vector3(0, 0, 0);
+        rb.angularVelocity = 0f;
     }
 }

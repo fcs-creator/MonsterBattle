@@ -48,6 +48,7 @@ public class Monster : MonoBehaviour
 
         // •Ší‚Ìİ’è
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
+        weapon.gameObject.SetActive(true);
 
         // ƒV[ƒ‹ƒh‚Ìİ’è
         //shield = transform.Find("Shield").gameObject;
