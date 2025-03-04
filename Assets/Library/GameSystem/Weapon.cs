@@ -22,6 +22,7 @@ public class Weapon : MonoBehaviour
 
     Vector3 initialOffset;
     float orbitRadius;
+    bool isShot = false;
 
     void Awake()
     {
@@ -30,7 +31,9 @@ public class Weapon : MonoBehaviour
 
         // 物理挙動を追加して無効にしておく
         rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.simulated = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        rb.gravityScale = 0;
+        rb.simulated = true;
 
         //武器のダメージ
         Damage = Parameters.WEAPON_DAMAGE;
@@ -46,6 +49,9 @@ public class Weapon : MonoBehaviour
         // 初期オフセットを計算
         initialOffset = transform.position - Owner.transform.position;
         orbitRadius = initialOffset.magnitude;
+
+        //撃っているかどうか
+        isShot = false;
 
         //武器扱いのオブジェクトをすべて取得
         weapons = new List<GameObject>();
@@ -80,6 +86,7 @@ public class Weapon : MonoBehaviour
     void Start()
     {
         _ = ExcecuteActionLoop();   //呼び出し&Taskを破棄
+        _ = FixedUpdateLoop();
     }
 
     async Task ExcecuteActionLoop()
@@ -95,6 +102,24 @@ public class Weapon : MonoBehaviour
         while (!Owner.IsDead)
         {
             await ActionLoop();
+        }
+    }
+
+    //物理の更新
+    async Task FixedUpdateLoop()
+    {
+        while (!Owner.IsDead)
+        {
+            if (!isShot)
+            {
+                //リジッドボディに位置と回転を適用
+                rb.linearVelocity = new Vector3(0, 0, 0);
+                rb.angularVelocity = 0f;
+                rb.MovePosition(transform.position);
+                rb.MoveRotation(transform.rotation);
+            }
+
+            await Task.Delay(System.TimeSpan.FromSeconds(Time.fixedDeltaTime));
         }
     }
 
@@ -132,13 +157,16 @@ public class Weapon : MonoBehaviour
     //初期位置にワープ
     public void WarpDefault()
     {
-        //物理挙動をリセット
-        ResetRigidbody();
-
         transform.SetParent(Owner.transform);
         transform.localPosition = defaultLocalPosition;
         transform.rotation = defaultRotation;
         transform.localScale = defaultLocalScale;
+
+        //リジッドボディに位置と回転を適用
+        rb.linearVelocity = new Vector3(0, 0, 0);
+        rb.angularVelocity = 0f;
+        rb.MovePosition(transform.position);
+        rb.MoveRotation(transform.rotation);
     }
 
     //動きの繋がりを補完する関数
@@ -154,7 +182,6 @@ public class Weapon : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             transform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
             transform.localScale = Vector3.Lerp(startScale, endScale, t);
-
             elapsedTime += Time.deltaTime;
             await Task.Yield();
         }
@@ -342,12 +369,18 @@ public class Weapon : MonoBehaviour
         }
 
         // 物理挙動を使えるようにして飛ばす
-        rb.simulated = true;
+        //rb.simulated = true;
+        rb.constraints = RigidbodyConstraints2D.None;
+
+        isShot = true;
+
         rb.AddForce(direction * power * dir, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
         await Default();
+
+        isShot = false;
     }
 
     //武器をモンスターによる制御から切り離す
@@ -400,7 +433,7 @@ public class Weapon : MonoBehaviour
     //物理挙動をリセット
     void ResetRigidbody() 
     {
-        rb.simulated = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.linearVelocity = new Vector3(0, 0, 0);
         rb.angularVelocity = 0f;
     }

@@ -259,6 +259,7 @@ public class Monster : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("weapon hit : " + gameObject.name + "<-" + weapon.name);
                         HpBar.TakeDamage(weapon.Damage);
                         rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
                     }

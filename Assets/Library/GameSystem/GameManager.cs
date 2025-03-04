@@ -8,8 +8,8 @@ public static class Parameters
 {
     //モンスター
     public const float GRAVITY_SCALE = 3;                                       //重力
-    public const float ACTION_FORCE_SCALE = 2;                                  //アクションの力の補正倍率 
-    public const float KNOCKBACK_FORCE = 20;                                     //ノックバックの力
+    public const float ACTION_FORCE_SCALE = 1;                                  //アクションの力の補正倍率 
+    public const float KNOCKBACK_FORCE = 10;                                    //ノックバックの力
     public const float MAX_VELOCITY_X = 50;                                     //最高速度_X
     public const float MAX_VELOCITY_Y = 50;                                     //最高速度_Y
     public const float DEAD_LINE_X = 25;                                        //死亡ラインX
@@ -34,7 +34,7 @@ public static class Parameters
     public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.7f;                     //武器が当たったときの上方向への吹き飛ばしの加算値
     public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ガード時の武器のダメージの軽減率
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
-    public const float WEAPON_STRIKE_FORCE = 60;                                //武器が当たったときに吹き飛ばす力
+    public const float WEAPON_STRIKE_FORCE = 50;                                //武器が当たったときに吹き飛ばす力
     public const float WEAPON_DAMAGE = 0;                                      //武器によるダメージ値
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
