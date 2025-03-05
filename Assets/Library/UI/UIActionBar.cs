@@ -3,22 +3,36 @@ using UnityEngine.TextCore.Text;
 using TMPro;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
+using System.Threading.Tasks;
 
 public class UIActionBar : MonoBehaviour
 {
+    public Monster Owner { get; set; }       // キャラクターの参照
     public Transform Character { get; set; } // キャラクターのTransform
     public Vector3 Offset { get; set; }      // キャラクターからのオフセット
     TextMeshProUGUI text;                    // ゲージの画像
-
+    
     void Awake()
     {
         text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         gameObject.SetActive(false);
     }
 
-    void Update()
+    void Start()
     {
-        UpdatePosition();
+        _ = UpdateActionBar();
+    }
+    
+    async Task UpdateActionBar()
+    {
+        while (!Owner.IsDead)
+        {
+            UpdatePosition();
+
+            await Task.Yield();
+        }
+
+        Hide();
     }
 
     // テキストを表示するメソッド

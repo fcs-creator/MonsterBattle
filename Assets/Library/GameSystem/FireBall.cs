@@ -16,6 +16,7 @@ public class FireBall : Magic
         
         //èWíeó¶ÇåvéZÇµÇƒî≠éÀ
         float grouping = Parameters.FIREBALL_SHOT_GROUPING;
-        rb.AddForce(new Vector2(Direction.x, Random.Range(-grouping, grouping)) * Speed, ForceMode2D.Impulse);
+        float adjust_y = Parameters.FIREBALL_SHOT_ADJUST_Y;
+        rb.AddForce(new Vector2(Direction.x, Random.Range(-grouping, grouping)+ adjust_y) * Speed, ForceMode2D.Impulse);
     }
 }

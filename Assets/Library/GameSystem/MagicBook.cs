@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class MagicBook : MonoBehaviour
@@ -15,6 +16,8 @@ public class MagicBook : MonoBehaviour
 
         for (int i = 0; i < num; i++)
         {
+            if (monster.IsDead) break;
+          
             GameObject obj = Instantiate(fireBallPrefab, monster.transform.position, Quaternion.identity);
             FireBall fireBall = obj.GetComponent<FireBall>();
             fireBall.Owner = monster;

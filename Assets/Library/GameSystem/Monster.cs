@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using System.Threading;
+using System;
 
 public class Monster : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class Monster : MonoBehaviour
     Weapon weapon;      //武器
     GameObject shield;  //シールド
     Rigidbody2D rb;
-    　
+    
     int EnemyCheckCount = 0;
 
     //敵の情報
@@ -35,8 +36,13 @@ public class Monster : MonoBehaviour
     public Vector2 Direction { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).normalized; } }
     public float Distance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
 
-    //タスクキャンセル用
-    List<CancellationTokenSource> cancellationTokenSources = new List<CancellationTokenSource>();
+    //タスクをキャンセル
+    readonly Canceler canceler = new Canceler();
+
+    public void CancelActions()
+    {
+        canceler.Cancel();
+    }
 
     void Awake()
     {
@@ -55,24 +61,22 @@ public class Monster : MonoBehaviour
         //shield.tag = Tags.Shield;
         //shield.AddComponent<PolygonCollider2D>().autoTiling = true;
         //shield.SetActive(false);
-    
+
+        //アクションバーの所有者を登録
+        ActionBar.Owner = this;
+
         IsDead = false;
         EnemyCheckCount = 0;
     }
 
-    CancellationToken CreateCancellationToken() 
-    {
-        var cts = new CancellationTokenSource();
-        cancellationTokenSources.Add(cts);
-        return cts.Token;
-    }
-
     void Start()
     {
-        //var token = CreateCancellationToken();
-        //Task.Run(() => ExcecuteActionLoop(token), token);
-
         _ = ExcecuteActionLoop();
+    }
+
+    public async virtual Task Action()
+    {
+        await Task.Yield();
     }
 
     async Task ExcecuteActionLoop()
@@ -80,7 +84,7 @@ public class Monster : MonoBehaviour
         IsFacingRight = true;
         if (transform.position.x >= 0) Flip();
 
-        while (!IsDead)
+        while (!IsDead && canceler.IsNotCancel)
         {
             await ActionLoop();
 
@@ -95,7 +99,14 @@ public class Monster : MonoBehaviour
 
     async protected Task Wait(float sec)
     {
-        await Task.Delay((int)(sec*1000));
+        try
+        {
+            await Task.Delay((int)(sec * 1000), canceler.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // キャンセルされた場合の処理
+        }
     }
 
     private void FixedUpdate()
@@ -137,6 +148,9 @@ public class Monster : MonoBehaviour
                 IsDead = true;
                 gameObject.SetActive(false);
                 HpBar.gameObject.SetActive(false);
+
+                //アクションをキャンセル
+                canceler.Cancel();
             }
         }
     }
@@ -348,7 +362,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private bool HasComponent<T>(GameObject obj) where T : Component
+    bool HasComponent<T>(GameObject obj) where T : Component
     {
         return obj.GetComponent<T>() != null;
     }
@@ -408,11 +422,5 @@ public class Monster : MonoBehaviour
         }
 
         EnemyCheckCount++;
-    }
-
-    // 数値を異なる範囲にマッピングする関数
-    float Map(float value, float fromMin, float fromMax, float toMin, float toMax)
-    {
-        return (value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
     }
 }

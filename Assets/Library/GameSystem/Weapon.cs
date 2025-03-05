@@ -5,6 +5,7 @@ using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 using System.Drawing;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using System.Threading;
 
 public class Weapon : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class Weapon : MonoBehaviour
 
     Vector3 initialOffset;
     float orbitRadius;
+
+    //タスクをキャンセルするための共通トークン
+    readonly Canceler canceler = new Canceler();
 
     void Awake()
     {
@@ -97,6 +101,8 @@ public class Weapon : MonoBehaviour
         {
             await ActionLoop();
         }
+
+        canceler.Cancel();
     }
 
     async public Task ExecuteAttack()
@@ -127,7 +133,7 @@ public class Weapon : MonoBehaviour
     //指定秒数待つ
     async protected Task Wait(float sec)
     {
-        await Task.Delay((int)(sec * 1000));
+        await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
     //初期位置にワープ
@@ -147,7 +153,7 @@ public class Weapon : MonoBehaviour
     {
         float elapsedTime = 0f;
 
-        while (elapsedTime < second)
+        while (elapsedTime < second && canceler.IsNotCancel)
         {
             float t = elapsedTime / second;
 
@@ -206,7 +212,7 @@ public class Weapon : MonoBehaviour
         Vector2 target = start + new Vector2(x, y);
         float elapsedTime = 0f;
 
-        while (elapsedTime < s)
+        while (elapsedTime < s && canceler.IsNotCancel)
         {
             // 経過時間の割合を計算
             float t = elapsedTime / s;
@@ -229,7 +235,7 @@ public class Weapon : MonoBehaviour
         float initialRotation = transform.rotation.eulerAngles.z;
         float targetRotation = initialRotation + angle;
 
-        while (elapsed < s)
+        while (elapsed < s && canceler.IsNotCancel)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / s;
@@ -274,7 +280,7 @@ public class Weapon : MonoBehaviour
 
         Transform centerObject = Owner.transform;
 
-        while (!stop)
+        while (!stop && canceler.IsNotCancel)
         {
             //フレーム毎の回転量を計算
             step = (rotAngle / second) * Time.deltaTime;
@@ -315,7 +321,7 @@ public class Weapon : MonoBehaviour
         float angle = 0;
         float angleAmount = 0;
 
-        while (angleAmount < 360)
+        while (angleAmount < 360 && canceler.IsNotCancel)
         {
             //回転：中心が基準
             angle = rotationSpeed * Time.deltaTime;

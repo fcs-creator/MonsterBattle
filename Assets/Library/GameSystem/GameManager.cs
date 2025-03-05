@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 public static class Parameters
 {
     //モンスター
     public const float GRAVITY_SCALE = 3;                                       //重力
-    public const float ACTION_FORCE_SCALE = 4;                                  //アクションの力の補正倍率 
-    public const float KNOCKBACK_FORCE = 15;                                     //ノックバックの力
+    public const float ACTION_FORCE_SCALE = 3.5f;                               //アクションの力の補正倍率 
+    public const float KNOCKBACK_FORCE = 15;                                    //ノックバックの力
     public const float MAX_VELOCITY_X = 50;                                     //最高速度_X
     public const float MAX_VELOCITY_Y = 50;                                     //最高速度_Y
     public const float DEAD_LINE_X = 25;                                        //死亡ラインX
@@ -31,19 +33,20 @@ public static class Parameters
     public const float MASS_MAGNIFICATION = 1.0f;                               //面積に対する重さの倍率
 
     //武器
-    public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.5f;                     //武器が当たったときの上方向への吹き飛ばしの加算値
+    public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.25f;                    //武器が当たったときの上方向への吹き飛ばしの加算値
     public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ガード時の武器のダメージの軽減率
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
-    public const float WEAPON_STRIKE_FORCE = 220;                               //武器が当たったときに吹き飛ばす力
-    public const float WEAPON_DAMAGE = 5;                                       //武器によるダメージ値
+    public const float WEAPON_STRIKE_FORCE = 200;                               //武器が当たったときに吹き飛ばす力
+    public const float WEAPON_DAMAGE = 10;                                       //武器によるダメージ値
     public const float WEAPON_GRAVITY_SCALE = 1;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
 
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
-    public const float FIREBALL_DESTOROY_WAIT_TIME = 0.5f;                      //発動後に破棄されるまでの待ち時間
-    public const float FIREBALL_SHOT_GROUPING = 0.3f;                           //集弾率(小さいほど正確に狙う)
+    public const float FIREBALL_DESTOROY_WAIT_TIME = 0.75f;                     //発動後に破棄されるまでの待ち時間
+    public const float FIREBALL_SHOT_GROUPING = 0.2f;                           //集弾率(小さいほど正確に狙う)
+    public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //発射時のY軸の調整値
     public const float THUNDER_DAMAGE = 20;                                     //サンダーダメージ値
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間
 
@@ -112,6 +115,26 @@ public class GameManager : MonoBehaviour
             objCameraTartget.transform.SetParent(monster.transform);
         }
     }
+
+    void Start()
+    {
+        _ = GameStart();
+    }
+
+    async Task GameStart() 
+    {
+        while (!gameSet) 
+        {
+            foreach (var monster in allMonsters)
+            {
+                _ = monster.Action(); // 各モンスターのActionを呼び出し
+            }
+
+            // 指定された時間（ミリ秒）だけ待機
+            await Task.Delay(5000);
+        }
+    }
+
 
     void Update()
     {
