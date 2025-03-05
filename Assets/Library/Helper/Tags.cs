@@ -14,4 +14,6 @@ public static class Tags {
     public const string Trap = "Trap";
     public const string Goal = "Goal";
     public const string Collection = "Collection";
+    public const string Guard = "Guard";
+    public const string Attack = "Attack";
 }

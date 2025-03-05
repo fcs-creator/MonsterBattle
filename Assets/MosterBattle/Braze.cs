@@ -5,19 +5,19 @@ public class Braze : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Dash(5);
+        await Dash(100);
         
         await Wait(0.75f);
         
         await Attack();
         
-        await BackStep(10.0f);
+        await BackStep(100);
         
         await Wait(0.5f);
         
         await MagicBook.FireBall(this,5,30f);
 
-        await Jump(5);
+        await Jump(100);
 
         await Wait(1);
     }

@@ -390,10 +390,17 @@ public class Monster : MonoBehaviour
     {
         if (EnemyCheckCount >= Parameters.ENEMY_CHECK_FREAKENCE)
         {
-            List<Monster> enemies = new List<Monster>(this.Enemies);
-            this.Enemies = enemies.OrderBy(obj => Vector3.Distance(obj.transform.position, transform.position)).ToList<Monster>();
+            List<Monster> enemies = new List<Monster>(Enemies);
+
+            // 生きている敵を抽出
+            List<Monster> ariveEnemies = enemies.Where(e => !e.IsDead).ToList();
+
+            //距離順に並び変えて更新
+            Enemies = ariveEnemies.OrderBy(obj => Vector3.Distance(obj.transform.position, transform.position)).ToList();
+
             if (Enemies.Count > 0)
             {
+                //一番近い敵も更新
                 Enemy = Enemies[0];
             }
 

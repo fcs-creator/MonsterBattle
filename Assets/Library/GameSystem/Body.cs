@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Body : MonoBehaviour
 {
@@ -33,23 +34,29 @@ public class Body : MonoBehaviour
     {
         if (bodyCollider != null)
         {
-            float area = CalculatePolygonArea(bodyCollider.points);
-            rbParent.mass = area* Parameters.MASS_MAGNIFICATION;  // 面積に比例して質量を設定
+            float area = CalculateScaledArea();
+            rbParent.mass = area * Parameters.MASS_MAGNIFICATION;  // 面積に比例して質量を設定
             Debug.Log(transform.parent.name + " : " + rbParent.mass + "kg");
         }
     }
 
-    float CalculatePolygonArea(Vector2[] vertices)
+    float CalculateScaledArea()
     {
-        float area = 0f;
-        int j = vertices.Length - 1;
-
-        for (int i = 0; i < vertices.Length; i++)
+        // ローカル座標での面積を計算
+        Vector2[] points = bodyCollider.points;
+        float localArea = 0;
+        for (int i = 0; i < points.Length; i++)
         {
-            area += (vertices[j].x + vertices[i].x) * (vertices[j].y - vertices[i].y);
-            j = i;
+            Vector2 current = points[i];
+            Vector2 next = points[(i + 1) % points.Length];
+            localArea += current.x * next.y - current.y * next.x;
         }
+        localArea = Mathf.Abs(localArea) * 0.5f;
 
-        return Mathf.Abs(area) / 2f;
+        // 親のスケールも含めてスケールを適用
+        Vector3 lossyScale = bodyCollider.transform.lossyScale;
+        float totalScaledArea = localArea * Mathf.Abs(lossyScale.x) * Mathf.Abs(lossyScale.y);
+
+        return totalScaledArea;
     }
 }
