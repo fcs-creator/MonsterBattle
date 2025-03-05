@@ -30,7 +30,8 @@ public class Weapon : MonoBehaviour
 
         // 物理挙動を追加して無効にしておく
         rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.simulated = false;
+        rb.centerOfMass = new Vector2(0, 0);
+        rb.simulated = true;
 
         //武器のダメージ
         Damage = Parameters.WEAPON_DAMAGE;
@@ -132,8 +133,8 @@ public class Weapon : MonoBehaviour
     //初期位置にワープ
     public void WarpDefault()
     {
-        //物理挙動をリセット
-        ResetRigidbody();
+        //武器を握った状態にする
+        SetGripWeapon(true);
 
         transform.SetParent(Owner.transform);
         transform.localPosition = defaultLocalPosition;
@@ -163,8 +164,8 @@ public class Weapon : MonoBehaviour
     //武器を初期位置にリセットする
     async protected Task Default()
     {
-        //物理挙動をリセット
-        ResetRigidbody();
+        //武器を握るモードにする
+        SetGripWeapon(true);
 
         //現在の状態
         Vector3 currentPosition = transform.position;
@@ -341,8 +342,10 @@ public class Weapon : MonoBehaviour
             dir *= -1;
         }
 
-        // 物理挙動を使えるようにして飛ばす
-        rb.simulated = true;
+        //武器から手を離す
+        SetGripWeapon(false);
+
+        //飛ばす
         rb.AddForce(direction * power * dir, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
@@ -353,6 +356,8 @@ public class Weapon : MonoBehaviour
     //武器をモンスターによる制御から切り離す
     async protected Task Purge()
     {
+        SetGripWeapon(false);
+
         // ワールド座標を保存
         Vector3 worldPosition = transform.position;
 
@@ -397,11 +402,20 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //物理挙動をリセット
-    void ResetRigidbody() 
+    //武器を握っているかどうかの状態をセット
+    void SetGripWeapon(bool value) 
     {
-        rb.simulated = false;
-        rb.linearVelocity = new Vector3(0, 0, 0);
-        rb.angularVelocity = 0f;
+        if (value)
+        {
+            rb.linearVelocity = new Vector3(0, 0, 0);
+            rb.angularVelocity = 0f;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.gravityScale = 0f;
+        }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.gravityScale = Parameters.WEAPON_GRAVITY_SCALE;
+        }
     }
 }
