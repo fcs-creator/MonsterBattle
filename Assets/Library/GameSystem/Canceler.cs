@@ -21,6 +21,7 @@ public class Canceler : ICancellable
 
     // ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ä‚¢‚È‚¢ê‡
     public bool IsNotCancel => !cts.IsCancellationRequested;
+    public bool IsCancel => cts.IsCancellationRequested;
 
     public void Cancel()
     {

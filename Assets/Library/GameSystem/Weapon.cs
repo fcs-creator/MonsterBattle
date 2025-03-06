@@ -36,6 +36,7 @@ public class Weapon : MonoBehaviour
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.centerOfMass = new Vector2(0, 0);
         rb.simulated = true;
+        SetGripWeapon(true);
 
         //武器のダメージ
         Damage = Parameters.WEAPON_DAMAGE;
@@ -133,6 +134,8 @@ public class Weapon : MonoBehaviour
     //指定秒数待つ
     async protected Task Wait(float sec)
     {
+        if (canceler.IsCancel) return;
+
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
@@ -151,6 +154,8 @@ public class Weapon : MonoBehaviour
     //動きの繋がりを補完する関数
     async Task Lerp(Vector3 startPosition, Quaternion startRotation, Vector3 startScale, Vector3 endPosition, Quaternion endRotation, Vector3 endScale, float second)
     {
+        if (canceler.IsCancel) return;
+
         float elapsedTime = 0f;
 
         while (elapsedTime < second && canceler.IsNotCancel)
@@ -203,9 +208,32 @@ public class Weapon : MonoBehaviour
         await Wait(Parameters.DEFAULT_RETURN_WAIT_TIME);
     }
 
+    //居合い抜き
+    async protected Task Drawing()
+    {
+        if (canceler.IsCancel) return;
+
+        Owner.ActionBar.SendText("Weapon-Drawing");
+
+        float elapsedTime = 0f;
+        float s = Parameters.WEAPON_INTERVAL_DRAWING;
+
+        while (elapsedTime < s && canceler.IsNotCancel)
+        {
+            // 経過時間の割合を計算
+            float t = elapsedTime / s;
+            // 経過時間を更新
+            elapsedTime += Time.deltaTime;
+            // 1フレーム待機
+            await Task.Yield();
+        }
+    }
+
     //武器を指定された(x, y)位置にs秒で移動させる
     async protected Task Move(float x, float y, float s)
     {
+        if (canceler.IsCancel) return;
+
         Owner.ActionBar.SendText("Weapon-Move");
 
         Vector2 start = transform.localPosition;
@@ -231,6 +259,8 @@ public class Weapon : MonoBehaviour
     //武器をangle度s秒でその場回転させる
     async protected Task Spin(float angle, float s)
     {
+        if (canceler.IsCancel) return;
+
         float elapsed = 0f;
         float initialRotation = transform.rotation.eulerAngles.z;
         float targetRotation = initialRotation + angle;
@@ -253,6 +283,8 @@ public class Weapon : MonoBehaviour
     //武器をモンスターの周囲で回転させる(上方向が基準で0°)
     async protected Task Rotate(float startAngle, float rotAngle, float second) 
     {
+        if (canceler.IsCancel) return;
+
         Owner.ActionBar.SendText("Weapon-Rotate");
 
         if (!Owner.IsFacingRight)
@@ -315,6 +347,8 @@ public class Weapon : MonoBehaviour
     //武器をモンスターの周囲を1回転する
     async protected Task Rotation360()
     {
+        if (canceler.IsCancel) return;
+
         Transform centerObject = Owner.transform;
 
         float rotationSpeed = 400.0f; // 回転速度
@@ -339,6 +373,8 @@ public class Weapon : MonoBehaviour
     //武器を指定された方向に飛ばす
     async protected Task Shot(Vector2 direction, float power)
     {
+        if (canceler.IsCancel) return;
+
         Owner.ActionBar.SendText("Weapon-Shot");
 
         //モンスターの向きによって武器飛ばす方向を変える

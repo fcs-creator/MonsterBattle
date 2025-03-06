@@ -10,8 +10,8 @@ public static class Tags {
     public const string Magic = "Magic";
     public const string Body = "Body";
     public const string Weapon = "Weapon";
-    public const string Shield = "Shield";
     public const string Trap = "Trap";
     public const string Goal = "Goal";
     public const string Collection = "Collection";
+    public const string Guard = "Guard";
 }

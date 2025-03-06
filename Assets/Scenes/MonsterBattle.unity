@@ -2709,8 +2709,8 @@ GameObject:
   - component: {fileID: 418483053}
   - component: {fileID: 418483054}
   m_Layer: 0
-  m_Name: Shield
-  m_TagString: Shield
+  m_Name: Guard
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2724,8 +2724,8 @@ Transform:
   m_GameObject: {fileID: 418483052}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.7322376, y: -0.601094, z: -2.396764}
-  m_LocalScale: {x: 1, y: 4, z: 1}
+  m_LocalPosition: {x: 2.2, y: 0, z: 0}
+  m_LocalScale: {x: 0.75, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1488920992}
@@ -2772,10 +2772,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 43884335
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 32bcef3e626741d4d9afcb29bb048722, type: 3}
-  m_Color: {r: 0.148126, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.148126, g: 1, b: 0, a: 0.3764706}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2946,7 +2946,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 930408577
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 8749302817991680212, guid: f7adf347d65aa534192ed834df7a4d14, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3167,7 +3167,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 930408577
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 4354231566380549168, guid: 4b6bdfae4decf4441b39232fb12ca89f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3254,7 +3254,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 38872877
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.8627451}
@@ -3294,8 +3294,8 @@ Transform:
   m_GameObject: {fileID: 475989537}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: -0.1, z: 0}
-  m_LocalScale: {x: 1.2, y: 0.2, z: 1}
+  m_LocalPosition: {x: 2.5, y: -0.1, z: 0}
+  m_LocalScale: {x: 0.75, y: 0.15, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2038099012915492501}
@@ -3342,7 +3342,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 38872877
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 8845789440810235704, guid: 538e41961ec545a44aee52fe787562fc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3364,7 +3364,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 475989537}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e14a139fe7ce5ba4ca07b09d200bcded, type: 3}
+  m_Script: {fileID: 11500000, guid: 906edee6bb98ba34a9e5715f880903b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &542082012
@@ -3694,7 +3694,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 38872877
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3625043607559282579, guid: d6eec37a6f727584c96786262a5fd6a8, type: 3}
   m_Color: {r: 1, g: 0.57341117, b: 0, a: 0.8627451}
@@ -7547,8 +7547,8 @@ GameObject:
   - component: {fileID: 1199307165}
   - component: {fileID: 1199307166}
   m_Layer: 0
-  m_Name: Shield
-  m_TagString: Shield
+  m_Name: Guard
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7610,7 +7610,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 43884335
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 32bcef3e626741d4d9afcb29bb048722, type: 3}
   m_Color: {r: 0.148126, g: 1, b: 0, a: 1}
@@ -7698,7 +7698,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 38872877
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3625043607559282579, guid: d6eec37a6f727584c96786262a5fd6a8, type: 3}
   m_Color: {r: 1, g: 0.52856565, b: 0, a: 1}
@@ -7868,8 +7868,8 @@ GameObject:
   - component: {fileID: 1248390349}
   - component: {fileID: 1248390350}
   m_Layer: 0
-  m_Name: Shield
-  m_TagString: Shield
+  m_Name: Guard
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7931,7 +7931,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 43884335
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 32bcef3e626741d4d9afcb29bb048722, type: 3}
   m_Color: {r: 0.148126, g: 1, b: 0, a: 1}
@@ -11404,7 +11404,7 @@ Transform:
   m_GameObject: {fileID: 6898811802608013032}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: -0.3, z: 0}
+  m_LocalPosition: {x: 10, y: -0.53, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11484,8 +11484,8 @@ GameObject:
   - component: {fileID: 4729659953033065088}
   - component: {fileID: 7730424236776961750}
   m_Layer: 0
-  m_Name: Shield
-  m_TagString: Shield
+  m_Name: Guard
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11501,7 +11501,7 @@ GameObject:
   - component: {fileID: 4729659952712883212}
   - component: {fileID: 7730424237396301914}
   m_Layer: 0
-  m_Name: Shield
+  m_Name: Guard
   m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11566,18 +11566,6 @@ Transform:
   - {fileID: 171049686689430957}
   m_Father: {fileID: 6688141616439587632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3192096468629104123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6898811802608013032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b10b48af4de5b04087f0d4bde2a083a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &3553493702282041565
 Transform:
   m_ObjectHideFlags: 0
@@ -11902,7 +11890,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2038099012915492501}
-  - component: {fileID: 3192096468629104123}
+  - component: {fileID: 6898811802608013033}
   m_Layer: 0
   m_Name: Level2 Goblin
   m_TagString: Untagged
@@ -11910,6 +11898,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6898811802608013033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898811802608013032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a512b63093b9046892f40ec32e4a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7516624330513302688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12003,7 +12003,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 43884335
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.27669525, g: 1, b: 0, a: 0.6745098}
@@ -12058,7 +12058,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 43884335
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.27669525, g: 1, b: 0, a: 0.6745098}

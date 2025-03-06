@@ -20,15 +20,15 @@ public static class Parameters
     public const int ENEMY_CHECK_FREAKENCE = 20;                                //索敵の頻度
     
     //アクション
-    public const float ACTION_INTERVAL_DASH = 1.0f;                             //ダッシュ
+    public const float ACTION_INTERVAL_DASH = 2.0f;                             //ダッシュ
     public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //バックステップ
     public const float ACTION_INTERVAL_JUMP = 0.5f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
     public const float ACTION_INTERVAL_SHOT = 3.0f;                             //武器を投げる
-    public const float ACTION_INTERVAL_GUARD = 1.0f;                            //ガード
+    public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
     public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //バックステップ判定を解除する速度
-
+    
     //ボディ
     public const float MASS_MAGNIFICATION = 1.0f;                               //面積に対する重さの倍率
 
@@ -41,6 +41,12 @@ public static class Parameters
     public const float WEAPON_GRAVITY_SCALE = 1;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
+    public const float WEAPON_INTERVAL_DRAWING = 1;                             //抜刀後の時間
+
+    //ガード
+    public const float GUARD_DURATION = 1.0f;                                   //継続時間
+    public const float GUARD_STUN_DURATION = 5f;                                //ガードが決まった時のスタン時間
+
 
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
@@ -79,8 +85,6 @@ public class GameManager : MonoBehaviour
         //全てのモンスターに対して処理を行う
         foreach (Monster monster in allMonsters)
         {
-            Debug.Log(monster.gameObject.name);
-
             //敵のリストの作成
             List<Monster> otherMonsters = new List<Monster>(allMonsters.OrderBy(obj => Vector3.Distance(obj.transform.position, monster.transform.position)).ToList());
             otherMonsters.Remove(monster);
@@ -134,6 +138,11 @@ public class GameManager : MonoBehaviour
 
             // 指定された時間（ミリ秒）だけ待機
             await Task.Delay(5000);
+        }
+
+        foreach (var monster in allMonsters)
+        {
+            monster.CancelActions();
         }
     }
 

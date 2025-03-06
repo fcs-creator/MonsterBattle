@@ -23,12 +23,14 @@ public class Monster : MonoBehaviour
     public bool IsAirborne { get { return !IsGrounded; } private set { IsAirborne = value; } }  //空中にいるか
     public bool IsDead { get; private set; }                                                    //死んでいるか
     public bool IsFacingRight { get; private set; }                                             //右を向いているか
-    
+    public bool IsStunned { get; set; }                                                         //スタン状態か
+
     Body body;          //本体
     Weapon weapon;      //武器
-    GameObject shield;  //シールド
+    Guard guard;        //防具
     Rigidbody2D rb;
     
+    bool IsStunable = true; //スタン可能か
     int EnemyCheckCount = 0;
 
     //敵の情報
@@ -56,11 +58,9 @@ public class Monster : MonoBehaviour
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
         weapon?.gameObject.SetActive(true);
 
-        // シールドの設定
-        //shield = transform.Find("Shield").gameObject;
-        //shield.tag = Tags.Shield;
-        //shield.AddComponent<PolygonCollider2D>().autoTiling = true;
-        //shield.SetActive(false);
+        // 防具の設定
+        guard = transform.Find("Guard").AddComponent<Guard>();
+        guard?.gameObject.SetActive(false);
 
         //アクションバーの所有者を登録
         ActionBar.Owner = this;
@@ -99,14 +99,9 @@ public class Monster : MonoBehaviour
 
     async protected Task Wait(float sec)
     {
-        try
-        {
-            await Task.Delay((int)(sec * 1000), canceler.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            // キャンセルされた場合の処理
-        }
+        if(canceler.IsCancel) return;
+
+        await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
     private void FixedUpdate()
@@ -131,6 +126,12 @@ public class Monster : MonoBehaviour
             {
                 IsBackSteping = false;
             }
+        }
+
+        //スタン状態の処理
+        if (IsStunned && IsStunable) 
+        {
+            _ = Stun();
         }
 
         //死亡判定
@@ -158,6 +159,8 @@ public class Monster : MonoBehaviour
     // 攻撃
     async virtual protected Task Attack() 
     {
+        if(canceler.IsCancel) return;
+
         ActionBar.SendText("Attack");
 
         IsAttacking = true;
@@ -169,25 +172,31 @@ public class Monster : MonoBehaviour
         IsAttacking = false;
     }
 
-    // ガード
+    // ガード : アタックへの対抗
     async virtual protected Task Guard() 
     {
+        if (canceler.IsCancel) return;
+
         ActionBar.SendText("Guard");
 
         IsGuarding = true;
 
-        shield.SetActive(true);
+        guard?.gameObject.SetActive(true);
 
-        await Wait(Parameters.ACTION_INTERVAL_GUARD);
+        await Wait(Parameters.GUARD_DURATION);
 
-        shield.SetActive(false);
+        guard?.gameObject.SetActive(false);
 
         IsGuarding = false;
+
+        await Wait(Parameters.ACTION_INTERVAL_GUARD);
     }
 
     //ダッシュ：相手に向かって進む
     async virtual protected Task Dash(float force) 
     {
+        if (canceler.IsCancel) return;
+
         ActionBar.SendText("Dash");
 
         IsDashing = true;
@@ -206,6 +215,8 @@ public class Monster : MonoBehaviour
     //バックステップ：相手から離れる
     async virtual protected Task BackStep(float force)
     {
+        if (canceler.IsCancel) return;
+
         ActionBar.SendText("BackStep");
 
         IsBackSteping = true;
@@ -222,6 +233,8 @@ public class Monster : MonoBehaviour
     //ジャンプ (100で画面上まで飛ぶ)
     async virtual protected Task Jump(float height) 
     {
+        if (canceler.IsCancel) return;
+
         ActionBar.SendText("Jump");
 
         if (IsGrounded)
@@ -237,7 +250,22 @@ public class Monster : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_JUMP);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    async Task Stun() 
+    {
+        //スタン不可にする
+        IsStunable = false;
+
+        await body.Stun();
+
+        await Wait(Parameters.GUARD_STUN_DURATION);
+
+        IsStunned = false;
+
+        //スタン可能にする
+        IsStunable = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
     {
         GameObject obj = other.gameObject;
 

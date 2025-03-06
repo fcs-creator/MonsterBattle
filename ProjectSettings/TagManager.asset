@@ -8,10 +8,10 @@ TagManager:
   - Magic
   - Body
   - Weapon
-  - Shield
   - Trap
   - Goal
   - Collection
+  - Guard
   layers:
   - Default
   - TransparentFX
@@ -52,14 +52,14 @@ TagManager:
   - name: UI
     uniqueID: 1525303889
     locked: 0
-  - name: Weapon
-    uniqueID: 38872877
-    locked: 0
-  - name: Shield
+  - name: Guard
     uniqueID: 43884335
     locked: 0
   - name: Body
     uniqueID: 930408577
+    locked: 0
+  - name: Weapon
+    uniqueID: 38872877
     locked: 0
   m_RenderingLayers:
   - Default

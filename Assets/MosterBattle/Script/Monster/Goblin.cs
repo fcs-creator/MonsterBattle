@@ -5,11 +5,10 @@ public class Goblin : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Dash(75);
+        await Dash(50);
 
         await Attack();
 
         await BackStep(25);
     }
-
 }
