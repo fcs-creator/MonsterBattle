@@ -54,7 +54,7 @@ public class Monster : MonoBehaviour
 
         // •Ší‚Ìİ’è
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
-        weapon.gameObject.SetActive(true);
+        weapon?.gameObject.SetActive(true);
 
         // ƒV[ƒ‹ƒh‚Ìİ’è
         //shield = transform.Find("Shield").gameObject;
@@ -162,7 +162,7 @@ public class Monster : MonoBehaviour
 
         IsAttacking = true;
 
-        await weapon.ExecuteAttack();
+        await weapon?.ExecuteAttack();
 
         await Wait(Parameters.ACTION_INTERVAL_ATTACK);
 

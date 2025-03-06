@@ -14,7 +14,7 @@ public static class Parameters
     public const float KNOCKBACK_FORCE = 15;                                    //ノックバックの力
     public const float MAX_VELOCITY_X = 50;                                     //最高速度_X
     public const float MAX_VELOCITY_Y = 50;                                     //最高速度_Y
-    public const float DEAD_LINE_X = 25;                                        //死亡ラインX
+    public const float DEAD_LINE_X = 40;                                        //死亡ラインX
     public const float DEAD_LINE_Y_UP = 25;                                     //死亡ライン上Y
     public const float DEAD_LINE_Y_DOWN = -20;                                  //死亡ライン下Y
     public const int ENEMY_CHECK_FREAKENCE = 20;                                //索敵の頻度
@@ -79,8 +79,10 @@ public class GameManager : MonoBehaviour
         //全てのモンスターに対して処理を行う
         foreach (Monster monster in allMonsters)
         {
+            Debug.Log(monster.gameObject.name);
+
             //敵のリストの作成
-            List<Monster> otherMonsters = new List<Monster>(allMonsters.OrderBy(obj => Vector3.Distance(obj.transform.position, monster.transform.position)).ToList<Monster>());
+            List<Monster> otherMonsters = new List<Monster>(allMonsters.OrderBy(obj => Vector3.Distance(obj.transform.position, monster.transform.position)).ToList());
             otherMonsters.Remove(monster);
             monster.Enemies = otherMonsters;
             if (otherMonsters.Count > 0)
