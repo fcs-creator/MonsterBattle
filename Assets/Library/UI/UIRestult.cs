@@ -18,7 +18,7 @@ public class UIRestult : MonoBehaviour
                 Image image = monsterImage.GetComponent<Image>();
                 image.sprite= monsterBody.GetComponent<SpriteRenderer>().sprite;
                 RectTransform rectTransform = image.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(512, 512);
+                rectTransform.sizeDelta = new Vector2(300, 300);
             }
             
             monsterName.GetComponent<TMP_Text>().text = monster.gameObject.name;

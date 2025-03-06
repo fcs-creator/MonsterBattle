@@ -37,7 +37,7 @@ public static class Parameters
     public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ガード時の武器のダメージの軽減率
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
     public const float WEAPON_STRIKE_FORCE = 200;                               //武器が当たったときに吹き飛ばす力
-    public const float WEAPON_DAMAGE = 10;                                       //武器によるダメージ値
+    public const float WEAPON_DAMAGE = 8;                                       //武器によるダメージ値
     public const float WEAPON_GRAVITY_SCALE = 1;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
@@ -45,7 +45,7 @@ public static class Parameters
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
     public const float FIREBALL_DESTOROY_WAIT_TIME = 0.75f;                     //発動後に破棄されるまでの待ち時間
-    public const float FIREBALL_SHOT_GROUPING = 0.2f;                           //集弾率(小さいほど正確に狙う)
+    public const float FIREBALL_SHOT_GROUPING = 0.12f;                           //集弾率(小さいほど正確に狙う)
     public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //発射時のY軸の調整値
     public const float THUNDER_DAMAGE = 20;                                     //サンダーダメージ値
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間

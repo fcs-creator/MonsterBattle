@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -46,7 +47,6 @@ public class MagicBook : MonoBehaviour
         {
             Rotate();
         }
-            
     }
 
     void Rotate() 

@@ -5,7 +5,7 @@ public class MonsterRed : Monster
 {
     protected override async Task ActionLoop() 
     {
-        await Dash(20);
+        await Dash(50);
 
         await Wait(0.5f);
 
@@ -13,15 +13,14 @@ public class MonsterRed : Monster
 
         await Wait(0.5f);
 
-        await Jump(15);
+        await Jump(50);
 
         await Wait(0.5f);
 
-        await Guard();
+        //await Guard();
 
-        await BackStep(8);
+        await BackStep(60);
 
         await Wait(1.0f);
-        
     }
 }
