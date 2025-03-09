@@ -12,6 +12,7 @@ TagManager:
   - Goal
   - Collection
   - Guard
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -49,9 +50,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: UI
-    uniqueID: 1525303889
-    locked: 0
   - name: Guard
     uniqueID: 43884335
     locked: 0
@@ -60,6 +58,9 @@ TagManager:
     locked: 0
   - name: Weapon
     uniqueID: 38872877
+    locked: 0
+  - name: UI
+    uniqueID: 1525303889
     locked: 0
   m_RenderingLayers:
   - Default
