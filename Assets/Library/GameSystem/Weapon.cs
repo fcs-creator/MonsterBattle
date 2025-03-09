@@ -90,6 +90,8 @@ public class Weapon : MonoBehaviour
 
     async Task ExcecuteActionLoop()
     {
+        await Wait(Parameters.START_INTERVAL);
+
         if (Owner == null)
         {
             Debug.Log(gameObject.name);

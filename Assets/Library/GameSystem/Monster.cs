@@ -84,6 +84,8 @@ public class Monster : MonoBehaviour
         IsFacingRight = true;
         if (transform.position.x >= 0) Flip();
 
+        await Wait(Parameters.START_INTERVAL);
+
         while (!IsDead && canceler.IsNotCancel)
         {
             await ActionLoop();

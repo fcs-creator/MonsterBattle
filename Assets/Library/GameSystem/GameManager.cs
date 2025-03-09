@@ -10,7 +10,7 @@ public static class Parameters
 {
     //モンスター
     public const float GRAVITY_SCALE = 3;                                       //重力
-    public const float ACTION_FORCE_SCALE = 3.5f;                               //アクションの力の補正倍率 
+    public const float ACTION_FORCE_SCALE = 4f;                               //アクションの力の補正倍率 
     public const float KNOCKBACK_FORCE = 15;                                    //ノックバックの力
     public const float MAX_VELOCITY_X = 50;                                     //最高速度_X
     public const float MAX_VELOCITY_Y = 50;                                     //最高速度_Y
@@ -20,6 +20,7 @@ public static class Parameters
     public const int ENEMY_CHECK_FREAKENCE = 20;                                //索敵の頻度
     
     //アクション
+    public const float START_INTERVAL = 2.0f;                                   //アクション開始までの待ち時間
     public const float ACTION_INTERVAL_DASH = 2.0f;                             //ダッシュ
     public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //バックステップ
     public const float ACTION_INTERVAL_JUMP = 0.5f;                             //ジャンプ
@@ -57,8 +58,8 @@ public static class Parameters
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間
 
     //UI
-    public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 2.75f);        //HPバーの表示オフセット位置
-    public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-3f);
+    public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 4f);        //HPバーの表示オフセット位置
+    public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-5f);
 }
 
 public class GameManager : MonoBehaviour

@@ -9,7 +9,9 @@ public class Guard : MonoBehaviour
         // 1つ上の階層にいるモンスターのオブジェクトを探してセット
         Owner = transform.parent.GetComponent<Monster>();
         gameObject.tag = Tags.Guard;
-        gameObject.AddComponent<PolygonCollider2D>().autoTiling = true;
+        var collider = gameObject.AddComponent<PolygonCollider2D>();
+        collider.autoTiling = true;
+        //collider.isTrigger = true;
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -24,6 +26,10 @@ public class Guard : MonoBehaviour
 
                 if (weapon.Owner != Owner)
                 {
+                    weapon.Owner.IsStunned = true;
+
+                    weapon.Owner.GetComponent<Rigidbody2D>().AddForce(new Vector2( 0.2f,0.8f)* 100,ForceMode2D.Impulse);
+
                     //スタン状態を有効にする
                     weapon.Owner.IsStunned = true;
 
