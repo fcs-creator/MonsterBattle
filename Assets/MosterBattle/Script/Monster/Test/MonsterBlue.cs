@@ -7,7 +7,7 @@ public class MonsterBlue : Monster
     {
         await Attack();
 
-        await Dash(50);
+        await Forward(50);
         
         await Wait(1);
         

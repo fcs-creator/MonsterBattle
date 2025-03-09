@@ -394,7 +394,7 @@ public class Weapon : MonoBehaviour
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
-        await Default();
+        //await Default();
     }
 
     //•Ší‚ğƒ‚ƒ“ƒXƒ^[‚É‚æ‚é§Œä‚©‚çØ‚è—£‚·

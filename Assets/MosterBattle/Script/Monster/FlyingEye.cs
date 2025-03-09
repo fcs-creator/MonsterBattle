@@ -5,7 +5,7 @@ public class FlyingEye : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Dash(75);
+        await Forward(75);
 
         await BackStep(25);
     }

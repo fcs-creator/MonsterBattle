@@ -5,7 +5,7 @@ public class MonsterPurple : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Dash(10.0f);
+        await Forward(10.0f);
 
         await Wait(0.5f);
 

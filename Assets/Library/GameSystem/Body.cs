@@ -50,7 +50,10 @@ public class Body : MonoBehaviour
         if (bodyCollider != null)
         {
             float area = CalculateScaledArea();
-            rbParent.mass = area * Parameters.MASS_MAGNIFICATION;  // –ÊÏ‚É”ä—á‚µ‚Ä¿—Ê‚ğİ’è
+            float massMag= Parameters.MASS_MAGNIFICATION;
+            float massMax = Parameters.MASS_MAX;
+            float massMin = Parameters.MASS_MIN;
+            rbParent.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // ¿—Ê‚ğİ’è
             Debug.Log(transform.parent.name + " : " + rbParent.mass + "kg");
         }
     }

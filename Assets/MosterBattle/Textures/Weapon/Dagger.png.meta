@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: 6fe0337bab2cc1046bc5e52274f48041
+guid: d841e086488a59c45b84ae0e260c6ae3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1488369032495627275
-    second: Braze_0
+      213: -2486521743634864436
+    second: Dagger_0
+  - first:
+      213: -2233438043662490273
+    second: Dagger_1
+  - first:
+      213: 2143774042229285547
+    second: Dagger_2
+  - first:
+      213: 281995780705280719
+    second: Dagger_3
+  - first:
+      213: 1873461278561640320
+    second: Dagger_4
+  - first:
+      213: -4516685652848253980
+    second: Dagger_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,23 +154,133 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Braze_0
+      name: Dagger_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 10
-        width: 279
-        height: 280
+        x: 49
+        y: 27
+        width: 192
+        height: 253
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0cf794dfbfb7a410800000000000000
-      internalID: 1488369032495627275
+      spriteID: cc6eb58f5a91e7dd0800000000000000
+      internalID: -2486521743634864436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dagger_1
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 223
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5567abbeeb3101e0800000000000000
+      internalID: -2233438043662490273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dagger_2
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 207
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba2a7c9122730cd10800000000000000
+      internalID: 2143774042229285547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dagger_3
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 107
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc2e8112ba9d9e300800000000000000
+      internalID: 281995780705280719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dagger_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 47
+        width: 40
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08f9d195b1fdff910800000000000000
+      internalID: 1873461278561640320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dagger_5
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 47
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e360e344528151c0800000000000000
+      internalID: -4516685652848253980
       vertices: []
       indices: 
       edges: []
@@ -164,7 +289,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: eb01478f62088264d9921cf8083b3215
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -173,8 +298,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Braze_0: 1488369032495627275
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

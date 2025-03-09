@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using System.Threading;
 using System;
+using UnityEditor.Experimental.GraphView;
 
 public class Monster : MonoBehaviour
 {
@@ -195,11 +196,11 @@ public class Monster : MonoBehaviour
     }
 
     //ダッシュ：相手に向かって進む
-    async virtual protected Task Dash(float force) 
+    async virtual protected Task Forward(float force) 
     {
         if (canceler.IsCancel) return;
 
-        ActionBar.SendText("Dash");
+        ActionBar.SendText("Forward");
 
         IsDashing = true;
 
@@ -232,7 +233,7 @@ public class Monster : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_BACKSTEP);
     }
 
-    //ジャンプ (100で画面上まで飛ぶ)
+    // 垂直ジャンプ (100で画面上まで飛ぶ)
     async virtual protected Task Jump(float height) 
     {
         if (canceler.IsCancel) return;
@@ -246,7 +247,75 @@ public class Monster : MonoBehaviour
             // 必要なジャンプ力を計算
             float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
 
-            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(0, jumpForce) * Parameters.JUMP_FORCE_SCALE, ForceMode2D.Impulse);
+        }
+
+        await Wait(Parameters.ACTION_INTERVAL_JUMP);
+    }
+
+    // 前斜めジャンプ
+    async virtual protected Task JumpForward(float height)
+    {
+        if (canceler.IsCancel) return;
+
+        ActionBar.SendText("JumpForward");
+
+        if (IsGrounded)
+        {
+            IsJumping = true;
+
+            //相手を見る
+            LookAtEnemy();
+
+            //必要なジャンプ力を計算
+            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
+            jumpForce *= Parameters.JUMP_FORCE_SCALE;
+
+
+            //ジャンプ方向を計算
+            Vector2 dir = Vector2.zero;
+            dir = Parameters.FORWARD_JUMP_DIRECTION;
+
+            if (Direction.x < 0) 
+            {
+                dir.x *= -1;
+            }
+
+            rb.AddForce(dir * jumpForce, ForceMode2D.Impulse);
+        }
+
+        await Wait(Parameters.ACTION_INTERVAL_JUMP);
+    }
+
+    // 後斜めジャンプ
+    async virtual protected Task JumpBackward(float height)
+    {
+        if (canceler.IsCancel) return;
+
+        ActionBar.SendText("JumpBackward");
+
+        if (IsGrounded)
+        {
+            IsJumping = true;
+
+            //相手を見る
+            LookAtEnemy();
+
+            //必要なジャンプ力を計算
+            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
+            jumpForce *= Parameters.JUMP_FORCE_SCALE;
+
+
+            //ジャンプ方向を計算
+            Vector2 dir = Vector2.zero;
+            dir = Parameters.BACKWARD_JUMP_DIRECTION;
+
+            if (Direction.x < 0)
+            {
+                dir.x *= -1;
+            }
+
+            rb.AddForce(dir * jumpForce, ForceMode2D.Impulse);
         }
 
         await Wait(Parameters.ACTION_INTERVAL_JUMP);

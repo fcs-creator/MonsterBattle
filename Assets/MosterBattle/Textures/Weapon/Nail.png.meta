@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 6fe0337bab2cc1046bc5e52274f48041
+guid: 9f5b61c69529753449730eb34d5e56e5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1488369032495627275
-    second: Braze_0
+      213: -6236935491567674646
+    second: Nail_0
+  - first:
+      213: -8718590350971602233
+    second: Nail_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +142,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Braze_0
+      name: Nail
       rect:
         serializedVersion: 2
-        x: 11
-        y: 10
-        width: 279
-        height: 280
+        x: 0
+        y: 0
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +157,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0cf794dfbfb7a410800000000000000
-      internalID: 1488369032495627275
+      spriteID: 7ca7034d448510780800000000000000
+      internalID: -8718590350971602233
       vertices: []
       indices: 
       edges: []
@@ -164,7 +167,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: eb01478f62088264d9921cf8083b3215
+    spriteID: 55f0b049cf80df04d8ebc355bc65f2d7
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +177,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Braze_0: 1488369032495627275
+      Nail: -8718590350971602233
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

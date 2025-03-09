@@ -10,12 +10,13 @@ public static class Parameters
 {
     //モンスター
     public const float GRAVITY_SCALE = 3;                                       //重力
-    public const float ACTION_FORCE_SCALE = 4f;                               //アクションの力の補正倍率 
-    public const float KNOCKBACK_FORCE = 15;                                    //ノックバックの力
+    public const float ACTION_FORCE_SCALE = 5;                                  //アクションの力の補正倍率
+    public const float JUMP_FORCE_SCALE = 3f;                                   //ジャンプの力の補正倍率
+    public const float KNOCKBACK_FORCE = 30;                                    //ノックバックの力
     public const float MAX_VELOCITY_X = 50;                                     //最高速度_X
     public const float MAX_VELOCITY_Y = 50;                                     //最高速度_Y
     public const float DEAD_LINE_X = 40;                                        //死亡ラインX
-    public const float DEAD_LINE_Y_UP = 25;                                     //死亡ライン上Y
+    public const float DEAD_LINE_Y_UP = 40;                                     //死亡ライン上Y
     public const float DEAD_LINE_Y_DOWN = -20;                                  //死亡ライン下Y
     public const int ENEMY_CHECK_FREAKENCE = 20;                                //索敵の頻度
     
@@ -23,23 +24,28 @@ public static class Parameters
     public const float START_INTERVAL = 2.0f;                                   //アクション開始までの待ち時間
     public const float ACTION_INTERVAL_DASH = 2.0f;                             //ダッシュ
     public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //バックステップ
-    public const float ACTION_INTERVAL_JUMP = 0.5f;                             //ジャンプ
+    public const float ACTION_INTERVAL_JUMP = 1.0f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
     public const float ACTION_INTERVAL_SHOT = 3.0f;                             //武器を投げる
     public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
     public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //バックステップ判定を解除する速度
-    
+
+    public static readonly Vector2 FORWARD_JUMP_DIRECTION = new Vector2(0.3f, 0.7f);    //前ジャンプの方向
+    public static readonly Vector2 BACKWARD_JUMP_DIRECTION = new Vector2(-0.3f, 0.7f);  //後ジャンプの方向
+
     //ボディ
-    public const float MASS_MAGNIFICATION = 1.0f;                               //面積に対する重さの倍率
+    public const float MASS_MAGNIFICATION = 3;                                  //面積に対する重さの倍率
+    public const float MASS_MAX = 100;                                          //最大質量
+    public const float MASS_MIN = 5;                                            //最小質量
 
     //武器
     public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.25f;                    //武器が当たったときの上方向への吹き飛ばしの加算値
     public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ガード時の武器のダメージの軽減率
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
     public const float WEAPON_STRIKE_FORCE = 200;                               //武器が当たったときに吹き飛ばす力
-    public const float WEAPON_DAMAGE = 8;                                       //武器によるダメージ値
-    public const float WEAPON_GRAVITY_SCALE = 1;                                //武器にかかる重力
+    public const float WEAPON_DAMAGE = 15;                                       //武器によるダメージ値
+    public const float WEAPON_GRAVITY_SCALE = 3;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
     public const float WEAPON_INTERVAL_DRAWING = 1;                             //抜刀後の時間
@@ -47,7 +53,6 @@ public static class Parameters
     //ガード
     public const float GUARD_DURATION = 1.0f;                                   //継続時間
     public const float GUARD_STUN_DURATION = 5f;                                //ガードが決まった時のスタン時間
-
 
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
@@ -58,8 +63,9 @@ public static class Parameters
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間
 
     //UI
-    public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 4f);        //HPバーの表示オフセット位置
-    public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-5f);
+    public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 4f);                   //HPバーの表示オフセット位置
+    public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-5f);               //アクションバーの表示オフセット位置
+    
 }
 
 public class GameManager : MonoBehaviour
