@@ -50,6 +50,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: MagicBook
+    uniqueID: 1253982843
+    locked: 0
   - name: Guard
     uniqueID: 43884335
     locked: 0
@@ -58,6 +61,12 @@ TagManager:
     locked: 0
   - name: Weapon
     uniqueID: 38872877
+    locked: 0
+  - name: VFXStatus
+    uniqueID: 3479013963
+    locked: 0
+  - name: VFX
+    uniqueID: 3783106335
     locked: 0
   - name: UI
     uniqueID: 1525303889

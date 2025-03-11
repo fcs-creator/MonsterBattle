@@ -5,7 +5,7 @@ public class Elder : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Forward(50);
+        await Forward(70);
         
         await Attack();
         

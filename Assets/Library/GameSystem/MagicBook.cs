@@ -8,8 +8,19 @@ public class MagicBook : MonoBehaviour
     [SerializeField] GameObject fireBallPrefab;     //ファイアーボールのプレハブ
     [SerializeField] GameObject thunderPrefab;      //サンダーのプレハブ
     [SerializeField] bool isActiveRotating = false; //回転するかどうか
+    [SerializeField] bool isActiveUpDowning = false; //上下するかどうか
 
     float rotationSpeed = 120.0f; //回転速度
+
+    //上下移動
+    float upDownSpeed = 1f;     //上下する速度
+    public float amplitude = 1.0f; // 振幅: 上下の移動量
+    Vector3 startPosition;
+
+    void Start()
+    {
+        startPosition = transform.position;
+    }
 
     async public Task FireBall(Monster monster, int num, float speed) 
     {
@@ -47,8 +58,20 @@ public class MagicBook : MonoBehaviour
         {
             Rotate();
         }
+
+        if (isActiveUpDowning)
+        {
+            UpDown();
+        }
     }
 
+    void UpDown() 
+    {
+        // 上下に滑らかに動かす
+        float newY = startPosition.y + Mathf.Sin(Time.time * upDownSpeed) * amplitude;
+        transform.position = new Vector3(startPosition.x, newY, startPosition.z);
+    }
+    
     void Rotate() 
     {
         // 現在の回転を取得

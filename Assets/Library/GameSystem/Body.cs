@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 public class Body : MonoBehaviour
 {
@@ -81,23 +82,28 @@ public class Body : MonoBehaviour
     public async Task Stun() 
     {
         await FlashAndHitStopTask();
-
-        await Wait(Parameters.GUARD_STUN_DURATION);
     }
 
     private async Task FlashAndHitStopTask()
     {
-        // スプライトの色を変更
-        sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0.5f); // 半透明に設定
-        await Wait(flashDuration);
+        float elapsedTime = 0f;
 
-        // ヒットストップとスローモーションの処理
-        Time.timeScale = slowMotionScale;
-        await Wait(hitStopDuration);
-        Time.timeScale = 1f;
+        while (elapsedTime < Parameters.GUARD_STUN_DURATION && canceler.IsNotCancel)
+        {
+            // スプライトの色を変更
+            sr.color = new Color(originalColor.r * 0.5f, originalColor.g * 0.5f, originalColor.b * 0.5f, 0.5f); // 半透明に設定
+            await Wait(flashDuration);
+            elapsedTime += flashDuration;
 
-        // スプライトの色を元に戻す
-        sr.color = originalColor;
+            // スプライトの色を元に戻す
+            sr.color = originalColor;
+            await Wait(flashDuration);
+            elapsedTime += flashDuration;
+
+            elapsedTime += Time.deltaTime;
+            AudioManager.Instance.PlaySE(Parameters.SE_STAN);
+            await Task.Yield();
+        }
     }
 
     async protected Task Wait(float sec)
@@ -105,5 +111,14 @@ public class Body : MonoBehaviour
         if (canceler.IsCancel) return;
 
         await Task.Delay((int)(sec * 1000), canceler.Token);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == Tags.Body) 
+        {
+            // ボディ同士が衝突した際のSE再生
+            AudioManager.Instance.PlaySE(Parameters.SE_COLLIDE_BODY);
+        }   
     }
 }

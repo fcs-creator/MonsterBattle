@@ -8,18 +8,12 @@ public class Braze : Monster
         await Guard();
 
         await Forward(100);
-        
+
         await Attack();
-        
+
         await BackStep(50);
-        
-        //await MagicBook.FireBall(this,5,30f);
-        
-        await JumpForward(40);
 
-        //await JumpBackward(100);
-
-        //await Jump();
+        await JumpForward(30);
     }
 
 }

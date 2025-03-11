@@ -11,8 +11,23 @@ public class Weapon : MonoBehaviour
 {
     public Monster Owner { get; private set; }          // 武器の所有者(モンスター)
     public bool IsHitableOwner { get; private set; }    // 武器が所有者に当たるか
-    public float Damage { get; private set; }           // 武器のダメージ
     public float StrikeForce { get; private set; }      // 武器の吹き飛ばす力
+
+    // 武器のダメージ
+    public float Damage
+    {
+        get
+        {
+            damage = CalcutlateDamage();
+            return damage;
+        }
+        private set
+        {
+            damage = value;
+        }      
+    }
+
+    private float damage;
 
     Vector3 defaultLocalPosition;   // 武器の初期座標
     Vector3 defaultLocalScale;      // 武器の初期スケール
@@ -23,6 +38,8 @@ public class Weapon : MonoBehaviour
 
     Vector3 initialOffset;
     float orbitRadius;
+
+    bool isShot;
 
     //タスクをキャンセルするための共通トークン
     readonly Canceler canceler = new Canceler();
@@ -61,6 +78,11 @@ public class Weapon : MonoBehaviour
             weapons.Add(child.gameObject);// 子オブジェクトをリストに追加
         }
 
+        float area = 0.0f;
+        float massMag = Parameters.MASS_WEAPON_MAGNIFICATION;
+        float massMax = Parameters.MASS_WEAPON_MAX;
+        float massMin = Parameters.MASS_WEAPON_MIN;
+
         foreach (GameObject obj in weapons)
         {
             // タグを設定
@@ -76,8 +98,14 @@ public class Weapon : MonoBehaviour
                 var weaponCollider = gameObject.AddComponent<PolygonCollider2D>();
                 weaponCollider.autoTiling = true;
                 weaponCollider.isTrigger = true;
+                area += CalculateScaledArea(weaponCollider);
             }
         }
+
+        rb.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // 質量を設定
+        Debug.Log("Weapon >> " + transform.parent.name + " : " + rb.mass + "kg");
+
+        isShot = false;
 
         // 最初は武器を隠しておく
         SetActive(false);
@@ -216,6 +244,9 @@ public class Weapon : MonoBehaviour
         if (canceler.IsCancel) return;
 
         Owner.ActionBar.SendText("Weapon-Drawing");
+
+        //SEを再生
+        AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_DRAWING);
 
         float elapsedTime = 0f;
         float s = Parameters.WEAPON_INTERVAL_DRAWING;
@@ -377,6 +408,8 @@ public class Weapon : MonoBehaviour
     {
         if (canceler.IsCancel) return;
 
+        isShot = true;
+        
         Owner.ActionBar.SendText("Weapon-Shot");
 
         //モンスターの向きによって武器飛ばす方向を変える
@@ -389,12 +422,15 @@ public class Weapon : MonoBehaviour
         //武器から手を離す
         SetGripWeapon(false);
 
+        //SE再生
+        AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_SHOT);
+
         //飛ばす
-        rb.AddForce(direction * power * dir, ForceMode2D.Impulse);
+        rb.AddForce(direction * power * dir * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
-        //await Default();
+        isShot = false;
     }
 
     //武器をモンスターによる制御から切り離す
@@ -460,6 +496,40 @@ public class Weapon : MonoBehaviour
         {
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.gravityScale = Parameters.WEAPON_GRAVITY_SCALE;
+        }
+    }
+
+    float CalculateScaledArea(PolygonCollider2D collider)
+    {
+        // ローカル座標での面積を計算
+        Vector2[] points = collider.points;
+        float localArea = 0;
+        for (int i = 0; i < points.Length; i++)
+        {
+            Vector2 current = points[i];
+            Vector2 next = points[(i + 1) % points.Length];
+            localArea += current.x * next.y - current.y * next.x;
+        }
+        localArea = Mathf.Abs(localArea) * 0.5f;
+
+        // 親のスケールも含めてスケールを適用
+        Vector3 lossyScale = collider.transform.lossyScale;
+        float totalScaledArea = localArea * Mathf.Abs(lossyScale.x) * Mathf.Abs(lossyScale.y);
+
+        return totalScaledArea;
+    }
+
+    public float CalcutlateDamage() 
+    {
+        if (isShot)
+        {
+            return rb.mass * Parameters.WEAPON_DAMAGE_SCALE;
+        }
+        else 
+        {
+            float speed = rb.linearVelocity.magnitude;
+            if (speed < 1) speed = 1;
+            return rb.mass * speed * Parameters.WEAPON_DAMAGE_SCALE;
         }
     }
 }

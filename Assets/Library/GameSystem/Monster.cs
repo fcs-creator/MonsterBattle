@@ -153,6 +153,9 @@ public class Monster : MonoBehaviour
                 gameObject.SetActive(false);
                 HpBar.gameObject.SetActive(false);
 
+                //死亡エフェクトを再生
+                VFXManager.Instance.Play(VFX.Dead, transform.position, transform.rotation);
+
                 //アクションをキャンセル
                 canceler.Cancel();
             }
@@ -240,17 +243,7 @@ public class Monster : MonoBehaviour
 
         ActionBar.SendText("Jump");
 
-        if (IsGrounded)
-        {
-            IsJumping = true;
-
-            // 必要なジャンプ力を計算
-            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
-
-            rb.AddForce(new Vector2(0, jumpForce) * Parameters.JUMP_FORCE_SCALE, ForceMode2D.Impulse);
-        }
-
-        await Wait(Parameters.ACTION_INTERVAL_JUMP);
+        await JumpCommon(Vector2.up, height);
     }
 
     // 前斜めジャンプ
@@ -260,31 +253,16 @@ public class Monster : MonoBehaviour
 
         ActionBar.SendText("JumpForward");
 
-        if (IsGrounded)
+        //ジャンプ方向を計算
+        Vector2 dir = Vector2.zero;
+        dir = Parameters.FORWARD_JUMP_DIRECTION;
+
+        if (Direction.x < 0)
         {
-            IsJumping = true;
-
-            //相手を見る
-            LookAtEnemy();
-
-            //必要なジャンプ力を計算
-            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
-            jumpForce *= Parameters.JUMP_FORCE_SCALE;
-
-
-            //ジャンプ方向を計算
-            Vector2 dir = Vector2.zero;
-            dir = Parameters.FORWARD_JUMP_DIRECTION;
-
-            if (Direction.x < 0) 
-            {
-                dir.x *= -1;
-            }
-
-            rb.AddForce(dir * jumpForce, ForceMode2D.Impulse);
+            dir.x *= -1;
         }
 
-        await Wait(Parameters.ACTION_INTERVAL_JUMP);
+        await JumpCommon(dir, height);
     }
 
     // 後斜めジャンプ
@@ -294,8 +272,24 @@ public class Monster : MonoBehaviour
 
         ActionBar.SendText("JumpBackward");
 
+        //ジャンプ方向を計算
+        Vector2 dir = Vector2.zero;
+        dir = Parameters.BACKWARD_JUMP_DIRECTION;
+
+        if (Direction.x < 0)
+        {
+            dir.x *= -1;
+        }
+
+        await JumpCommon(dir, height);
+    }
+
+    async Task JumpCommon(Vector2 direction, float height)
+    {
         if (IsGrounded)
         {
+            AudioManager.Instance.PlaySE(Parameters.SE_JUMP);
+
             IsJumping = true;
 
             //相手を見る
@@ -305,17 +299,7 @@ public class Monster : MonoBehaviour
             float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
             jumpForce *= Parameters.JUMP_FORCE_SCALE;
 
-
-            //ジャンプ方向を計算
-            Vector2 dir = Vector2.zero;
-            dir = Parameters.BACKWARD_JUMP_DIRECTION;
-
-            if (Direction.x < 0)
-            {
-                dir.x *= -1;
-            }
-
-            rb.AddForce(dir * jumpForce, ForceMode2D.Impulse);
+            rb.AddForce(direction * jumpForce, ForceMode2D.Impulse);
         }
 
         await Wait(Parameters.ACTION_INTERVAL_JUMP);
@@ -364,6 +348,9 @@ public class Monster : MonoBehaviour
                 {
                     Vector2 direction = (transform.position - obj.transform.position).normalized;
                     direction = new Vector2(direction.x, direction.y + Parameters.WEAPON_ONHIT_ADD_DIRECTION_Y).normalized;
+                    
+                    //武器のダメージ値の計算
+                    weapon.CalcutlateDamage();
 
                     if (IsGuarding)
                     {
@@ -372,12 +359,25 @@ public class Monster : MonoBehaviour
                     }
                     else
                     {
+                        PlayHitVFX(obj, other);
+
+                        //ダメージ加えて吹き飛ばす
                         HpBar.TakeDamage(weapon.Damage);
                         rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
                     }
                 }
             }
         }
+    }
+
+    //攻撃のヒットエフェクトの再生
+    void PlayHitVFX(GameObject weapon, Collider2D weaponCollider) 
+    {
+        // 衝突点を取得
+        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
+
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(VFX.HitS, collisionPoint, transform.rotation);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -389,6 +389,13 @@ public class Monster : MonoBehaviour
         {
             IsJumping = false;
             IsGrounded = true;
+
+            if(rb.linearVelocity.magnitude > Parameters.LAND_VELOCITY)
+            {
+                //着地音を再生
+                AudioManager.Instance.PlaySE(Parameters.SE_LAND);
+            }
+            
         }
 
         //魔法によるダメージ
@@ -508,7 +515,7 @@ public class Monster : MonoBehaviour
             // 生きている敵を抽出
             List<Monster> ariveEnemies = enemies.Where(e => !e.IsDead).ToList();
 
-            //距離順に並び変えて更新
+            // 距離順に並び変えて更新
             Enemies = ariveEnemies.OrderBy(obj => Vector3.Distance(obj.transform.position, transform.position)).ToList();
 
             if (Enemies.Count > 0)

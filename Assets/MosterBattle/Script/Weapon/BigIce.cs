@@ -13,6 +13,8 @@ public class BigIce: Weapon
 
         await Rotate(100, -100, 0.5f);
 
-        await Shot(new Vector2(0.5f, -0.5f), 50f);
+        await Drawing();
+
+        await Shot(new Vector2(0.4f, -0.6f), 40f);
     }
 }
