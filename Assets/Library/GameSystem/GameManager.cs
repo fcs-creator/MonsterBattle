@@ -13,6 +13,7 @@ public static class Parameters
     public const float ACTION_FORCE_SCALE = 5;                                  //アクションの力の補正倍率
     public const float JUMP_FORCE_SCALE = 3f;                                   //ジャンプの力の補正倍率
     public const float KNOCKBACK_FORCE = 40;                                    //ノックバックの力
+    public const float KNOCKBACK_RANDOM_RANGE_X = 0.3f;                         //ノックバックのランダムX方向の範囲
     public const float MAX_VELOCITY_X = 50;                                     //最高速度_X
     public const float MAX_VELOCITY_Y = 50;                                     //最高速度_Y
     public const float DEAD_LINE_X = 40;                                        //死亡ラインX
@@ -30,6 +31,7 @@ public static class Parameters
     public const float ACTION_INTERVAL_SHOT = 3.0f;                             //武器を投げる
     public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
+    public const float ACTION_INTERVAL_FLOATING = 1.0f;                         //浮遊
     public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //バックステップ判定を解除する速度
 
     public static readonly Vector2 FORWARD_JUMP_DIRECTION = new Vector2(0.3f, 0.7f);    //前ジャンプの方向

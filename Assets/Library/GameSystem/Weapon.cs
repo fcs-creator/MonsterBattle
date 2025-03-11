@@ -170,7 +170,7 @@ public class Weapon : MonoBehaviour
     }
 
     //初期位置にワープ
-    public void WarpDefault()
+    void WarpDefault()
     {
         //武器を握った状態にする
         SetGripWeapon(true);
@@ -413,10 +413,14 @@ public class Weapon : MonoBehaviour
         Owner.ActionBar.SendText("Weapon-Shot");
 
         //モンスターの向きによって武器飛ばす方向を変える
-        float dir = 1;   
-        if (!Owner.IsFacingRight) 
+        float dir = 1;
+        if (!Owner.IsFacingRight)
         {
             dir *= -1;
+        }
+        else 
+        {
+            direction.y *= -1;
         }
 
         //武器から手を離す

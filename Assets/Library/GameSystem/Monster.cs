@@ -25,6 +25,7 @@ public class Monster : MonoBehaviour
     public bool IsDead { get; private set; }                                                    //死んでいるか
     public bool IsFacingRight { get; private set; }                                             //右を向いているか
     public bool IsStunned { get; set; }                                                         //スタン状態か
+    public bool IsFloating { get; set; }                                                        //浮遊状態か
 
     Body body;          //本体
     Weapon weapon;      //武器
@@ -320,6 +321,23 @@ public class Monster : MonoBehaviour
         IsStunable = true;
     }
 
+    //浮遊状態の切り替え
+    async protected Task Floating(bool value) 
+    {
+        IsFloating = value;
+
+        if (IsFloating)
+        {
+            rb.gravityScale = 0;   
+        }
+        else
+        {
+            rb.gravityScale = Parameters.GRAVITY_SCALE;
+        }
+
+        await Wait(Parameters.ACTION_INTERVAL_FLOATING);
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         GameObject obj = other.gameObject;
@@ -463,6 +481,7 @@ public class Monster : MonoBehaviour
         if (HasComponent<Rigidbody2D>(enemy) && HasComponent<Rigidbody2D>(gameObject))
         { 
             Vector2 direction = (enemy.transform.position - gameObject.transform.position).normalized;
+            direction.x += UnityEngine.Random.Range(-Parameters.KNOCKBACK_RANDOM_RANGE_X, Parameters.KNOCKBACK_RANDOM_RANGE_X);
             gameObject.GetComponent<Rigidbody2D>().AddForce(direction * -Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
             enemy.GetComponent<Rigidbody2D>().AddForce(direction * Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
         }
