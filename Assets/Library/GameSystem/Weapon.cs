@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
@@ -9,11 +9,11 @@ using System.Threading;
 
 public class Weapon : MonoBehaviour
 {
-    public Monster Owner { get; private set; }          // •Ší‚ÌŠ—LÒ(ƒ‚ƒ“ƒXƒ^[)
-    public bool IsHitableOwner { get; private set; }    // •Ší‚ªŠ—LÒ‚É“–‚½‚é‚©
-    public float StrikeForce { get; private set; }      // •Ší‚Ì‚«”ò‚Î‚·—Í
+    public Monster Owner { get; private set; }          // æ­¦å™¨ã®æ‰€æœ‰è€…(ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼)
+    public bool IsHitableOwner { get; private set; }    // æ­¦å™¨ãŒæ‰€æœ‰è€…ã«å½“ãŸã‚‹ã‹
+    public float StrikeForce { get; private set; }      // æ­¦å™¨ã®å¹ãé£›ã°ã™åŠ›
 
-    // •Ší‚Ìƒ_ƒ[ƒW
+    // æ­¦å™¨ã®ãƒ€ãƒ¡ãƒ¼ã‚¸
     public float Damage
     {
         get
@@ -29,9 +29,9 @@ public class Weapon : MonoBehaviour
 
     private float damage;
 
-    Vector3 defaultLocalPosition;   // •Ší‚Ì‰ŠúÀ•W
-    Vector3 defaultLocalScale;      // •Ší‚Ì‰ŠúƒXƒP[ƒ‹
-    Quaternion defaultRotation;     // •Ší‚Ì‰Šú‰ñ“]
+    Vector3 defaultLocalPosition;   // æ­¦å™¨ã®åˆæœŸåº§æ¨™
+    Vector3 defaultLocalScale;      // æ­¦å™¨ã®åˆæœŸã‚¹ã‚±ãƒ¼ãƒ«
+    Quaternion defaultRotation;     // æ­¦å™¨ã®åˆæœŸå›è»¢
 
     Rigidbody2D rb;
     List<GameObject> weapons;
@@ -41,41 +41,41 @@ public class Weapon : MonoBehaviour
 
     bool isShot;
 
-    //ƒ^ƒXƒN‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é‚½‚ß‚Ì‹¤’Êƒg[ƒNƒ“
+    //ã‚¿ã‚¹ã‚¯ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ãŸã‚ã®å…±é€šãƒˆãƒ¼ã‚¯ãƒ³
     readonly Canceler canceler = new Canceler();
 
     void Awake()
     {
-        // 1‚Âã‚ÌŠK‘w‚É‚¢‚éƒ‚ƒ“ƒXƒ^[‚ÌƒIƒuƒWƒFƒNƒg‚ğ’T‚µ‚ÄƒZƒbƒg
+        // 1ã¤ä¸Šã®éšå±¤ã«ã„ã‚‹ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¢ã—ã¦ã‚»ãƒƒãƒˆ
         Owner = transform.parent.GetComponent<Monster>();
 
-        // •¨—‹““®‚ğ’Ç‰Á‚µ‚Ä–³Œø‚É‚µ‚Ä‚¨‚­
+        // ç‰©ç†æŒ™å‹•ã‚’è¿½åŠ ã—ã¦ç„¡åŠ¹ã«ã—ã¦ãŠã
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.centerOfMass = new Vector2(0, 0);
         rb.simulated = true;
         SetGripWeapon(true);
 
-        //•Ší‚Ìƒ_ƒ[ƒW
+        //æ­¦å™¨ã®ãƒ€ãƒ¡ãƒ¼ã‚¸
         Damage = Parameters.WEAPON_DAMAGE;
 
-        //•Ší‚Ì‚«”ò‚Î‚·—Í
+        //æ­¦å™¨ã®å¹ãé£›ã°ã™åŠ›
         StrikeForce = Parameters.WEAPON_STRIKE_FORCE;
 
-        // ‰Šú‚ÌˆÊ’uA‰ñ“]AƒXƒP[ƒ‹‚ğ•Û‘¶
+        // åˆæœŸã®ä½ç½®ã€å›è»¢ã€ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ä¿å­˜
         defaultLocalPosition = transform.localPosition;
         defaultLocalScale = transform.localScale;
         defaultRotation = transform.rotation;
 
-        // ‰ŠúƒIƒtƒZƒbƒg‚ğŒvZ
+        // åˆæœŸã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¨ˆç®—
         initialOffset = transform.position - Owner.transform.position;
         orbitRadius = initialOffset.magnitude;
 
-        //•Šíˆµ‚¢‚ÌƒIƒuƒWƒFƒNƒg‚ğ‚·‚×‚Äæ“¾
+        //æ­¦å™¨æ‰±ã„ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã™ã¹ã¦å–å¾—
         weapons = new List<GameObject>();
-        weapons.Add(gameObject);//e‚ğ’Ç‰Á
+        weapons.Add(gameObject);//è¦ªã‚’è¿½åŠ 
         foreach (Transform child in transform)
         {
-            weapons.Add(child.gameObject);// qƒIƒuƒWƒFƒNƒg‚ğƒŠƒXƒg‚É’Ç‰Á
+            weapons.Add(child.gameObject);// å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
         }
 
         float area = 0.0f;
@@ -85,16 +85,16 @@ public class Weapon : MonoBehaviour
 
         foreach (GameObject obj in weapons)
         {
-            // ƒ^ƒO‚ğİ’è
+            // ã‚¿ã‚°ã‚’è¨­å®š
             gameObject.tag = Tags.Weapon;
 
             if (HasComponent<SpriteRenderer>(obj))
             {
-                //ƒXƒvƒ‰ƒCƒg‚Ìƒ\[ƒgƒŒƒCƒ„[‚ğİ’è
+                //ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚½ãƒ¼ãƒˆãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¨­å®š
                 SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
                 sr.sortingLayerName = SortLayer.Weapon;
 
-                // ‰æ‘œ‚ÌŒ`ó‚É‡‚í‚¹‚ÄƒRƒ‰ƒCƒ_‚ğİ’è
+                // ç”»åƒã®å½¢çŠ¶ã«åˆã‚ã›ã¦ã‚³ãƒ©ã‚¤ãƒ€ã‚’è¨­å®š
                 var weaponCollider = gameObject.AddComponent<PolygonCollider2D>();
                 weaponCollider.autoTiling = true;
                 weaponCollider.isTrigger = true;
@@ -102,18 +102,31 @@ public class Weapon : MonoBehaviour
             }
         }
 
-        rb.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // ¿—Ê‚ğİ’è
+        rb.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // è³ªé‡ã‚’è¨­å®š
         Debug.Log("Weapon >> " + transform.parent.name + " : " + rb.mass + "kg");
 
         isShot = false;
 
-        // Å‰‚Í•Ší‚ğ‰B‚µ‚Ä‚¨‚­
+        // æœ€åˆã¯æ­¦å™¨ã‚’éš ã—ã¦ãŠã
         SetActive(false);
+    }
+
+    // ä»»æ„ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ã‚³ãƒ”ãƒ¼ã—ã¦åˆ¥ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«è¿½åŠ 
+    public static T CopyComponent<T>(T original, GameObject destination) where T : Component
+    {
+        // å…ƒã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‹ã‚‰JSONå½¢å¼ã§ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
+        string json = JsonUtility.ToJson(original);
+
+        // æ–°ã—ã„ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ä½œæˆã—ã¦JSONã‚’é©ç”¨
+        T newComponent = destination.AddComponent<T>();
+        JsonUtility.FromJsonOverwrite(json, newComponent);
+
+        return newComponent;
     }
 
     void Start()
     {
-        _ = ExcecuteActionLoop();   //ŒÄ‚Ño‚µ&Task‚ğ”jŠü
+        _ = ExcecuteActionLoop();   //å‘¼ã³å‡ºã—&Taskã‚’ç ´æ£„
     }
 
     async Task ExcecuteActionLoop()
@@ -149,19 +162,19 @@ public class Weapon : MonoBehaviour
         SetActive(false);
     }
 
-    //Šî–{‚Í‚±‚¿‚ç‚ªŒÄ‚Ño‚³‚ê‚é
+    //åŸºæœ¬ã¯ã“ã¡ã‚‰ãŒå‘¼ã³å‡ºã•ã‚Œã‚‹
     async virtual protected Task Attack()
     {
         await Task.Yield();
     }
 
-    //©“®§Œä‚·‚é•Ší‚ªì‚ê‚é(‚¨‚Ü‚¯—v‘f)
+    //è‡ªå‹•åˆ¶å¾¡ã™ã‚‹æ­¦å™¨ãŒä½œã‚Œã‚‹(ãŠã¾ã‘è¦ç´ )
     async virtual protected Task ActionLoop()
     {
         await Task.Yield();
     }
 
-    //w’è•b”‘Ò‚Â
+    //æŒ‡å®šç§’æ•°å¾…ã¤
     async protected Task Wait(float sec)
     {
         if (canceler.IsCancel) return;
@@ -169,10 +182,10 @@ public class Weapon : MonoBehaviour
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
-    //‰ŠúˆÊ’u‚Éƒ[ƒv
+    //åˆæœŸä½ç½®ã«ãƒ¯ãƒ¼ãƒ—
     void WarpDefault()
     {
-        //•Ší‚ğˆ¬‚Á‚½ó‘Ô‚É‚·‚é
+        //æ­¦å™¨ã‚’æ¡ã£ãŸçŠ¶æ…‹ã«ã™ã‚‹
         SetGripWeapon(true);
 
         transform.SetParent(Owner.transform);
@@ -181,7 +194,7 @@ public class Weapon : MonoBehaviour
         transform.localScale = defaultLocalScale;
     }
 
-    //“®‚«‚ÌŒq‚ª‚è‚ğ•âŠ®‚·‚éŠÖ”
+    //å‹•ãã®ç¹‹ãŒã‚Šã‚’è£œå®Œã™ã‚‹é–¢æ•°
     async Task Lerp(Vector3 startPosition, Quaternion startRotation, Vector3 startScale, Vector3 endPosition, Quaternion endRotation, Vector3 endScale, float second)
     {
         if (canceler.IsCancel) return;
@@ -192,7 +205,7 @@ public class Weapon : MonoBehaviour
         {
             float t = elapsedTime / second;
 
-            // •âŠÔ‚ğs‚¤
+            // è£œé–“ã‚’è¡Œã†
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             transform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
             transform.localScale = Vector3.Lerp(startScale, endScale, t);
@@ -202,35 +215,35 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //•Ší‚ğ‰ŠúˆÊ’u‚ÉƒŠƒZƒbƒg‚·‚é
+    //æ­¦å™¨ã‚’åˆæœŸä½ç½®ã«ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     async protected Task Default()
     {
-        //•Ší‚ğˆ¬‚éƒ‚[ƒh‚É‚·‚é
+        //æ­¦å™¨ã‚’æ¡ã‚‹ãƒ¢ãƒ¼ãƒ‰ã«ã™ã‚‹
         SetGripWeapon(true);
 
-        //Œ»İ‚Ìó‘Ô
+        //ç¾åœ¨ã®çŠ¶æ…‹
         Vector3 currentPosition = transform.position;
         Quaternion currentRotation = transform.rotation;
         Vector3 currentScale = transform.localScale;
 
-        //ƒŠƒZƒbƒgŒã‚Ìó‘Ô(Š—L‚·‚éƒ‚ƒ“ƒXƒ^[‚Ì‰ñ“]‚ÆŠgk‚Í”½‰f‚µ‚È‚¢)
+        //ãƒªã‚»ãƒƒãƒˆå¾Œã®çŠ¶æ…‹(æ‰€æœ‰ã™ã‚‹ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®å›è»¢ã¨æ‹¡ç¸®ã¯åæ˜ ã—ãªã„)
         Vector3 targetPosition;
         Quaternion targetRotation = defaultRotation;
         Vector3 targetScale = defaultLocalScale;
 
-        //Œü‚«‚É‚æ‚Á‚Ä–ß‚·ˆÊ’u‚ğ•Ï‚¦‚é
+        //å‘ãã«ã‚ˆã£ã¦æˆ»ã™ä½ç½®ã‚’å¤‰ãˆã‚‹
         if (Owner.IsFacingRight)
             targetPosition = Owner.transform.position + defaultLocalPosition;
         else
             targetPosition = Owner.transform.position - defaultLocalPosition;
 
-        //•âŠ®‚·‚é
+        //è£œå®Œã™ã‚‹
         await Lerp(currentPosition, currentRotation, currentScale, targetPosition, targetRotation, targetScale, Parameters.DEFAULT_RETURN_TIME);
 
-        //ÅŒã‚Ée‚É–ß‚·
+        //æœ€å¾Œã«è¦ªã«æˆ»ã™
         transform.SetParent(Owner.transform);
 
-        // ÅŒã‚ÉŠmÀ‚ÉŒ³‚Ìó‘Ô‚Éİ’è
+        // æœ€å¾Œã«ç¢ºå®Ÿã«å…ƒã®çŠ¶æ…‹ã«è¨­å®š
         transform.localPosition = defaultLocalPosition;
         transform.rotation = targetRotation;
         transform.localScale = targetScale;
@@ -238,14 +251,14 @@ public class Weapon : MonoBehaviour
         await Wait(Parameters.DEFAULT_RETURN_WAIT_TIME);
     }
 
-    //‹‡‚¢”²‚«
+    //å±…åˆã„æŠœã
     async protected Task Drawing()
     {
         if (canceler.IsCancel) return;
 
         Owner.ActionBar.SendText("Weapon-Drawing");
 
-        //SE‚ğÄ¶
+        //SEã‚’å†ç”Ÿ
         AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_DRAWING);
 
         float elapsedTime = 0f;
@@ -253,16 +266,16 @@ public class Weapon : MonoBehaviour
 
         while (elapsedTime < s && canceler.IsNotCancel)
         {
-            // Œo‰ßŠÔ‚ÌŠ„‡‚ğŒvZ
+            // çµŒéæ™‚é–“ã®å‰²åˆã‚’è¨ˆç®—
             float t = elapsedTime / s;
-            // Œo‰ßŠÔ‚ğXV
+            // çµŒéæ™‚é–“ã‚’æ›´æ–°
             elapsedTime += Time.deltaTime;
-            // 1ƒtƒŒ[ƒ€‘Ò‹@
+            // 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…æ©Ÿ
             await Task.Yield();
         }
     }
 
-    //•Ší‚ğw’è‚³‚ê‚½(x, y)ˆÊ’u‚És•b‚ÅˆÚ“®‚³‚¹‚é
+    //æ­¦å™¨ã‚’æŒ‡å®šã•ã‚ŒãŸ(x, y)ä½ç½®ã«sç§’ã§ç§»å‹•ã•ã›ã‚‹
     async protected Task Move(float x, float y, float s)
     {
         if (canceler.IsCancel) return;
@@ -275,21 +288,21 @@ public class Weapon : MonoBehaviour
 
         while (elapsedTime < s && canceler.IsNotCancel)
         {
-            // Œo‰ßŠÔ‚ÌŠ„‡‚ğŒvZ
+            // çµŒéæ™‚é–“ã®å‰²åˆã‚’è¨ˆç®—
             float t = elapsedTime / s;
-            // üŒ`•âŠÔiLerpj‚ÅˆÊ’u‚ğXV
+            // ç·šå½¢è£œé–“ï¼ˆLerpï¼‰ã§ä½ç½®ã‚’æ›´æ–°
             transform.localPosition = Vector2.Lerp(start, target, t);
-            // Œo‰ßŠÔ‚ğXV
+            // çµŒéæ™‚é–“ã‚’æ›´æ–°
             elapsedTime += Time.deltaTime;
-            // 1ƒtƒŒ[ƒ€‘Ò‹@
+            // 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…æ©Ÿ
             await Task.Yield();
         }
 
-        // ÅIˆÊ’u‚ğİ’èiŒë·‚ğ•â³j
+        // æœ€çµ‚ä½ç½®ã‚’è¨­å®šï¼ˆèª¤å·®ã‚’è£œæ­£ï¼‰
         transform.localPosition = target;
     }
 
-    //•Ší‚ğangle“xs•b‚Å‚»‚Ìê‰ñ“]‚³‚¹‚é
+    //æ­¦å™¨ã‚’angleåº¦sç§’ã§ãã®å ´å›è»¢ã•ã›ã‚‹
     async protected Task Spin(float angle, float s)
     {
         if (canceler.IsCancel) return;
@@ -303,17 +316,17 @@ public class Weapon : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / s;
             float zRotation = Mathf.Lerp(initialRotation, targetRotation, t);
-            // Z²‰ñ‚è‚Å‰ñ“]‚³‚¹‚é
+            // Zè»¸å›ã‚Šã§å›è»¢ã•ã›ã‚‹
             transform.rotation = Quaternion.Euler(0, 0, zRotation);
             // With the following line
             await Task.Yield();
         }
 
-        // ÅŒã‚ÉŠmÀ‚É–Ú•WŠp“x‚Ü‚Å‰ñ“]‚³‚¹‚é
+        // æœ€å¾Œã«ç¢ºå®Ÿã«ç›®æ¨™è§’åº¦ã¾ã§å›è»¢ã•ã›ã‚‹
         transform.rotation = Quaternion.Euler(0, 0, targetRotation);
     }
 
-    //•Ší‚ğƒ‚ƒ“ƒXƒ^[‚ÌüˆÍ‚Å‰ñ“]‚³‚¹‚é(ã•ûŒü‚ªŠî€‚Å0‹)
+    //æ­¦å™¨ã‚’ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®å‘¨å›²ã§å›è»¢ã•ã›ã‚‹(ä¸Šæ–¹å‘ãŒåŸºæº–ã§0Â°)
     async protected Task Rotate(float startAngle, float rotAngle, float second) 
     {
         if (canceler.IsCancel) return;
@@ -323,12 +336,12 @@ public class Weapon : MonoBehaviour
         if (!Owner.IsFacingRight)
             transform.localScale = new Vector2(defaultLocalScale.x * -1, defaultLocalScale.y);
 
-        //Œv‰ñ‚è‚©‚Ç‚¤‚©”»’è
+        //æ™‚è¨ˆå›ã‚Šã‹ã©ã†ã‹åˆ¤å®š
         bool clockwise = true;
         if ((Owner.IsFacingRight && rotAngle < 0) || (!Owner.IsFacingRight && rotAngle >= 0))
             clockwise = false;
 
-        //ŠJnŠp“x‚Ì’²®
+        //é–‹å§‹è§’åº¦ã®èª¿æ•´
         float addStartAngle = startAngle;
 
         if ((clockwise && startAngle < 0) || (!clockwise && startAngle > 0))
@@ -347,17 +360,17 @@ public class Weapon : MonoBehaviour
 
         while (!stop && canceler.IsNotCancel)
         {
-            //ƒtƒŒ[ƒ€–ˆ‚Ì‰ñ“]—Ê‚ğŒvZ
+            //ãƒ•ãƒ¬ãƒ¼ãƒ æ¯ã®å›è»¢é‡ã‚’è¨ˆç®—
             step = (rotAngle / second) * Time.deltaTime;
 
-            //ğŒ‚É‰‚¶‚Ä‹t‰ñ“]
+            //æ¡ä»¶ã«å¿œã˜ã¦é€†å›è»¢
             if ((clockwise && rotAngle > 0) || (!clockwise && rotAngle < 0))
                 step *= -1;
 
-            //Œ»İ‚Ü‚Å‚Ì‰ñ“]‘—Ê‚Ì‰ÁZ
+            //ç¾åœ¨ã¾ã§ã®å›è»¢ç·é‡ã®åŠ ç®—
             currentRotAngle += Mathf.Abs(step);
 
-            //‰ñ“]—Ê‚ªw’è—Ê‚É’B‚µ‚½‚çI—¹
+            //å›è»¢é‡ãŒæŒ‡å®šé‡ã«é”ã—ãŸã‚‰çµ‚äº†
             if (currentRotAngle >= Mathf.Abs(rotAngle))
             {
                 currentRotAngle = rotAngle;
@@ -365,7 +378,7 @@ public class Weapon : MonoBehaviour
             }
             else
             {
-                //ˆÊ’uF”¼Œa‚ğŒ³‚ÉˆÚ“®‚µ‚Ä•â³‚·‚é
+                //ä½ç½®ï¼šåŠå¾„ã‚’å…ƒã«ç§»å‹•ã—ã¦è£œæ­£ã™ã‚‹
                 Vector3 desiredPosition = (transform.position - centerObject.position).normalized * orbitRadius + centerObject.position;
                 transform.position = desiredPosition;
                 transform.RotateAround(centerObject.position, Vector3.forward, step);
@@ -377,24 +390,24 @@ public class Weapon : MonoBehaviour
         WarpDefault();
     }
 
-    //•Ší‚ğƒ‚ƒ“ƒXƒ^[‚ÌüˆÍ‚ğ1‰ñ“]‚·‚é
+    //æ­¦å™¨ã‚’ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®å‘¨å›²ã‚’1å›è»¢ã™ã‚‹
     async protected Task Rotation360()
     {
         if (canceler.IsCancel) return;
 
         Transform centerObject = Owner.transform;
 
-        float rotationSpeed = 400.0f; // ‰ñ“]‘¬“x
+        float rotationSpeed = 400.0f; // å›è»¢é€Ÿåº¦
         float angle = 0;
         float angleAmount = 0;
 
         while (angleAmount < 360 && canceler.IsNotCancel)
         {
-            //‰ñ“]F’†S‚ªŠî€
+            //å›è»¢ï¼šä¸­å¿ƒãŒåŸºæº–
             angle = rotationSpeed * Time.deltaTime;
             transform.RotateAround(centerObject.position, Vector3.forward, angle);
 
-            //ˆÊ’uF”¼Œa‚ğŒ³‚ÉˆÚ“®‚µ‚Ä•â³‚·‚é
+            //ä½ç½®ï¼šåŠå¾„ã‚’å…ƒã«ç§»å‹•ã—ã¦è£œæ­£ã™ã‚‹
             Vector3 desiredPosition = (transform.position - centerObject.position).normalized * orbitRadius + centerObject.position;
             transform.position = desiredPosition;
 
@@ -403,7 +416,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //•Ší‚ğw’è‚³‚ê‚½•ûŒü‚É”ò‚Î‚· (Œü‚«‚Í-1~1‚Ì­”‚Åw’è ãŒü‚«:1, ³–Ê:0, ‰ºŒü‚«: -1)
+    //æ­¦å™¨ã‚’æŒ‡å®šã•ã‚ŒãŸæ–¹å‘ã«é£›ã°ã™ (å‘ãã¯-1~1ã®å°‘æ•°ã§æŒ‡å®š ä¸Šå‘ã:1, æ­£é¢:0, ä¸‹å‘ã: -1)
     async protected Task Shot(float directionY, float power)
     {
         if (canceler.IsCancel) return;
@@ -415,7 +428,7 @@ public class Weapon : MonoBehaviour
         float dirY = Mathf.Clamp(directionY, -1.0f, 1.0f);
         float dirX = 1 - Mathf.Abs(dirY);
 
-        //ƒ‚ƒ“ƒXƒ^[‚ÌŒü‚«‚É‚æ‚Á‚Ä•Ší”ò‚Î‚·•ûŒü‚ğ•Ï‚¦‚é
+        //ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®å‘ãã«ã‚ˆã£ã¦æ­¦å™¨é£›ã°ã™æ–¹å‘ã‚’å¤‰ãˆã‚‹
         if (!Owner.IsFacingRight)
         {
             dirX *= -1;
@@ -425,13 +438,13 @@ public class Weapon : MonoBehaviour
             //dirY *= -1;
         }
 
-        //•Ší‚©‚çè‚ğ—£‚·
+        //æ­¦å™¨ã‹ã‚‰æ‰‹ã‚’é›¢ã™
         SetGripWeapon(false);
 
-        //SEÄ¶
+        //SEå†ç”Ÿ
         AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_SHOT);
 
-        //”ò‚Î‚·
+        //é£›ã°ã™
         rb.AddForce(new Vector2(dirX,dirY) * power * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
@@ -439,18 +452,18 @@ public class Weapon : MonoBehaviour
         isShot = false;
     }
 
-    //•Ší‚ğƒ‚ƒ“ƒXƒ^[‚É‚æ‚é§Œä‚©‚çØ‚è—£‚·
+    //æ­¦å™¨ã‚’ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã«ã‚ˆã‚‹åˆ¶å¾¡ã‹ã‚‰åˆ‡ã‚Šé›¢ã™
     async protected Task Purge()
     {
         SetGripWeapon(false);
 
-        // ƒ[ƒ‹ƒhÀ•W‚ğ•Û‘¶
+        // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’ä¿å­˜
         Vector3 worldPosition = transform.position;
 
-        // eƒIƒuƒWƒFƒNƒg‚©‚çØ‚è—£‚·
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰åˆ‡ã‚Šé›¢ã™
         transform.SetParent(null);
 
-        // Œ³‚ÌˆÊ’u‚É–ß‚·
+        // å…ƒã®ä½ç½®ã«æˆ»ã™
         transform.position = worldPosition;
 
         await Task.Yield();
@@ -461,7 +474,7 @@ public class Weapon : MonoBehaviour
         return obj.GetComponent<T>() != null;
     }
 
-    //©•ª‚ÌBody‚Ì“–‚½‚è”»’è‚©‚ç1“xo‚½•Ší‚Í“–‚½‚é‚æ‚¤‚É‚È‚é
+    //è‡ªåˆ†ã®Bodyã®å½“ãŸã‚Šåˆ¤å®šã‹ã‚‰1åº¦å‡ºãŸæ­¦å™¨ã¯å½“ãŸã‚‹ã‚ˆã†ã«ãªã‚‹
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag(Tags.Body))
@@ -488,7 +501,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //•Ší‚ğˆ¬‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìó‘Ô‚ğƒZƒbƒg
+    //æ­¦å™¨ã‚’æ¡ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®çŠ¶æ…‹ã‚’ã‚»ãƒƒãƒˆ
     void SetGripWeapon(bool value) 
     {
         if (value)
@@ -507,7 +520,7 @@ public class Weapon : MonoBehaviour
 
     float CalculateScaledArea(PolygonCollider2D collider)
     {
-        // ƒ[ƒJƒ‹À•W‚Å‚Ì–ÊÏ‚ğŒvZ
+        // ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã§ã®é¢ç©ã‚’è¨ˆç®—
         Vector2[] points = collider.points;
         float localArea = 0;
         for (int i = 0; i < points.Length; i++)
@@ -518,7 +531,7 @@ public class Weapon : MonoBehaviour
         }
         localArea = Mathf.Abs(localArea) * 0.5f;
 
-        // e‚ÌƒXƒP[ƒ‹‚àŠÜ‚ß‚ÄƒXƒP[ƒ‹‚ğ“K—p
+        // è¦ªã®ã‚¹ã‚±ãƒ¼ãƒ«ã‚‚å«ã‚ã¦ã‚¹ã‚±ãƒ¼ãƒ«ã‚’é©ç”¨
         Vector3 lossyScale = collider.transform.lossyScale;
         float totalScaledArea = localArea * Mathf.Abs(lossyScale.x) * Mathf.Abs(lossyScale.y);
 

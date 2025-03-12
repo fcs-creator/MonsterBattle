@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,38 +9,38 @@ using UnityEditor.Experimental.GraphView;
 
 public class Monster : MonoBehaviour
 {
-    public Monster Enemy { get; set; }                  //Å‚à‹ß‚¢“G
-    public List<Monster> Enemies { get; set; }          //‘S‚Ä‚Ì“G
-    public MagicBook MagicBook { get; set; }            //–‚–@‚Ì‘
-    public UIHPBar HpBar { get; private set; }          //HPƒo[
-    public UIActionBar ActionBar { get; private set; }  //ƒAƒNƒVƒ‡ƒ“ƒo[
+    public Monster Enemy { get; set; }                  //æœ€ã‚‚è¿‘ã„æ•µ
+    public List<Monster> Enemies { get; set; }          //å…¨ã¦ã®æ•µ
+    public MagicBook MagicBook { get; set; }            //é­”æ³•ã®æ›¸
+    public UIHPBar HpBar { get; private set; }          //HPãƒãƒ¼
+    public UIActionBar ActionBar { get; private set; }  //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ¼
 
-    public bool IsAttacking { get; private set; }                                               //UŒ‚’†‚©
-    public bool IsGuarding { get; private set; }                                                //–hŒä’†‚©
-    public bool IsBackSteping { get; private set; }                                             //ƒoƒbƒNƒXƒeƒbƒv’†‚©
-    public bool IsDashing { get; private set; }                                                 //ƒ_ƒbƒVƒ…’†‚©
-    public bool IsJumping { get; private set; }                                                 //ƒWƒƒƒ“ƒv’†‚©
-    public bool IsGrounded { get; private set; }                                                //’n–Ê‚É‚¢‚é‚©
-    public bool IsAirborne { get { return !IsGrounded; } private set { IsAirborne = value; } }  //‹ó’†‚É‚¢‚é‚©
-    public bool IsDead { get; private set; }                                                    //€‚ñ‚Å‚¢‚é‚©
-    public bool IsFacingRight { get; private set; }                                             //‰E‚ğŒü‚¢‚Ä‚¢‚é‚©
-    public bool IsStunned { get; set; }                                                         //ƒXƒ^ƒ“ó‘Ô‚©
-    public bool IsFloating { get; set; }                                                        //•‚—Vó‘Ô‚©
+    public bool IsAttacking { get; private set; }                                               //æ”»æ’ƒä¸­ã‹
+    public bool IsGuarding { get; private set; }                                                //é˜²å¾¡ä¸­ã‹
+    public bool IsBackSteping { get; private set; }                                             //ãƒãƒƒã‚¯ã‚¹ãƒ†ãƒƒãƒ—ä¸­ã‹
+    public bool IsDashing { get; private set; }                                                 //ãƒ€ãƒƒã‚·ãƒ¥ä¸­ã‹
+    public bool IsJumping { get; private set; }                                                 //ã‚¸ãƒ£ãƒ³ãƒ—ä¸­ã‹
+    public bool IsGrounded { get; private set; }                                                //åœ°é¢ã«ã„ã‚‹ã‹
+    public bool IsAirborne { get { return !IsGrounded; } private set { IsAirborne = value; } }  //ç©ºä¸­ã«ã„ã‚‹ã‹
+    public bool IsDead { get; private set; }                                                    //æ­»ã‚“ã§ã„ã‚‹ã‹
+    public bool IsFacingRight { get; private set; }                                             //å³ã‚’å‘ã„ã¦ã„ã‚‹ã‹
+    public bool IsStunned { get; set; }                                                         //ã‚¹ã‚¿ãƒ³çŠ¶æ…‹ã‹
+    public bool IsFloating { get; set; }                                                        //æµ®éŠçŠ¶æ…‹ã‹
 
-    Body body;          //–{‘Ì
-    Weapon weapon;      //•Ší
-    Guard guard;        //–h‹ï
+    Body body;          //æœ¬ä½“
+    Weapon weapon;      //æ­¦å™¨
+    Guard guard;        //é˜²å…·
     Rigidbody2D rb;
     
-    bool IsStunable = true; //ƒXƒ^ƒ“‰Â”\‚©
+    bool IsStunable = true; //ã‚¹ã‚¿ãƒ³å¯èƒ½ã‹
     int EnemyCheckCount = 0;
 
-    //“G‚Ìî•ñ
+    //æ•µã®æƒ…å ±
     public Vector2 Position { get { return new Vector2(transform.position.x, transform.position.y); } }
     public Vector2 Direction { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).normalized; } }
     public float Distance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
 
-    //ƒ^ƒXƒN‚ğƒLƒƒƒ“ƒZƒ‹
+    //ã‚¿ã‚¹ã‚¯ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«
     readonly Canceler canceler = new Canceler();
 
     public void CancelActions()
@@ -50,21 +50,21 @@ public class Monster : MonoBehaviour
 
     void Awake()
     {
-        //•¨—‹““®‚ğ’Ç‰Á
+        //ç‰©ç†æŒ™å‹•ã‚’è¿½åŠ 
         rb = gameObject.AddComponent<Rigidbody2D>();
 
-        // –{‘Ì‚Ìİ’è
+        // æœ¬ä½“ã®è¨­å®š
         body = transform.Find("Body").AddComponent<Body>();
 
-        // •Ší‚Ìİ’è
+        // æ­¦å™¨ã®è¨­å®š
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
         weapon?.gameObject.SetActive(true);
 
-        // –h‹ï‚Ìİ’è
+        // é˜²å…·ã®è¨­å®š
         guard = transform.Find("Guard").AddComponent<Guard>();
         guard?.gameObject.SetActive(false);
 
-        //ƒAƒNƒVƒ‡ƒ“ƒo[‚ÌŠ—LÒ‚ğ“o˜^
+        //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ¼ã®æ‰€æœ‰è€…ã‚’ç™»éŒ²
         ActionBar.Owner = this;
 
         IsDead = false;
@@ -110,12 +110,12 @@ public class Monster : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //“G‚Ìî•ñ‚ÌXV
+        //æ•µã®æƒ…å ±ã®æ›´æ–°
         UpdateEnemies();
 
         HpBar.Character = transform;
 
-        //Å‚‘¬“x‚ğw’è
+        //æœ€é«˜é€Ÿåº¦ã‚’æŒ‡å®š
         Vector2 maxVelocity = new Vector2(Parameters.MAX_VELOCITY_X, Parameters.MAX_VELOCITY_Y);
         Vector2 clampedVelocity = new Vector2(
             Mathf.Clamp(rb.linearVelocity.x, -maxVelocity.x, maxVelocity.x),
@@ -132,13 +132,13 @@ public class Monster : MonoBehaviour
             }
         }
 
-        //ƒXƒ^ƒ“ó‘Ô‚Ìˆ—
+        //ã‚¹ã‚¿ãƒ³çŠ¶æ…‹ã®å‡¦ç†
         if (IsStunned && IsStunable) 
         {
             _ = Stun();
         }
 
-        //€–S”»’è
+        //æ­»äº¡åˆ¤å®š
         if (!IsDead) 
         {
             bool judge = false;
@@ -154,16 +154,16 @@ public class Monster : MonoBehaviour
                 gameObject.SetActive(false);
                 HpBar.gameObject.SetActive(false);
 
-                //€–SƒGƒtƒFƒNƒg‚ğÄ¶
+                //æ­»äº¡ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿ
                 VFXManager.Instance.Play(VFX.Dead, transform.position, transform.rotation);
 
-                //ƒAƒNƒVƒ‡ƒ“‚ğƒLƒƒƒ“ƒZƒ‹
+                //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«
                 canceler.Cancel();
             }
         }
     }
 
-    // UŒ‚
+    // æ”»æ’ƒ
     async virtual protected Task Attack() 
     {
         if(canceler.IsCancel) return;
@@ -179,7 +179,7 @@ public class Monster : MonoBehaviour
         IsAttacking = false;
     }
 
-    // ƒK[ƒh : ƒAƒ^ƒbƒN‚Ö‚Ì‘ÎR
+    // ã‚¬ãƒ¼ãƒ‰ : ã‚¢ã‚¿ãƒƒã‚¯ã¸ã®å¯¾æŠ—
     async virtual protected Task Guard() 
     {
         if (canceler.IsCancel) return;
@@ -199,7 +199,7 @@ public class Monster : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_GUARD);
     }
 
-    //ƒ_ƒbƒVƒ…F‘Šè‚ÉŒü‚©‚Á‚Äi‚Ş
+    //ãƒ€ãƒƒã‚·ãƒ¥ï¼šç›¸æ‰‹ã«å‘ã‹ã£ã¦é€²ã‚€
     async virtual protected Task Forward(float force) 
     {
         if (canceler.IsCancel) return;
@@ -208,10 +208,10 @@ public class Monster : MonoBehaviour
 
         IsDashing = true;
 
-        //‘Šè‚ğŒ©‚é
+        //ç›¸æ‰‹ã‚’è¦‹ã‚‹
         LookAtEnemy();
 
-        //‘Šè‚ÉŒü‚©‚Á‚Äi‚Ş
+        //ç›¸æ‰‹ã«å‘ã‹ã£ã¦é€²ã‚€
         rb.AddForce(Direction.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_DASH);
@@ -219,7 +219,7 @@ public class Monster : MonoBehaviour
         IsDashing = false;
     }
 
-    //ƒoƒbƒNƒXƒeƒbƒvF‘Šè‚©‚ç—£‚ê‚é
+    //ãƒãƒƒã‚¯ã‚¹ãƒ†ãƒƒãƒ—ï¼šç›¸æ‰‹ã‹ã‚‰é›¢ã‚Œã‚‹
     async virtual protected Task BackStep(float force)
     {
         if (canceler.IsCancel) return;
@@ -228,16 +228,16 @@ public class Monster : MonoBehaviour
 
         IsBackSteping = true;
 
-        //‘Šè‚ğŒ©‚é
+        //ç›¸æ‰‹ã‚’è¦‹ã‚‹
         LookAtEnemy();
 
-        //‘Šè‚©‚ç—£‚ê‚é
+        //ç›¸æ‰‹ã‹ã‚‰é›¢ã‚Œã‚‹
         rb.AddForce(-Direction.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
         
         await Wait(Parameters.ACTION_INTERVAL_BACKSTEP);
     }
 
-    // ‚’¼ƒWƒƒƒ“ƒv (100‚Å‰æ–Êã‚Ü‚Å”ò‚Ô)
+    // å‚ç›´ã‚¸ãƒ£ãƒ³ãƒ— (100ã§ç”»é¢ä¸Šã¾ã§é£›ã¶)
     async virtual protected Task Jump(float height) 
     {
         if (canceler.IsCancel) return;
@@ -247,14 +247,14 @@ public class Monster : MonoBehaviour
         await JumpCommon(Vector2.up, height);
     }
 
-    // ‘OÎ‚ßƒWƒƒƒ“ƒv
+    // å‰æ–œã‚ã‚¸ãƒ£ãƒ³ãƒ—
     async virtual protected Task JumpForward(float height)
     {
         if (canceler.IsCancel) return;
 
         ActionBar.SendText("JumpForward");
 
-        //ƒWƒƒƒ“ƒv•ûŒü‚ğŒvZ
+        //ã‚¸ãƒ£ãƒ³ãƒ—æ–¹å‘ã‚’è¨ˆç®—
         Vector2 dir = Vector2.zero;
         dir = Parameters.FORWARD_JUMP_DIRECTION;
 
@@ -266,14 +266,14 @@ public class Monster : MonoBehaviour
         await JumpCommon(dir, height);
     }
 
-    // ŒãÎ‚ßƒWƒƒƒ“ƒv
+    // å¾Œæ–œã‚ã‚¸ãƒ£ãƒ³ãƒ—
     async virtual protected Task JumpBackward(float height)
     {
         if (canceler.IsCancel) return;
 
         ActionBar.SendText("JumpBackward");
 
-        //ƒWƒƒƒ“ƒv•ûŒü‚ğŒvZ
+        //ã‚¸ãƒ£ãƒ³ãƒ—æ–¹å‘ã‚’è¨ˆç®—
         Vector2 dir = Vector2.zero;
         dir = Parameters.BACKWARD_JUMP_DIRECTION;
 
@@ -293,10 +293,10 @@ public class Monster : MonoBehaviour
 
             IsJumping = true;
 
-            //‘Šè‚ğŒ©‚é
+            //ç›¸æ‰‹ã‚’è¦‹ã‚‹
             LookAtEnemy();
 
-            //•K—v‚ÈƒWƒƒƒ“ƒv—Í‚ğŒvZ
+            //å¿…è¦ãªã‚¸ãƒ£ãƒ³ãƒ—åŠ›ã‚’è¨ˆç®—
             float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
             jumpForce *= Parameters.JUMP_FORCE_SCALE;
 
@@ -308,7 +308,7 @@ public class Monster : MonoBehaviour
 
     async Task Stun() 
     {
-        //ƒXƒ^ƒ“•s‰Â‚É‚·‚é
+        //ã‚¹ã‚¿ãƒ³ä¸å¯ã«ã™ã‚‹
         IsStunable = false;
 
         await body.Stun();
@@ -317,11 +317,11 @@ public class Monster : MonoBehaviour
 
         IsStunned = false;
 
-        //ƒXƒ^ƒ“‰Â”\‚É‚·‚é
+        //ã‚¹ã‚¿ãƒ³å¯èƒ½ã«ã™ã‚‹
         IsStunable = true;
     }
 
-    //•‚—Vó‘Ô‚ÌØ‚è‘Ö‚¦
+    //æµ®éŠçŠ¶æ…‹ã®åˆ‡ã‚Šæ›¿ãˆ
     async protected Task Floating(bool value) 
     {
         IsFloating = value;
@@ -342,7 +342,7 @@ public class Monster : MonoBehaviour
     {
         GameObject obj = other.gameObject;
 
-        //•Ší‚Æ‚ÌÚG‚Ìˆ—
+        //æ­¦å™¨ã¨ã®æ¥è§¦æ™‚ã®å‡¦ç†
         if (obj.CompareTag(Tags.Weapon))
         {
             if (HasComponent<Weapon>(obj))
@@ -368,7 +368,7 @@ public class Monster : MonoBehaviour
                     Vector2 direction = (transform.position - obj.transform.position).normalized;
                     direction = new Vector2(direction.x, direction.y + Parameters.WEAPON_ONHIT_ADD_DIRECTION_Y).normalized;
                     
-                    //•Ší‚Ìƒ_ƒ[ƒW’l‚ÌŒvZ
+                    //æ­¦å™¨ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤ã®è¨ˆç®—
                     weapon.CalcutlateDamage();
 
                     if (IsGuarding)
@@ -380,7 +380,7 @@ public class Monster : MonoBehaviour
                     {
                         PlayHitWeaponVFX(other);
 
-                        //ƒ_ƒ[ƒW‰Á‚¦‚Ä‚«”ò‚Î‚·
+                        //ãƒ€ãƒ¡ãƒ¼ã‚¸åŠ ãˆã¦å¹ãé£›ã°ã™
                         HpBar.TakeDamage(weapon.Damage);
                         rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
                     }
@@ -389,20 +389,20 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //•Ší‚ÌƒqƒbƒgƒGƒtƒFƒNƒg‚ÌÄ¶
+    //æ­¦å™¨ã®ãƒ’ãƒƒãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å†ç”Ÿ
     void PlayHitWeaponVFX(Collider2D weaponCollider) 
     {
-        // Õ“Ë“_‚ğæ“¾
+        // è¡çªç‚¹ã‚’å–å¾—
         Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
 
-        // ƒqƒbƒgƒGƒtƒFƒNƒg‚ğÄ¶
+        // ãƒ’ãƒƒãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿ
         VFXManager.Instance.Play(Parameters.VFX_HIT_S, collisionPoint, transform.rotation);
     }
 
-    //ƒXƒe[ƒW‚Ì•Ç‚ÌƒqƒbƒgƒGƒtƒFƒNƒg‚ÌÄ¶
+    //ã‚¹ãƒ†ãƒ¼ã‚¸ã®å£ã®ãƒ’ãƒƒãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å†ç”Ÿ
     void PlayHitWallVFX(Vector3 collisionPoint)
     {
-        // ƒqƒbƒgƒGƒtƒFƒNƒg‚ğÄ¶
+        // ãƒ’ãƒƒãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿ
         VFXManager.Instance.Play(Parameters.VFX_HIT_WALL, collisionPoint, transform.rotation);
     }
 
@@ -410,7 +410,7 @@ public class Monster : MonoBehaviour
     {
         GameObject obj = collision.gameObject;
 
-        //ƒXƒe[ƒW‚Ì•Ç‚Æ‚ÌÚG‚Ìˆ—
+        //ã‚¹ãƒ†ãƒ¼ã‚¸ã®å£ã¨ã®æ¥è§¦æ™‚ã®å‡¦ç†
         if (obj.CompareTag(Tags.StageWall))
         {
             if(collision.contactCount > 0) 
@@ -420,7 +420,7 @@ public class Monster : MonoBehaviour
                 var contact = collision.contacts;
                 PlayHitWallVFX(contact[0].point);
 
-                //ƒ_ƒ[ƒW‰Á‚¦‚Ä‚«”ò‚Î‚·
+                //ãƒ€ãƒ¡ãƒ¼ã‚¸åŠ ãˆã¦å¹ãé£›ã°ã™
                 HpBar.TakeDamage(Parameters.WALL_DAMAGE);
                 Vector2 direction = (transform.position - obj.transform.position).normalized;
                 rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
@@ -428,7 +428,7 @@ public class Monster : MonoBehaviour
         }
 
 
-        //’n–Ê‚ÉÚG‚Ìˆ—
+        //åœ°é¢ã«æ¥è§¦æ™‚ã®å‡¦ç†
         if (obj.CompareTag(Tags.Platform))
         {
             IsJumping = false;
@@ -436,13 +436,13 @@ public class Monster : MonoBehaviour
 
             if(rb.linearVelocity.magnitude > Parameters.LAND_VELOCITY)
             {
-                //’…’n‰¹‚ğÄ¶
+                //ç€åœ°éŸ³ã‚’å†ç”Ÿ
                 AudioManager.Instance.PlaySE(Parameters.SE_LAND);
             }
             
         }
 
-        //–‚–@‚É‚æ‚éƒ_ƒ[ƒW
+        //é­”æ³•ã«ã‚ˆã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸
         if (HasComponent<Magic>(obj))
         {
             Magic magic = obj.GetComponent<Magic>();
@@ -458,7 +458,7 @@ public class Monster : MonoBehaviour
     {
         GameObject obj = collision.gameObject;
 
-        //“G‚Æ‚ÌÚG‚ÌƒmƒbƒNƒoƒbƒNˆ—
+        //æ•µã¨ã®æ¥è§¦æ™‚ã®ãƒãƒƒã‚¯ãƒãƒƒã‚¯å‡¦ç†
         if (HasComponent<Monster>(obj))
         {
             IsJumping = false;
@@ -470,7 +470,7 @@ public class Monster : MonoBehaviour
     {
         GameObject obj = collider.gameObject;
 
-        //“G‚Æ‚ÌÚG‚ÌƒmƒbƒNƒoƒbƒNˆ—
+        //æ•µã¨ã®æ¥è§¦æ™‚ã®ãƒãƒƒã‚¯ãƒãƒƒã‚¯å‡¦ç†
         if (HasComponent<Monster>(obj))
         {
             IsJumping = false;
@@ -518,7 +518,7 @@ public class Monster : MonoBehaviour
         return obj.GetComponent<T>() != null;
     }
 
-    // ƒLƒƒƒ‰ƒNƒ^[‚ÌŒü‚«‚ğ”½“]‚·‚é
+    // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å‘ãã‚’åè»¢ã™ã‚‹
     public void Flip() 
     {
         IsFacingRight = !IsFacingRight;
@@ -527,7 +527,7 @@ public class Monster : MonoBehaviour
         transform.localScale = scale;
     }
 
-    //‘Šè‚Ì•û‚ğŒü‚­
+    //ç›¸æ‰‹ã®æ–¹ã‚’å‘ã
     public void LookAtEnemy() 
     {
         if (Direction.x > 0 && !IsFacingRight)
@@ -550,22 +550,22 @@ public class Monster : MonoBehaviour
         this.ActionBar = actionBar;
     }
 
-    //“G‚Ìî•ñ‚ÌXV
+    //æ•µã®æƒ…å ±ã®æ›´æ–°
     void UpdateEnemies()
     {
         if (EnemyCheckCount >= Parameters.ENEMY_CHECK_FREAKENCE)
         {
             List<Monster> enemies = new List<Monster>(Enemies);
 
-            // ¶‚«‚Ä‚¢‚é“G‚ğ’Šo
+            // ç”Ÿãã¦ã„ã‚‹æ•µã‚’æŠ½å‡º
             List<Monster> ariveEnemies = enemies.Where(e => !e.IsDead).ToList();
 
-            // ‹——£‡‚É•À‚Ñ•Ï‚¦‚ÄXV
+            // è·é›¢é †ã«ä¸¦ã³å¤‰ãˆã¦æ›´æ–°
             Enemies = ariveEnemies.OrderBy(obj => Vector3.Distance(obj.transform.position, transform.position)).ToList();
 
             if (Enemies.Count > 0)
             {
-                //ˆê”Ô‹ß‚¢“G‚àXV
+                //ä¸€ç•ªè¿‘ã„æ•µã‚‚æ›´æ–°
                 Enemy = Enemies[0];
             }
 
