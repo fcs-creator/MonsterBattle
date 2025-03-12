@@ -342,6 +342,7 @@ public class Monster : MonoBehaviour
     {
         GameObject obj = other.gameObject;
 
+        //武器との接触時の処理
         if (obj.CompareTag(Tags.Weapon))
         {
             if (HasComponent<Weapon>(obj))
@@ -377,7 +378,7 @@ public class Monster : MonoBehaviour
                     }
                     else
                     {
-                        PlayHitVFX(obj, other);
+                        PlayHitWeaponVFX(other);
 
                         //ダメージ加えて吹き飛ばす
                         HpBar.TakeDamage(weapon.Damage);
@@ -388,19 +389,44 @@ public class Monster : MonoBehaviour
         }
     }
 
-    //攻撃のヒットエフェクトの再生
-    void PlayHitVFX(GameObject weapon, Collider2D weaponCollider) 
+    //武器のヒットエフェクトの再生
+    void PlayHitWeaponVFX(Collider2D weaponCollider) 
     {
         // 衝突点を取得
         Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
 
         // ヒットエフェクトを再生
-        VFXManager.Instance.Play(VFX.HitS, collisionPoint, transform.rotation);
+        VFXManager.Instance.Play(Parameters.VFX_HIT_S, collisionPoint, transform.rotation);
+    }
+
+    //ステージの壁のヒットエフェクトの再生
+    void PlayHitWallVFX(Vector3 collisionPoint)
+    {
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(Parameters.VFX_HIT_WALL, collisionPoint, transform.rotation);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject obj = collision.gameObject;
+
+        //ステージの壁との接触時の処理
+        if (obj.CompareTag(Tags.StageWall))
+        {
+            if(collision.contactCount > 0) 
+            {
+                Debug.Log(gameObject.name + " > Hit Wall");
+
+                var contact = collision.contacts;
+                PlayHitWallVFX(contact[0].point);
+
+                //ダメージ加えて吹き飛ばす
+                HpBar.TakeDamage(Parameters.WALL_DAMAGE);
+                Vector2 direction = (transform.position - obj.transform.position).normalized;
+                rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
+            }
+        }
+
 
         //地面に接触時の処理
         if (obj.CompareTag(Tags.Platform))

@@ -22,6 +22,7 @@ public enum SE
     WeaponShot,
     WeaponDrawing,
     CollideBody,
+    HitWall,
 }
 
 public class AudioManager : MonoBehaviour
@@ -48,6 +49,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip weaponShot;
     [SerializeField] AudioClip weaponDrawing;
     [SerializeField] AudioClip collideBody;
+    [SerializeField] AudioClip hitWall;
     
 
     // AudioClipÇä«óùÇ∑ÇÈDictionary
@@ -84,7 +86,9 @@ public class AudioManager : MonoBehaviour
             { SE.Jump, jump },
             { SE.WeaponShot, weaponShot },
             { SE.WeaponDrawing, weaponDrawing },
-            { SE.CollideBody, collideBody }
+            { SE.CollideBody, collideBody },
+            { SE.HitWall, hitWall }
+
         };
 
         DontDestroyOnLoad(gameObject);

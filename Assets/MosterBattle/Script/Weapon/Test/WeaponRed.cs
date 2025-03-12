@@ -11,6 +11,6 @@ public class WeaponRed : Weapon
 
         await Wait(1);
 
-        await Shot(new Vector2(1.0f, 0.0f), 70);
+        await Shot(0, 70);
     }
 }

@@ -7,6 +7,6 @@ public class Wind: Weapon
     {
         await Drawing();
 
-        await Shot(new Vector2(0.7f, 0.3f), 70f);
+        await Shot(0.2f, 70f);
     }
 }

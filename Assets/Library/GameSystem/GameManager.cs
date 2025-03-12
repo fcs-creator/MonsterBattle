@@ -67,10 +67,14 @@ public static class Parameters
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
     public const float FIREBALL_DESTOROY_WAIT_TIME = 0.75f;                     //発動後に破棄されるまでの待ち時間
-    public const float FIREBALL_SHOT_GROUPING = 0.12f;                           //集弾率(小さいほど正確に狙う)
+    public const float FIREBALL_SHOT_GROUPING = 0.12f;                          //集弾率(小さいほど正確に狙う)
     public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //発射時のY軸の調整値
     public const float THUNDER_DAMAGE = 20;                                     //サンダーダメージ値
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間
+
+    //ステージの壁
+    public const float WALL_FORCE = 50;                                         //壁に当たった時に受ける力
+    public const float WALL_DAMAGE = 10;                                        //壁に当たった時のダメージ値
 
     //UI
     public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 4f);            //HPバーの表示オフセット位置
@@ -82,12 +86,14 @@ public static class Parameters
     public const VFX VFX_HIT_L = VFX.HitL;                                      //大ヒット時に使用するVFX
     public const VFX VFX_GUARD = VFX.Guard;                                     //ガード時に使用するVFX
     public const VFX VFX_DEAD = VFX.Dead;                                       //ガード時に使用するVFX
+    public const VFX VFX_HIT_WALL = VFX.HitWall;                                //壁に当たった時に使用するVFX
 
     public static readonly Vector3 VFX_HIT_S_SCALE = new Vector3(10, 10, 1);    //弱ヒット時のVFXのスケール
     public static readonly Vector3 VFX_HIT_M_SCALE = new Vector3(10, 10, 1);    //中ヒット時のVFXのスケール
     public static readonly Vector3 VFX_HIT_L_SCALE = new Vector3(10, 10, 1);    //大ヒット時のVFXのスケール
     public static readonly Vector3 VFX_GUARD_SCALE = new Vector3(20, 20, 1);    //ガード時のVFXのスケール
     public static readonly Vector3 VFX_DEAD_SCALE = new Vector3(10, 10, 1);     //死亡時のVFXのスケール
+    public static readonly Vector3 VFX_WALL_SCALE = new Vector3(10, 10, 1);     //壁に当たった時のVFXのスケール
 
     //BGM
     public const BGM BGM_BATTLE = BGM.Battle;                                   //バトルBGM
@@ -106,6 +112,7 @@ public static class Parameters
     public const SE SE_WEAPON_SHOT = SE.WeaponShot;                             //武器を投げた時のSE
     public const SE SE_WEAPON_DRAWING = SE.WeaponDrawing;                       //武器を抜刀時のSE
     public const SE SE_COLLIDE_BODY = SE.CollideBody;                           //ボディ同士がぶつかった時のSE
+    public const SE SE_HIT_WALL = SE.HitWall;                                   //ボディ同士がぶつかった時のSE
 }
 
 public class GameManager : MonoBehaviour

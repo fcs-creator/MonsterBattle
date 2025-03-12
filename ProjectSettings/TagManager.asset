@@ -12,7 +12,7 @@ TagManager:
   - Goal
   - Collection
   - Guard
-  - Shield
+  - StageWall
   layers:
   - Default
   - TransparentFX

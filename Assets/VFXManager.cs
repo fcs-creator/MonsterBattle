@@ -8,6 +8,7 @@ public enum VFX
     HitL,
     Guard,
     Dead,
+    HitWall,
 }
 
 public class VFXManager : MonoBehaviour
@@ -17,6 +18,7 @@ public class VFXManager : MonoBehaviour
     public GameObject hitLPrefab;
     public GameObject guardPrefab;
     public GameObject deadPrefab;
+    public GameObject hitWallPrefab;
 
     public static VFXManager Instance { get; private set; }
 
@@ -58,6 +60,10 @@ public class VFXManager : MonoBehaviour
             case VFX.Dead:
                 PlayVFX(deadPrefab, position, GetRandomRotation(), Parameters.VFX_DEAD_SCALE);
                 AudioManager.Instance.PlaySE(SE.Dead);
+                break;
+            case VFX.HitWall:
+                PlayVFX(hitWallPrefab, position, GetRandomRotation(), Parameters.VFX_WALL_SCALE);
+                AudioManager.Instance.PlaySE(SE.HitWall);
                 break;
             default:
                 Debug.LogWarning("éwíËÇµÇΩVFXÇ™ë∂ç›ÇµÇ‹ÇπÇÒÅI");

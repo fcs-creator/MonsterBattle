@@ -8,14 +8,10 @@ public class Glacia : Monster
         if (Distance > 10)
         {
             await Forward(80);
-
-            await Floating(false);
         }
         else 
         {
-            await Floating(true);
-
-            //await BackStep(80);
+            await BackStep(80);
 
             await Attack();
 

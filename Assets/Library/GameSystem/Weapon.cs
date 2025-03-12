@@ -403,8 +403,8 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //武器を指定された方向に飛ばす
-    async protected Task Shot(Vector2 direction, float power)
+    //武器を指定された方向に飛ばす (向きは-1~1の少数で指定 上向き:1, 正面:0, 下向き: -1)
+    async protected Task Shot(float directionY, float power)
     {
         if (canceler.IsCancel) return;
 
@@ -412,15 +412,17 @@ public class Weapon : MonoBehaviour
         
         Owner.ActionBar.SendText("Weapon-Shot");
 
+        float dirY = Mathf.Clamp(directionY, -1.0f, 1.0f);
+        float dirX = 1 - Mathf.Abs(dirY);
+
         //モンスターの向きによって武器飛ばす方向を変える
-        float dir = 1;
         if (!Owner.IsFacingRight)
         {
-            dir *= -1;
+            dirX *= -1;
         }
         else 
         {
-            direction.y *= -1;
+            //dirY *= -1;
         }
 
         //武器から手を離す
@@ -430,7 +432,7 @@ public class Weapon : MonoBehaviour
         AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_SHOT);
 
         //飛ばす
-        rb.AddForce(direction * power * dir * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(dirX,dirY) * power * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
