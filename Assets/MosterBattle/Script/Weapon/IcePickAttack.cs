@@ -1,0 +1,187 @@
+using UnityEngine;
+using System.Threading.Tasks;
+
+public class IcePickAttack: Weapon
+{
+    bool pos;
+    async protected override Task Attack() 
+    {
+        //await Drawing();
+
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+        await Rotate(0,360,0.05f);
+
+        //await Rotate(90, 90, 0.05f);
+
+        //await Rotate(180, 90, 0.05f);
+
+        //await Rotate(270, 90, 0.05f);
+
+        //if(pos) {
+            //await Move(-10, 0, 0.05f);
+            //await Move(30, 0, 0.1f);
+            //await Move(-40, 0, 0.1f);
+            //await Default();
+        //}
+        //else {
+        //    await Move(-50, 0, 0.4f);
+        //    await Default();
+        //}
+        pos = !pos;
+
+        //await Shot(0.6f, 40f);
+    }
+}

@@ -15,4 +15,5 @@ public static class Tags {
     public const string Collection = "Collection";
     public const string Guard = "Guard";
     public const string StageWall = "StageWall";
+    public const string Shield = "Shield";
 }

@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using Unity.VisualScripting;
 using System.Threading;
 
+
 public class Weapon : MonoBehaviour
 {
     public Monster Owner { get; private set; }          // 武器の所有者(モンスター)
@@ -50,10 +51,14 @@ public class Weapon : MonoBehaviour
         Owner = transform.parent.GetComponent<Monster>();
 
         // 物理挙動を追加して無効にしておく
-        rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.centerOfMass = new Vector2(0, 0);
-        rb.simulated = true;
-        SetGripWeapon(true);
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.centerOfMass = new Vector2(0, 0);
+            rb.simulated = true;
+            SetGripWeapon(true);
+        }
 
         //武器のダメージ
         Damage = Parameters.WEAPON_DAMAGE;
@@ -95,10 +100,13 @@ public class Weapon : MonoBehaviour
                 sr.sortingLayerName = SortLayer.Weapon;
 
                 // 画像の形状に合わせてコライダを設定
-                var weaponCollider = gameObject.AddComponent<PolygonCollider2D>();
-                weaponCollider.autoTiling = true;
-                weaponCollider.isTrigger = true;
-                area += CalculateScaledArea(weaponCollider);
+                if (gameObject.GetComponent<PolygonCollider2D>() == null)
+                {
+                    var weaponCollider = gameObject.AddComponent<PolygonCollider2D>();
+                    weaponCollider.autoTiling = true;
+                    weaponCollider.isTrigger = true;
+                    area += CalculateScaledArea(weaponCollider);
+                };
             }
         }
 
@@ -109,19 +117,6 @@ public class Weapon : MonoBehaviour
 
         // 最初は武器を隠しておく
         SetActive(false);
-    }
-
-    // 任意のコンポーネントをコピーして別のオブジェクトに追加
-    public static T CopyComponent<T>(T original, GameObject destination) where T : Component
-    {
-        // 元のコンポーネントからJSON形式でデータを取得
-        string json = JsonUtility.ToJson(original);
-
-        // 新しいコンポーネントを作成してJSONを適用
-        T newComponent = destination.AddComponent<T>();
-        JsonUtility.FromJsonOverwrite(json, newComponent);
-
-        return newComponent;
     }
 
     void Start()
@@ -417,7 +412,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を指定された方向に飛ばす (向きは-1~1の少数で指定 上向き:1, 正面:0, 下向き: -1)
-    async protected Task Shot(float directionY, float power)
+    async public Task Shot(float directionY, float power)
     {
         if (canceler.IsCancel) return;
 
@@ -433,10 +428,6 @@ public class Weapon : MonoBehaviour
         {
             dirX *= -1;
         }
-        else 
-        {
-            //dirY *= -1;
-        }
 
         //武器から手を離す
         SetGripWeapon(false);
@@ -450,6 +441,21 @@ public class Weapon : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
         isShot = false;
+    }
+
+    async protected Task Clone(int num)
+    {
+        if (canceler.IsCancel) return;
+
+        Owner.ActionBar.SendText("Clone");
+
+        for (int i = 0; i < num; i++)
+        {
+            GameObject clone = Instantiate(transform.gameObject, transform.position, transform.rotation, Owner.transform);
+            Weapon cloneWeapon = clone.transform.GetComponent<Weapon>();
+            cloneWeapon.SetActive(true);
+            await cloneWeapon.Shot(-1, 20);
+        }
     }
 
     //武器をモンスターによる制御から切り離す

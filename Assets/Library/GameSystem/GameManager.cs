@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -8,111 +8,111 @@ using UnityEngine;
 
 public static class Parameters
 {
-    //ƒ‚ƒ“ƒXƒ^[
-    public const float GRAVITY_SCALE = 3;                                       //d—Í
-    public const float ACTION_FORCE_SCALE = 5;                                  //ƒAƒNƒVƒ‡ƒ“‚Ì—Í‚Ì•â³”{—¦
-    public const float JUMP_FORCE_SCALE = 3f;                                   //ƒWƒƒƒ“ƒv‚Ì—Í‚Ì•â³”{—¦
-    public const float KNOCKBACK_FORCE = 40;                                    //ƒmƒbƒNƒoƒbƒN‚Ì—Í
-    public const float KNOCKBACK_RANDOM_RANGE_X = 0.3f;                         //ƒmƒbƒNƒoƒbƒN‚Ìƒ‰ƒ“ƒ_ƒ€X•ûŒü‚Ì”ÍˆÍ
-    public const float MAX_VELOCITY_X = 50;                                     //Å‚‘¬“x_X
-    public const float MAX_VELOCITY_Y = 50;                                     //Å‚‘¬“x_Y
-    public const float DEAD_LINE_X = 40;                                        //€–Sƒ‰ƒCƒ“X
-    public const float DEAD_LINE_Y_UP = 40;                                     //€–Sƒ‰ƒCƒ“ãY
-    public const float DEAD_LINE_Y_DOWN = -20;                                  //€–Sƒ‰ƒCƒ“‰ºY
-    public const int ENEMY_CHECK_FREAKENCE = 20;                                //õ“G‚Ì•p“x
-    public const int LAND_VELOCITY = 10;                                        //’…’n‚É‘¬“x‚ğ0‚É‚·‚é‚½‚ß‚Ìè‡’l
+    //ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼
+    public const float GRAVITY_SCALE = 3;                                       //é‡åŠ›
+    public const float ACTION_FORCE_SCALE = 5;                                  //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®åŠ›ã®è£œæ­£å€ç‡
+    public const float JUMP_FORCE_SCALE = 3f;                                   //ã‚¸ãƒ£ãƒ³ãƒ—ã®åŠ›ã®è£œæ­£å€ç‡
+    public const float KNOCKBACK_FORCE = 40;                                    //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®åŠ›
+    public const float KNOCKBACK_RANDOM_RANGE_X = 0.3f;                         //ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ãƒ©ãƒ³ãƒ€ãƒ Xæ–¹å‘ã®ç¯„å›²
+    public const float MAX_VELOCITY_X = 50;                                     //æœ€é«˜é€Ÿåº¦_X
+    public const float MAX_VELOCITY_Y = 50;                                     //æœ€é«˜é€Ÿåº¦_Y
+    public const float DEAD_LINE_X = 40;                                        //æ­»äº¡ãƒ©ã‚¤ãƒ³X
+    public const float DEAD_LINE_Y_UP = 40;                                     //æ­»äº¡ãƒ©ã‚¤ãƒ³ä¸ŠY
+    public const float DEAD_LINE_Y_DOWN = -20;                                  //æ­»äº¡ãƒ©ã‚¤ãƒ³ä¸‹Y
+    public const int ENEMY_CHECK_FREAKENCE = 20;                                //ç´¢æ•µã®é »åº¦
+    public const int LAND_VELOCITY = 10;                                        //ç€åœ°æ™‚ã«é€Ÿåº¦ã‚’0ã«ã™ã‚‹ãŸã‚ã®é–¾å€¤
 
-    //ƒAƒNƒVƒ‡ƒ“
-    public const float START_INTERVAL = 2.0f;                                   //ƒAƒNƒVƒ‡ƒ“ŠJn‚Ü‚Å‚Ì‘Ò‚¿ŠÔ
-    public const float ACTION_INTERVAL_DASH = 2.0f;                             //ƒ_ƒbƒVƒ…
-    public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //ƒoƒbƒNƒXƒeƒbƒv
-    public const float ACTION_INTERVAL_JUMP = 1.0f;                             //ƒWƒƒƒ“ƒv
-    public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //•Ší‚ÅUŒ‚
-    public const float ACTION_INTERVAL_SHOT = 3.0f;                             //•Ší‚ğ“Š‚°‚é
-    public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ƒK[ƒh
-    public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //–‚–@
-    public const float ACTION_INTERVAL_FLOATING = 1.0f;                         //•‚—V
-    public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //ƒoƒbƒNƒXƒeƒbƒv”»’è‚ğ‰ğœ‚·‚é‘¬“x
+    //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
+    public const float START_INTERVAL = 0;                                      //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³é–‹å§‹ã¾ã§ã®å¾…ã¡æ™‚é–“
+    public const float ACTION_INTERVAL_DASH = 2.0f;                             //ãƒ€ãƒƒã‚·ãƒ¥
+    public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //ãƒãƒƒã‚¯ã‚¹ãƒ†ãƒƒãƒ—
+    public const float ACTION_INTERVAL_JUMP = 1.0f;                             //ã‚¸ãƒ£ãƒ³ãƒ—
+    public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //æ­¦å™¨ã§æ”»æ’ƒ
+    public const float ACTION_INTERVAL_SHOT = 0.5f;                             //æ­¦å™¨ã‚’æŠ•ã’ã‚‹
+    public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ã‚¬ãƒ¼ãƒ‰
+    public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //é­”æ³•
+    public const float ACTION_INTERVAL_FLOATING = 1.0f;                         //æµ®éŠ
+    public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //ãƒãƒƒã‚¯ã‚¹ãƒ†ãƒƒãƒ—åˆ¤å®šã‚’è§£é™¤ã™ã‚‹é€Ÿåº¦
 
-    public static readonly Vector2 FORWARD_JUMP_DIRECTION = new Vector2(0.3f, 0.7f);    //‘OƒWƒƒƒ“ƒv‚Ì•ûŒü
-    public static readonly Vector2 BACKWARD_JUMP_DIRECTION = new Vector2(-0.3f, 0.7f);  //ŒãƒWƒƒƒ“ƒv‚Ì•ûŒü
+    public static readonly Vector2 FORWARD_JUMP_DIRECTION = new Vector2(0.3f, 0.7f);    //å‰ã‚¸ãƒ£ãƒ³ãƒ—ã®æ–¹å‘
+    public static readonly Vector2 BACKWARD_JUMP_DIRECTION = new Vector2(-0.3f, 0.7f);  //å¾Œã‚¸ãƒ£ãƒ³ãƒ—ã®æ–¹å‘
 
-    //ƒ{ƒfƒB
-    public const float MASS_MAGNIFICATION = 3;                                  //–ÊÏ‚É‘Î‚·‚éd‚³‚Ì”{—¦
-    public const float MASS_MAX = 100;                                          //Å‘å¿—Ê
-    public const float MASS_MIN = 5;                                            //Å¬¿—Ê
+    //ãƒœãƒ‡ã‚£
+    public const float MASS_MAGNIFICATION = 3;                                  //é¢ç©ã«å¯¾ã™ã‚‹é‡ã•ã®å€ç‡
+    public const float MASS_MAX = 100;                                          //æœ€å¤§è³ªé‡
+    public const float MASS_MIN = 5;                                            //æœ€å°è³ªé‡
 
-    //•Ší
-    public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.25f;                    //•Ší‚ª“–‚½‚Á‚½‚Æ‚«‚Ìã•ûŒü‚Ö‚Ì‚«”ò‚Î‚µ‚Ì‰ÁZ’l
-    public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ƒK[ƒh‚Ì•Ší‚Ìƒ_ƒ[ƒW‚ÌŒyŒ¸—¦
-    public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ƒK[ƒh‚Ì•Ší‚É‚æ‚é‚«”ò‚Î‚µ‚ÌŒyŒ¸—¦
-    public const float WEAPON_STRIKE_FORCE = 300;                               //•Ší‚ª“–‚½‚Á‚½‚Æ‚«‚É‚«”ò‚Î‚·—Í
-    public const float WEAPON_SHOT_FORCE_SCALE = 5;                             //•Ší‚ğ“Š‚°‚é—Í‚Ì•â³”{—¦
-    public const float WEAPON_DAMAGE = 15;                                      //•Ší‚É‚æ‚éƒ_ƒ[ƒW’l
-    public const float WEAPON_DAMAGE_SCALE = 3.0f;                              //•Ší‚Ìƒ_ƒ[ƒW”{—¦
-    public const float WEAPON_GRAVITY_SCALE = 3;                                //•Ší‚É‚©‚©‚éd—Í
-    public const float DEFAULT_RETURN_TIME= 0.5f;                               //‰ŠúˆÊ’u‚É–ß‚é‚Ì‚É‚©‚©‚é•b”
-    public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //‰ŠúˆÊ’u‚É–ß‚Á‚½Œã‚Ì‘Ò‚¿ŠÔ
-    public const float WEAPON_INTERVAL_DRAWING = 1;                             //”²“Œã‚ÌŠÔ
-    public const float MASS_WEAPON_MAGNIFICATION = 1;                           //–ÊÏ‚É‘Î‚·‚éd‚³‚Ì”{—¦
-    public const float MASS_WEAPON_MAX = 30;                                    //Å‘å¿—Ê
-    public const float MASS_WEAPON_MIN = 3;                                     //Å¬¿—Ê
+    //æ­¦å™¨
+    public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.25f;                    //æ­¦å™¨ãŒå½“ãŸã£ãŸã¨ãã®ä¸Šæ–¹å‘ã¸ã®å¹ãé£›ã°ã—ã®åŠ ç®—å€¤
+    public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ã‚¬ãƒ¼ãƒ‰æ™‚ã®æ­¦å™¨ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã®è»½æ¸›ç‡
+    public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ã‚¬ãƒ¼ãƒ‰æ™‚ã®æ­¦å™¨ã«ã‚ˆã‚‹å¹ãé£›ã°ã—ã®è»½æ¸›ç‡
+    public const float WEAPON_STRIKE_FORCE = 300;                               //æ­¦å™¨ãŒå½“ãŸã£ãŸã¨ãã«å¹ãé£›ã°ã™åŠ›
+    public const float WEAPON_SHOT_FORCE_SCALE = 5;                             //æ­¦å™¨ã‚’æŠ•ã’ã‚‹åŠ›ã®è£œæ­£å€ç‡
+    public const float WEAPON_DAMAGE = 15;                                      //æ­¦å™¨ã«ã‚ˆã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤
+    public const float WEAPON_DAMAGE_SCALE = 3.0f;                              //æ­¦å™¨ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å€ç‡
+    public const float WEAPON_GRAVITY_SCALE = 3;                                //æ­¦å™¨ã«ã‹ã‹ã‚‹é‡åŠ›
+    public const float DEFAULT_RETURN_TIME= 0.5f;                               //åˆæœŸä½ç½®ã«æˆ»ã‚‹ã®ã«ã‹ã‹ã‚‹ç§’æ•°
+    public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //åˆæœŸä½ç½®ã«æˆ»ã£ãŸå¾Œã®å¾…ã¡æ™‚é–“
+    public const float WEAPON_INTERVAL_DRAWING = 1;                             //æŠœåˆ€å¾Œã®æ™‚é–“
+    public const float MASS_WEAPON_MAGNIFICATION = 1;                           //é¢ç©ã«å¯¾ã™ã‚‹é‡ã•ã®å€ç‡
+    public const float MASS_WEAPON_MAX = 30;                                    //æœ€å¤§è³ªé‡
+    public const float MASS_WEAPON_MIN = 3;                                     //æœ€å°è³ªé‡
     
 
-    //ƒK[ƒh
-    public const float GUARD_DURATION = 1.0f;                                   //Œp‘±ŠÔ
-    public const float GUARD_STUN_DURATION = 3f;                                //ƒK[ƒh‚ªŒˆ‚Ü‚Á‚½‚ÌƒXƒ^ƒ“ŠÔ
-    public const float GUARD_FORCE_SCALE = 50;                                  //ƒK[ƒh‚ªŒˆ‚Ü‚Á‚½‚É‚«”ò‚Î‚·—Í(Œü‚«‚Í‘Šè‚Ì‹tƒxƒNƒgƒ‹)
+    //ã‚¬ãƒ¼ãƒ‰
+    public const float GUARD_DURATION = 1.0f;                                   //ç¶™ç¶šæ™‚é–“
+    public const float GUARD_STUN_DURATION = 3f;                                //ã‚¬ãƒ¼ãƒ‰ãŒæ±ºã¾ã£ãŸæ™‚ã®ã‚¹ã‚¿ãƒ³æ™‚é–“
+    public const float GUARD_FORCE_SCALE = 50;                                  //ã‚¬ãƒ¼ãƒ‰ãŒæ±ºã¾ã£ãŸæ™‚ã«å¹ãé£›ã°ã™åŠ›(å‘ãã¯ç›¸æ‰‹ã®é€†ãƒ™ã‚¯ãƒˆãƒ«)
 
-    //–‚–@
-    public const float FIREBALL_DAMAGE = 5;                                     //ƒtƒ@ƒCƒA[ƒ{[ƒ‹ƒ_ƒ[ƒW’l
-    public const float FIREBALL_DESTOROY_WAIT_TIME = 0.75f;                     //”­“®Œã‚É”jŠü‚³‚ê‚é‚Ü‚Å‚Ì‘Ò‚¿ŠÔ
-    public const float FIREBALL_SHOT_GROUPING = 0.12f;                          //W’e—¦(¬‚³‚¢‚Ù‚Ç³Šm‚É‘_‚¤)
-    public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //”­Ë‚ÌY²‚Ì’²®’l
-    public const float THUNDER_DAMAGE = 20;                                     //ƒTƒ“ƒ_[ƒ_ƒ[ƒW’l
-    public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //”­“®Œã‚É”jŠü‚³‚ê‚é‚Ü‚Å‚Ì‘Ò‚¿ŠÔ
+    //é­”æ³•
+    public const float FIREBALL_DAMAGE = 5;                                     //ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤
+    public const float FIREBALL_DESTOROY_WAIT_TIME = 0.75f;                     //ç™ºå‹•å¾Œã«ç ´æ£„ã•ã‚Œã‚‹ã¾ã§ã®å¾…ã¡æ™‚é–“
+    public const float FIREBALL_SHOT_GROUPING = 0.12f;                          //é›†å¼¾ç‡(å°ã•ã„ã»ã©æ­£ç¢ºã«ç‹™ã†)
+    public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //ç™ºå°„æ™‚ã®Yè»¸ã®èª¿æ•´å€¤
+    public const float THUNDER_DAMAGE = 20;                                     //ã‚µãƒ³ãƒ€ãƒ¼ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤
+    public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //ç™ºå‹•å¾Œã«ç ´æ£„ã•ã‚Œã‚‹ã¾ã§ã®å¾…ã¡æ™‚é–“
 
-    //ƒXƒe[ƒW‚Ì•Ç
-    public const float WALL_FORCE = 50;                                         //•Ç‚É“–‚½‚Á‚½‚Éó‚¯‚é—Í
-    public const float WALL_DAMAGE = 10;                                        //•Ç‚É“–‚½‚Á‚½‚Ìƒ_ƒ[ƒW’l
+    //ã‚¹ãƒ†ãƒ¼ã‚¸ã®å£
+    public const float WALL_FORCE = 50;                                         //å£ã«å½“ãŸã£ãŸæ™‚ã«å—ã‘ã‚‹åŠ›
+    public const float WALL_DAMAGE = 10;                                        //å£ã«å½“ãŸã£ãŸæ™‚ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤
 
     //UI
-    public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 4f);            //HPƒo[‚Ì•\¦ƒIƒtƒZƒbƒgˆÊ’u
-    public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-5f);        //ƒAƒNƒVƒ‡ƒ“ƒo[‚Ì•\¦ƒIƒtƒZƒbƒgˆÊ’u
+    public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 5f);            //HPãƒãƒ¼ã®è¡¨ç¤ºã‚ªãƒ•ã‚»ãƒƒãƒˆä½ç½®
+    public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-5f);        //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ¼ã®è¡¨ç¤ºã‚ªãƒ•ã‚»ãƒƒãƒˆä½ç½®
 
     //VFX
-    public const VFX VFX_HIT_S = VFX.HitS;                                      //ãƒqƒbƒg‚Ég—p‚·‚éVFX
-    public const VFX VFX_HIT_M = VFX.HitM;                                      //’†ƒqƒbƒg‚Ég—p‚·‚éVFX
-    public const VFX VFX_HIT_L = VFX.HitL;                                      //‘åƒqƒbƒg‚Ég—p‚·‚éVFX
-    public const VFX VFX_GUARD = VFX.Guard;                                     //ƒK[ƒh‚Ég—p‚·‚éVFX
-    public const VFX VFX_DEAD = VFX.Dead;                                       //ƒK[ƒh‚Ég—p‚·‚éVFX
-    public const VFX VFX_HIT_WALL = VFX.HitWall;                                //•Ç‚É“–‚½‚Á‚½‚Ég—p‚·‚éVFX
+    public const VFX VFX_HIT_S = VFX.HitS;                                      //å¼±ãƒ’ãƒƒãƒˆæ™‚ã«ä½¿ç”¨ã™ã‚‹VFX
+    public const VFX VFX_HIT_M = VFX.HitM;                                      //ä¸­ãƒ’ãƒƒãƒˆæ™‚ã«ä½¿ç”¨ã™ã‚‹VFX
+    public const VFX VFX_HIT_L = VFX.HitL;                                      //å¤§ãƒ’ãƒƒãƒˆæ™‚ã«ä½¿ç”¨ã™ã‚‹VFX
+    public const VFX VFX_GUARD = VFX.Guard;                                     //ã‚¬ãƒ¼ãƒ‰æ™‚ã«ä½¿ç”¨ã™ã‚‹VFX
+    public const VFX VFX_DEAD = VFX.Dead;                                       //ã‚¬ãƒ¼ãƒ‰æ™‚ã«ä½¿ç”¨ã™ã‚‹VFX
+    public const VFX VFX_HIT_WALL = VFX.HitWall;                                //å£ã«å½“ãŸã£ãŸæ™‚ã«ä½¿ç”¨ã™ã‚‹VFX
 
-    public static readonly Vector3 VFX_HIT_S_SCALE = new Vector3(10, 10, 1);    //ãƒqƒbƒg‚ÌVFX‚ÌƒXƒP[ƒ‹
-    public static readonly Vector3 VFX_HIT_M_SCALE = new Vector3(10, 10, 1);    //’†ƒqƒbƒg‚ÌVFX‚ÌƒXƒP[ƒ‹
-    public static readonly Vector3 VFX_HIT_L_SCALE = new Vector3(10, 10, 1);    //‘åƒqƒbƒg‚ÌVFX‚ÌƒXƒP[ƒ‹
-    public static readonly Vector3 VFX_GUARD_SCALE = new Vector3(20, 20, 1);    //ƒK[ƒh‚ÌVFX‚ÌƒXƒP[ƒ‹
-    public static readonly Vector3 VFX_DEAD_SCALE = new Vector3(10, 10, 1);     //€–S‚ÌVFX‚ÌƒXƒP[ƒ‹
-    public static readonly Vector3 VFX_WALL_SCALE = new Vector3(10, 10, 1);     //•Ç‚É“–‚½‚Á‚½‚ÌVFX‚ÌƒXƒP[ƒ‹
+    public static readonly Vector3 VFX_HIT_S_SCALE = new Vector3(10, 10, 1);    //å¼±ãƒ’ãƒƒãƒˆæ™‚ã®VFXã®ã‚¹ã‚±ãƒ¼ãƒ«
+    public static readonly Vector3 VFX_HIT_M_SCALE = new Vector3(10, 10, 1);    //ä¸­ãƒ’ãƒƒãƒˆæ™‚ã®VFXã®ã‚¹ã‚±ãƒ¼ãƒ«
+    public static readonly Vector3 VFX_HIT_L_SCALE = new Vector3(10, 10, 1);    //å¤§ãƒ’ãƒƒãƒˆæ™‚ã®VFXã®ã‚¹ã‚±ãƒ¼ãƒ«
+    public static readonly Vector3 VFX_GUARD_SCALE = new Vector3(20, 20, 1);    //ã‚¬ãƒ¼ãƒ‰æ™‚ã®VFXã®ã‚¹ã‚±ãƒ¼ãƒ«
+    public static readonly Vector3 VFX_DEAD_SCALE = new Vector3(10, 10, 1);     //æ­»äº¡æ™‚ã®VFXã®ã‚¹ã‚±ãƒ¼ãƒ«
+    public static readonly Vector3 VFX_WALL_SCALE = new Vector3(10, 10, 1);     //å£ã«å½“ãŸã£ãŸæ™‚ã®VFXã®ã‚¹ã‚±ãƒ¼ãƒ«
 
     //BGM
-    public const BGM BGM_BATTLE = BGM.Battle;                                   //ƒoƒgƒ‹BGM
-    public const BGM BGM_RESULT = BGM.Result;                                   //ƒŠƒUƒ‹ƒgBGM
+    public const BGM BGM_BATTLE = BGM.Battle;                                   //ãƒãƒˆãƒ«BGM
+    public const BGM BGM_RESULT = BGM.Result;                                   //ãƒªã‚¶ãƒ«ãƒˆBGM
 
     //SE
-    public const SE SE_HIT_STRIKE_S = SE.HitStrikeS;                            //ãƒqƒbƒg‚ÌSE
-    public const SE SE_HIT_STRIKE_M = SE.HitStrikeM;                            //’†ƒqƒbƒg‚ÌSE
-    public const SE SE_HIT_STRIKW_L = SE.HitStrikeL;                            //‘åƒqƒbƒg‚ÌSE
-    public const SE SE_PARRY = SE.Parry;                                        //ƒpƒŠƒB‚ÌSE
-    public const SE SE_STAN = SE.Stan;                                          //ƒXƒ^ƒ“‚ÌSE
-    public const SE SE_GUARD = SE.Guard;                                        //ƒK[ƒh‚ÌSE
-    public const SE SE_DEAD = SE.Dead;                                          //€–S‚ÌSE
-    public const SE SE_JUMP = SE.Jump;                                          //ƒWƒƒƒ“ƒv‚ÌSE
-    public const SE SE_LAND = SE.None;                                          //’…’n‚ÌSE
-    public const SE SE_WEAPON_SHOT = SE.WeaponShot;                             //•Ší‚ğ“Š‚°‚½‚ÌSE
-    public const SE SE_WEAPON_DRAWING = SE.WeaponDrawing;                       //•Ší‚ğ”²“‚ÌSE
-    public const SE SE_COLLIDE_BODY = SE.CollideBody;                           //ƒ{ƒfƒB“¯m‚ª‚Ô‚Â‚©‚Á‚½‚ÌSE
-    public const SE SE_HIT_WALL = SE.HitWall;                                   //ƒ{ƒfƒB“¯m‚ª‚Ô‚Â‚©‚Á‚½‚ÌSE
+    public const SE SE_HIT_STRIKE_S = SE.HitStrikeS;                            //å¼±ãƒ’ãƒƒãƒˆæ™‚ã®SE
+    public const SE SE_HIT_STRIKE_M = SE.HitStrikeM;                            //ä¸­ãƒ’ãƒƒãƒˆæ™‚ã®SE
+    public const SE SE_HIT_STRIKW_L = SE.HitStrikeL;                            //å¤§ãƒ’ãƒƒãƒˆæ™‚ã®SE
+    public const SE SE_PARRY = SE.Parry;                                        //ãƒ‘ãƒªã‚£æ™‚ã®SE
+    public const SE SE_STAN = SE.Stan;                                          //ã‚¹ã‚¿ãƒ³æ™‚ã®SE
+    public const SE SE_GUARD = SE.Guard;                                        //ã‚¬ãƒ¼ãƒ‰æ™‚ã®SE
+    public const SE SE_DEAD = SE.Dead;                                          //æ­»äº¡æ™‚ã®SE
+    public const SE SE_JUMP = SE.Jump;                                          //ã‚¸ãƒ£ãƒ³ãƒ—æ™‚ã®SE
+    public const SE SE_LAND = SE.None;                                          //ç€åœ°æ™‚ã®SE
+    public const SE SE_WEAPON_SHOT = SE.WeaponShot;                             //æ­¦å™¨ã‚’æŠ•ã’ãŸæ™‚ã®SE
+    public const SE SE_WEAPON_DRAWING = SE.WeaponDrawing;                       //æ­¦å™¨ã‚’æŠœåˆ€æ™‚ã®SE
+    public const SE SE_COLLIDE_BODY = SE.CollideBody;                           //ãƒœãƒ‡ã‚£åŒå£«ãŒã¶ã¤ã‹ã£ãŸæ™‚ã®SE
+    public const SE SE_HIT_WALL = SE.HitWall;                                   //ãƒœãƒ‡ã‚£åŒå£«ãŒã¶ã¤ã‹ã£ãŸæ™‚ã®SE
 }
 
 public class GameManager : MonoBehaviour
@@ -129,27 +129,27 @@ public class GameManager : MonoBehaviour
     {
         gameSet = false;
 
-        //UIResult‚Ì‚Â‚¢‚½ƒIƒuƒWƒFƒNƒg‚ğ‘S‚Ä’T‚µ‚Äæ“ª‚ğæ“¾(”ñƒAƒNƒeƒBƒu‚ÌƒIƒuƒWƒFƒNƒg‚ª‘ÎÛ‚Ì‚½‚ß‚±‚Ì‹Lq)
-        result = FindObjectsByType<UIRestult>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];@
+        //UIResultã®ã¤ã„ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å…¨ã¦æ¢ã—ã¦å…ˆé ­ã‚’å–å¾—(éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå¯¾è±¡ã®ãŸã‚ã“ã®è¨˜è¿°)
+        result = FindObjectsByType<UIRestult>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];ã€€
         result.gameObject.SetActive(false);
 
-        //‘S‚Ä‚Ìƒ‚ƒ“ƒXƒ^[‚ğæ“¾(”ñƒAƒNƒeƒBƒu‚Ìƒ‚ƒ“ƒXƒ^[‚ÍœŠO)
+        //å…¨ã¦ã®ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã‚’å–å¾—(éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã¯é™¤å¤–)
         allMonsters = FindObjectsByType<Monster>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
-        //‘S‚Ä‚Ìƒ‚ƒ“ƒXƒ^[‚É‘Î‚µ‚Äˆ—‚ğs‚¤
+        //å…¨ã¦ã®ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã«å¯¾ã—ã¦å‡¦ç†ã‚’è¡Œã†
         foreach (Monster monster in allMonsters)
         {
-            //“G‚ÌƒŠƒXƒg‚Ìì¬
+            //æ•µã®ãƒªã‚¹ãƒˆã®ä½œæˆ
             List<Monster> otherMonsters = new List<Monster>(allMonsters.OrderBy(obj => Vector3.Distance(obj.transform.position, monster.transform.position)).ToList());
             otherMonsters.Remove(monster);
             monster.Enemies = otherMonsters;
             if (otherMonsters.Count > 0)
                 monster.Enemy = otherMonsters[0];
 
-            //–‚–@‘‚ğİ’è
+            //é­”æ³•æ›¸ã‚’è¨­å®š
             monster.MagicBook = magicBook;
 
-            //HPƒo[‚ğİ’è
+            //HPãƒãƒ¼ã‚’è¨­å®š
             GameObject objHpBar = Instantiate(hpBarPrefab, Vector3.zero, Quaternion.identity);
             UIHPBar hpBar = objHpBar.GetComponent<UIHPBar>();
             hpBar.Character = monster.transform;
@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
             objHpBar.transform.SetParent(GameObject.Find("UIPlay").transform);
             objHpBar.transform.localScale = new Vector3(1, 1, 1);
 
-            //ƒAƒNƒVƒ‡ƒ“ƒeƒLƒXƒg‚ğİ’è
+            //ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’è¨­å®š
             GameObject actionBarObj = Instantiate(actionBarPrefab, Vector3.zero, Quaternion.identity);
             UIActionBar actionBar = actionBarObj.GetComponent<UIActionBar>();
             actionBar.Character = monster.transform;
@@ -167,7 +167,7 @@ public class GameManager : MonoBehaviour
             actionBar.transform.SetParent(GameObject.Find("UIPlay").transform);
             actionBar.transform.localScale = new Vector3(1, 1, 1);
 
-            //ƒJƒƒ‰‚Ì’Ç]‚Ìƒ^[ƒQƒbƒg‚ğİ’è
+            //ã‚«ãƒ¡ãƒ©ã®è¿½å¾“ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
             GameObject objCameraTartget = new GameObject();
             objCameraTartget.name = "CameraFollowTarget";
             objCameraTartget.transform.position = new Vector3(0,0,0);
@@ -183,17 +183,17 @@ public class GameManager : MonoBehaviour
 
     async Task GameStart() 
     {
-        //BGM‚ÌÄ¶
+        //BGMã®å†ç”Ÿ
         AudioManager.Instance.PlayBGM(Parameters.BGM_BATTLE);
 
         while (!gameSet) 
         {
             foreach (var monster in allMonsters)
             {
-                _ = monster.Action(); // Šeƒ‚ƒ“ƒXƒ^[‚ÌAction‚ğŒÄ‚Ño‚µ
+                _ = monster.Action(); // å„ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®Actionã‚’å‘¼ã³å‡ºã—
             }
 
-            // w’è‚³‚ê‚½ŠÔiƒ~ƒŠ•bj‚¾‚¯‘Ò‹@
+            // æŒ‡å®šã•ã‚ŒãŸæ™‚é–“ï¼ˆãƒŸãƒªç§’ï¼‰ã ã‘å¾…æ©Ÿ
             await Task.Delay(5000);
         }
 
@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
             monster.CancelActions();
         }
 
-        //BGM‚Ì’â~
+        //BGMã®åœæ­¢
         AudioManager.Instance.StopBGM();
 
         AudioManager.Instance.PlayBGM(Parameters.BGM_RESULT);
@@ -216,7 +216,7 @@ public class GameManager : MonoBehaviour
         GameSetCheck();
     }
 
-    //ƒQ[ƒ€‚ÌI—¹”»’è
+    //ã‚²ãƒ¼ãƒ ã®çµ‚äº†åˆ¤å®š
     void GameSetCheck() 
     {
         int deadMonsters = 0;
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
         {
             gameSet = true;
 
-            //¶‚«c‚Á‚½ƒ‚ƒ“ƒXƒ^[‚ğæ“¾
+            //ç”Ÿãæ®‹ã£ãŸãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã‚’å–å¾—
             foreach (Monster monster in allMonsters)
             {
                 if (!monster.IsDead)
@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            //ƒŠƒUƒ‹ƒg‰æ–Ê‚ğ•\¦
+            //ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã‚’è¡¨ç¤º
             result.gameObject.SetActive(true);
         }
     }

@@ -18,7 +18,7 @@ public class Monster : MonoBehaviour
     public bool IsAttacking { get; private set; }                                               //攻撃中か
     public bool IsGuarding { get; private set; }                                                //防御中か
     public bool IsBackSteping { get; private set; }                                             //バックステップ中か
-    public bool IsDashing { get; private set; }                                                 //ダッシュ中か
+    public bool IsForward { get; private set; }                                                 //ダッシュ中か
     public bool IsJumping { get; private set; }                                                 //ジャンプ中か
     public bool IsGrounded { get; private set; }                                                //地面にいるか
     public bool IsAirborne { get { return !IsGrounded; } private set { IsAirborne = value; } }  //空中にいるか
@@ -206,7 +206,7 @@ public class Monster : MonoBehaviour
 
         ActionBar.SendText("Forward");
 
-        IsDashing = true;
+        IsForward = true;
 
         //相手を見る
         LookAtEnemy();
@@ -216,7 +216,7 @@ public class Monster : MonoBehaviour
 
         await Wait(Parameters.ACTION_INTERVAL_DASH);
 
-        IsDashing = false;
+        IsForward = false;
     }
 
     //バックステップ：相手から離れる
@@ -305,6 +305,31 @@ public class Monster : MonoBehaviour
 
         await Wait(Parameters.ACTION_INTERVAL_JUMP);
     }
+
+    async virtual protected Task Move(float x, float y, float force)
+    {
+        if (canceler.IsCancel) return;
+
+        ActionBar.SendText("Move");
+
+        IsForward = true;
+
+        if (x > 0 && !IsFacingRight)
+        {
+            Flip();
+        }
+        else if (x < 0 && IsFacingRight)
+        {
+            Flip();
+        }
+
+        rb.AddForce(new Vector2(x, y).normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
+
+        await Wait(Parameters.ACTION_INTERVAL_DASH);
+
+        IsForward = false;
+    }
+
 
     async Task Stun() 
     {
