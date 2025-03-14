@@ -26,13 +26,13 @@ public class Monster : MonoBehaviour
     public bool IsFacingRight { get; private set; }                                             //右を向いているか
     public bool IsStunned { get; set; }                                                         //スタン状態か
     public bool IsFloating { get; set; }                                                        //浮遊状態か
+    private bool IsStunable;                                                                    //スタン可能か
 
     Body body;          //本体
     Weapon weapon;      //武器
     Guard guard;        //防具
-    Rigidbody2D rb;
-    
-    bool IsStunable = true; //スタン可能か
+    Rigidbody2D rb;     //物理挙動
+
     int EnemyCheckCount = 0;
 
     //敵の情報
@@ -67,6 +67,7 @@ public class Monster : MonoBehaviour
         //アクションバーの所有者を登録
         ActionBar.Owner = this;
 
+        IsStunable = true;
         IsDead = false;
         EnemyCheckCount = 0;
     }
@@ -76,39 +77,7 @@ public class Monster : MonoBehaviour
         _ = ExcecuteActionLoop();
     }
 
-    public async virtual Task Action()
-    {
-        await Task.Yield();
-    }
-
-    async Task ExcecuteActionLoop()
-    {
-        IsFacingRight = true;
-        if (transform.position.x >= 0) Flip();
-
-        await Wait(Parameters.START_INTERVAL);
-
-        while (!IsDead && canceler.IsNotCancel)
-        {
-            await ActionLoop();
-
-            await Task.Yield();
-        }
-    }
-
-    async virtual protected Task ActionLoop()
-    {
-        await Task.Yield();
-    }
-
-    async protected Task Wait(float sec)
-    {
-        if(canceler.IsCancel) return;
-
-        await Task.Delay((int)(sec * 1000), canceler.Token);
-    }
-
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         //敵の情報の更新
         UpdateEnemies();
@@ -124,7 +93,7 @@ public class Monster : MonoBehaviour
 
         rb.linearVelocity = clampedVelocity;
 
-        if(IsBackSteping)
+        if (IsBackSteping)
         {
             if (Mathf.Abs(rb.linearVelocity.x) < Parameters.BACKSTEP_CANCELATION_VELOCITY)
             {
@@ -133,22 +102,22 @@ public class Monster : MonoBehaviour
         }
 
         //スタン状態の処理
-        if (IsStunned && IsStunable) 
+        if (IsStunned && IsStunable)
         {
             _ = Stun();
         }
 
         //死亡判定
-        if (!IsDead) 
+        if (!IsDead)
         {
             bool judge = false;
 
-            if (HpBar.IsEmpty())                                           judge = true;
-            if (transform.position.y <= Parameters.DEAD_LINE_Y_DOWN)       judge = true;
-            if (transform.position.y >= Parameters.DEAD_LINE_Y_UP)         judge = true;
+            if (HpBar.IsEmpty()) judge = true;
+            if (transform.position.y <= Parameters.DEAD_LINE_Y_DOWN) judge = true;
+            if (transform.position.y >= Parameters.DEAD_LINE_Y_UP) judge = true;
             if (Mathf.Abs(transform.position.x) >= Parameters.DEAD_LINE_X) judge = true;
 
-            if (judge) 
+            if (judge)
             {
                 IsDead = true;
                 gameObject.SetActive(false);
@@ -163,8 +132,40 @@ public class Monster : MonoBehaviour
         }
     }
 
+    public async virtual Task Action()
+    {
+        await Task.Yield();
+    }
+
+    private async Task ExcecuteActionLoop()
+    {
+        IsFacingRight = true;
+        if (transform.position.x >= 0) Flip();
+
+        await Wait(Parameters.START_INTERVAL);
+
+        while (!IsDead && canceler.IsNotCancel)
+        {
+            await ActionLoop();
+
+            await Task.Yield();
+        }
+    }
+
+    protected async virtual Task ActionLoop()
+    {
+        await Task.Yield();
+    }
+
+    protected async Task Wait(float sec)
+    {
+        if(canceler.IsCancel) return;
+
+        await Task.Delay((int)(sec * 1000), canceler.Token);
+    }
+
     // 攻撃
-    async virtual protected Task Attack() 
+    protected async virtual Task Attack() 
     {
         if(canceler.IsCancel) return;
 
@@ -179,8 +180,8 @@ public class Monster : MonoBehaviour
         IsAttacking = false;
     }
 
-    // ガード : アタックへの対抗
-    async virtual protected Task Guard() 
+    // ガード
+    protected async virtual Task Guard() 
     {
         if (canceler.IsCancel) return;
 
@@ -200,7 +201,7 @@ public class Monster : MonoBehaviour
     }
 
     //ダッシュ：相手に向かって進む
-    async virtual protected Task Forward(float force) 
+    protected async virtual Task Forward(float force) 
     {
         if (canceler.IsCancel) return;
 
@@ -220,7 +221,7 @@ public class Monster : MonoBehaviour
     }
 
     //バックステップ：相手から離れる
-    async virtual protected Task BackStep(float force)
+    protected async virtual Task BackStep(float force)
     {
         if (canceler.IsCancel) return;
 
@@ -237,8 +238,8 @@ public class Monster : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_BACKSTEP);
     }
 
-    // 垂直ジャンプ (100で画面上まで飛ぶ)
-    async virtual protected Task Jump(float height) 
+    // 垂直ジャンプ
+    protected async virtual Task Jump(float height) 
     {
         if (canceler.IsCancel) return;
 
@@ -248,7 +249,7 @@ public class Monster : MonoBehaviour
     }
 
     // 前斜めジャンプ
-    async virtual protected Task JumpForward(float height)
+    protected async virtual Task JumpForward(float height)
     {
         if (canceler.IsCancel) return;
 
@@ -267,7 +268,7 @@ public class Monster : MonoBehaviour
     }
 
     // 後斜めジャンプ
-    async virtual protected Task JumpBackward(float height)
+    protected async virtual Task JumpBackward(float height)
     {
         if (canceler.IsCancel) return;
 
@@ -285,28 +286,8 @@ public class Monster : MonoBehaviour
         await JumpCommon(dir, height);
     }
 
-    async Task JumpCommon(Vector2 direction, float height)
-    {
-        if (IsGrounded)
-        {
-            AudioManager.Instance.PlaySE(Parameters.SE_JUMP);
-
-            IsJumping = true;
-
-            //相手を見る
-            LookAtEnemy();
-
-            //必要なジャンプ力を計算
-            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
-            jumpForce *= Parameters.JUMP_FORCE_SCALE;
-
-            rb.AddForce(direction * jumpForce, ForceMode2D.Impulse);
-        }
-
-        await Wait(Parameters.ACTION_INTERVAL_JUMP);
-    }
-
-    async virtual protected Task Move(float x, float y, float force)
+    // 自由移動
+    protected async virtual Task Move(float x, float y, float force)
     {
         if (canceler.IsCancel) return;
 
@@ -330,30 +311,14 @@ public class Monster : MonoBehaviour
         IsForward = false;
     }
 
-
-    async Task Stun() 
-    {
-        //スタン不可にする
-        IsStunable = false;
-
-        await body.Stun();
-
-        await Wait(Parameters.GUARD_STUN_DURATION);
-
-        IsStunned = false;
-
-        //スタン可能にする
-        IsStunable = true;
-    }
-
-    //浮遊状態の切り替え
-    async protected Task Floating(bool value) 
+    // 浮遊状態の切り替え
+    protected async Task Floating(bool value)
     {
         IsFloating = value;
 
         if (IsFloating)
         {
-            rb.gravityScale = 0;   
+            rb.gravityScale = 0;
         }
         else
         {
@@ -363,72 +328,44 @@ public class Monster : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_FLOATING);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    // ジャンプの共通処理
+    private async Task JumpCommon(Vector2 direction, float height)
     {
-        GameObject obj = other.gameObject;
-
-        //武器との接触時の処理
-        if (obj.CompareTag(Tags.Weapon))
+        if (IsGrounded)
         {
-            if (HasComponent<Weapon>(obj))
-            {
-                Weapon weapon = obj.GetComponent<Weapon>();
+            AudioManager.Instance.PlaySE(Parameters.SE_JUMP);
 
-                bool hitable = false;
+            IsJumping = true;
 
-                if (weapon.Owner != this)
-                {
-                    hitable = true;
-                }
-                else
-                {
-                    if (weapon.IsHitableOwner) 
-                    {
-                        hitable = true;
-                    }
-                }
+            //相手を見る
+            LookAtEnemy();
 
-                if (hitable) 
-                {
-                    Vector2 direction = (transform.position - obj.transform.position).normalized;
-                    direction = new Vector2(direction.x, direction.y + Parameters.WEAPON_ONHIT_ADD_DIRECTION_Y).normalized;
-                    
-                    //武器のダメージ値の計算
-                    weapon.CalcutlateDamage();
+            //必要なジャンプ力を計算
+            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
+            jumpForce *= Parameters.JUMP_FORCE_SCALE;
 
-                    if (IsGuarding)
-                    {
-                        HpBar.TakeDamage(weapon.Damage * Parameters.WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING);
-                        rb.AddForce(direction * weapon.StrikeForce * Parameters.WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING,ForceMode2D.Impulse);
-                    }
-                    else
-                    {
-                        PlayHitWeaponVFX(other);
-
-                        //ダメージ加えて吹き飛ばす
-                        HpBar.TakeDamage(weapon.Damage);
-                        rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
-                    }
-                }
-            }
+            rb.AddForce(direction * jumpForce, ForceMode2D.Impulse);
         }
+
+        await Wait(Parameters.ACTION_INTERVAL_JUMP);
     }
 
-    //武器のヒットエフェクトの再生
-    void PlayHitWeaponVFX(Collider2D weaponCollider) 
+    // スタン状態の処理
+    private async Task Stun() 
     {
-        // 衝突点を取得
-        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
+        //スタン不可にする
+        IsStunable = false;
 
-        // ヒットエフェクトを再生
-        VFXManager.Instance.Play(Parameters.VFX_HIT_S, collisionPoint, transform.rotation);
-    }
+        weapon.CancelActions();
 
-    //ステージの壁のヒットエフェクトの再生
-    void PlayHitWallVFX(Vector3 collisionPoint)
-    {
-        // ヒットエフェクトを再生
-        VFXManager.Instance.Play(Parameters.VFX_HIT_WALL, collisionPoint, transform.rotation);
+        await body.Flash();
+
+        await Wait(Parameters.GUARD_STUN_DURATION);
+
+        IsStunned = false;
+
+        //スタン可能にする
+        IsStunable = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -491,6 +428,14 @@ public class Monster : MonoBehaviour
         }
     }
 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag(Tags.Platform))
+        {
+            IsGrounded = false;
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D collider)
     {
         GameObject obj = collider.gameObject;
@@ -502,7 +447,6 @@ public class Monster : MonoBehaviour
             Knockback(obj);
         }
     }
-
 
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -519,14 +463,75 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag(Tags.Platform))
+        GameObject obj = other.gameObject;
+
+        //武器との接触時の処理
+        if (obj.CompareTag(Tags.Weapon))
         {
-            IsGrounded = false;
+            if (HasComponent<Weapon>(obj))
+            {
+                Weapon weapon = obj.GetComponent<Weapon>();
+
+                bool hitable = false;
+
+                if (weapon.Owner != this)
+                {
+                    hitable = true;
+                }
+                else
+                {
+                    if (weapon.IsHitableOwner)
+                    {
+                        hitable = true;
+                    }
+                }
+
+                if (hitable)
+                {
+                    Vector2 direction = (transform.position - obj.transform.position).normalized;
+                    direction = new Vector2(direction.x, direction.y + Parameters.WEAPON_ONHIT_ADD_DIRECTION_Y).normalized;
+
+                    //武器のダメージ値の計算
+                    weapon.CalcutlateDamage();
+
+                    if (IsGuarding)
+                    {
+                        HpBar.TakeDamage(weapon.Damage * Parameters.WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING);
+                        rb.AddForce(direction * weapon.StrikeForce * Parameters.WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING, ForceMode2D.Impulse);
+                    }
+                    else
+                    {
+                        PlayHitWeaponVFX(other);
+
+                        //ダメージ加えて吹き飛ばす
+                        HpBar.TakeDamage(weapon.Damage);
+                        rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
+                    }
+                }
+            }
         }
     }
 
+    // 武器のヒットエフェクトの再生
+    private void PlayHitWeaponVFX(Collider2D weaponCollider)
+    {
+        // 衝突点を取得
+        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
+
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(Parameters.VFX_HIT_S, collisionPoint, transform.rotation);
+    }
+
+    // ステージの壁のヒットエフェクトの再生
+    private void PlayHitWallVFX(Vector3 collisionPoint)
+    {
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(Parameters.VFX_HIT_WALL, collisionPoint, transform.rotation);
+    }
+
+    // ノックバック処理
     private void Knockback(GameObject enemy) 
     {
         if (HasComponent<Rigidbody2D>(enemy) && HasComponent<Rigidbody2D>(gameObject))
@@ -538,13 +543,8 @@ public class Monster : MonoBehaviour
         }
     }
 
-    bool HasComponent<T>(GameObject obj) where T : Component
-    {
-        return obj.GetComponent<T>() != null;
-    }
-
     // キャラクターの向きを反転する
-    public void Flip() 
+    private void Flip() 
     {
         IsFacingRight = !IsFacingRight;
         Vector3 scale = transform.localScale;
@@ -552,7 +552,7 @@ public class Monster : MonoBehaviour
         transform.localScale = scale;
     }
 
-    //相手の方を向く
+    // 相手の方を向く
     public void LookAtEnemy() 
     {
         if (Direction.x > 0 && !IsFacingRight)
@@ -565,18 +565,20 @@ public class Monster : MonoBehaviour
         }
     }
 
+    // Hpバーの設定
     public void SetHpBar(UIHPBar hpBar)
     {
         this.HpBar = hpBar;
     }
 
+    // アクションバーの設定
     public void SetActionBar(UIActionBar actionBar)
     {
         this.ActionBar = actionBar;
     }
 
-    //敵の情報の更新
-    void UpdateEnemies()
+    // 敵の情報の更新
+    private void UpdateEnemies()
     {
         if (EnemyCheckCount >= Parameters.ENEMY_CHECK_FREAKENCE)
         {
@@ -599,4 +601,11 @@ public class Monster : MonoBehaviour
 
         EnemyCheckCount++;
     }
+
+    // コンポーネントの有無を確認
+    private bool HasComponent<T>(GameObject obj) where T : Component
+    {
+        return obj.GetComponent<T>() != null;
+    }
+
 }

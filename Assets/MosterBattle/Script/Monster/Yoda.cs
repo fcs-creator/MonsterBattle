@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class Yoda : Monster
@@ -34,7 +34,7 @@ public class Yoda : Monster
         }
         else
         {
-            await Forward(Distance * 10);
+            //await Forward(Distance * 10);
         }
         atk = !atk;
     }

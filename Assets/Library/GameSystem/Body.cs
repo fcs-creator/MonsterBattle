@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
@@ -6,47 +6,48 @@ using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 public class Body : MonoBehaviour
 {
+    Monster owner;
     PolygonCollider2D bodyCollider;
     Rigidbody2D rbParent;
 
     SpriteRenderer sr;
     Color originalColor;
     float flashDuration = 0.1f;
-    float hitStopDuration = 0.05f;
-    float slowMotionScale = 0.1f; // ƒXƒ[‚Ì“x‡‚¢‚ğ’²®‚·‚éƒpƒ‰ƒ[ƒ^
 
-    //ƒ^ƒXƒN‚ğƒLƒƒƒ“ƒZƒ‹
+    //ã‚¿ã‚¹ã‚¯ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«
     readonly Canceler canceler = new Canceler();
 
     void Awake()
     {
-        //e‚ÌƒŠƒWƒbƒhƒ{ƒfƒB‚ğæ“¾
+        owner = transform.parent.GetComponent<Monster>();
+
+        //è¦ªã®ãƒªã‚¸ãƒƒãƒ‰ãƒœãƒ‡ã‚£ã‚’å–å¾—
         rbParent = transform.parent.gameObject.GetComponent<Rigidbody2D>();
         rbParent.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rbParent.gravityScale = Parameters.GRAVITY_SCALE;
         rbParent.freezeRotation = true;
 
-        //•¨—ƒ}ƒeƒŠƒAƒ‹‚Ìİ’è
+        //ç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š
         rbParent.sharedMaterial = Resources.Load<PhysicsMaterial2D>("MonsterPhysicsMaterial");
 
-        //ƒ^ƒO‚Ìİ’è
+        //ã‚¿ã‚°ã®è¨­å®š
         gameObject.tag = Tags.Body;
 
-        //ƒXƒvƒ‰ƒCƒg‚Ìƒ\[ƒgƒŒƒCƒ„[‚ğİ’è
+        //ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚½ãƒ¼ãƒˆãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¨­å®š
         sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sortingLayerName = SortLayer.Body;
 
-        //ƒXƒvƒ‰ƒCƒg‚ÌF‚ğæ“¾
+        //ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è‰²ã‚’å–å¾—
         originalColor = sr.color;
 
-        //ƒRƒ‰ƒCƒ_[‚ğİ’è
+        //ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’è¨­å®š
         bodyCollider = gameObject.AddComponent<PolygonCollider2D>();
         bodyCollider.autoTiling = true;
 
         UpdateMassBasedOnArea();
     }
 
-    void UpdateMassBasedOnArea()
+    private void UpdateMassBasedOnArea()
     {
         if (bodyCollider != null)
         {
@@ -54,14 +55,14 @@ public class Body : MonoBehaviour
             float massMag= Parameters.MASS_MAGNIFICATION;
             float massMax = Parameters.MASS_MAX;
             float massMin = Parameters.MASS_MIN;
-            rbParent.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // ¿—Ê‚ğİ’è
+            rbParent.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // è³ªé‡ã‚’è¨­å®š
             Debug.Log(transform.parent.name + " : " + rbParent.mass + "kg");
         }
     }
 
-    float CalculateScaledArea()
+    private float CalculateScaledArea()
     {
-        // ƒ[ƒJƒ‹À•W‚Å‚Ì–ÊÏ‚ğŒvZ
+        // ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã§ã®é¢ç©ã‚’è¨ˆç®—
         Vector2[] points = bodyCollider.points;
         float localArea = 0;
         for (int i = 0; i < points.Length; i++)
@@ -72,30 +73,25 @@ public class Body : MonoBehaviour
         }
         localArea = Mathf.Abs(localArea) * 0.5f;
 
-        // e‚ÌƒXƒP[ƒ‹‚àŠÜ‚ß‚ÄƒXƒP[ƒ‹‚ğ“K—p
+        // è¦ªã®ã‚¹ã‚±ãƒ¼ãƒ«ã‚‚å«ã‚ã¦ã‚¹ã‚±ãƒ¼ãƒ«ã‚’é©ç”¨
         Vector3 lossyScale = bodyCollider.transform.lossyScale;
         float totalScaledArea = localArea * Mathf.Abs(lossyScale.x) * Mathf.Abs(lossyScale.y);
 
         return totalScaledArea;
     }
 
-    public async Task Stun() 
-    {
-        await FlashAndHitStopTask();
-    }
-
-    private async Task FlashAndHitStopTask()
+    public async Task Flash()
     {
         float elapsedTime = 0f;
 
         while (elapsedTime < Parameters.GUARD_STUN_DURATION && canceler.IsNotCancel)
         {
-            // ƒXƒvƒ‰ƒCƒg‚ÌF‚ğ•ÏX
-            sr.color = new Color(originalColor.r * 0.5f, originalColor.g * 0.5f, originalColor.b * 0.5f, 0.5f); // ”¼“§–¾‚Éİ’è
+            // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è‰²ã‚’å¤‰æ›´
+            sr.color = new Color(originalColor.r * 0.5f, originalColor.g * 0.5f, originalColor.b * 0.5f, 0.5f); // åŠé€æ˜ã«è¨­å®š
             await Wait(flashDuration);
             elapsedTime += flashDuration;
 
-            // ƒXƒvƒ‰ƒCƒg‚ÌF‚ğŒ³‚É–ß‚·
+            // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è‰²ã‚’å…ƒã«æˆ»ã™
             sr.color = originalColor;
             await Wait(flashDuration);
             elapsedTime += flashDuration;
@@ -117,7 +113,7 @@ public class Body : MonoBehaviour
     {
         if (collision.gameObject.tag == Tags.Body) 
         {
-            // ƒ{ƒfƒB“¯m‚ªÕ“Ë‚µ‚½Û‚ÌSEÄ¶
+            // ãƒœãƒ‡ã‚£åŒå£«ãŒè¡çªã—ãŸéš›ã®SEå†ç”Ÿ
             AudioManager.Instance.PlaySE(Parameters.SE_COLLIDE_BODY);
         }   
     }

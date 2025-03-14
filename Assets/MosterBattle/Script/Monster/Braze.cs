@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class Braze : Monster
@@ -7,13 +7,13 @@ public class Braze : Monster
     {
         await Guard();
         
-        await Forward(100);
-        
-        await Attack();
-        
-        await BackStep(50);
-        
-        await JumpForward(30);
+        //await Forward(100);
+        //
+        //await Attack();
+        //
+        //await BackStep(50);
+        //
+        //await JumpForward(30);
     }
 
 }

@@ -1,10 +1,10 @@
-using System;
+ï»¿using System;
 using System.Threading;
 
 public interface ICancellable
 {
-    void Cancel(); // ƒLƒƒƒ“ƒZƒ‹‚ðŽÀs
-    CancellationToken Token { get; } // ƒg[ƒNƒ“‚ðŽæ“¾
+    void Cancel(); // ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã‚’å®Ÿè¡Œ
+    CancellationToken Token { get; } // ãƒˆãƒ¼ã‚¯ãƒ³ã‚’å–å¾—
 }
 
 public class Canceler : ICancellable
@@ -16,10 +16,10 @@ public class Canceler : ICancellable
         cts = new CancellationTokenSource();
     }
 
-    // ƒg[ƒNƒ“‚ðŒöŠJ
+    // ãƒˆãƒ¼ã‚¯ãƒ³ã‚’å…¬é–‹
     public CancellationToken Token => cts.Token;
 
-    // ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ä‚¢‚È‚¢ê‡
+    // ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¦ã„ãªã„å ´åˆ
     public bool IsNotCancel => !cts.IsCancellationRequested;
     public bool IsCancel => cts.IsCancellationRequested;
 

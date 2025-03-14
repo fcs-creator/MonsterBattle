@@ -15,6 +15,7 @@ public class Weapon : MonoBehaviour
     public float StrikeForce { get; private set; }      // 武器の吹き飛ばす力
 
     // 武器のダメージ
+    private float damage;
     public float Damage
     {
         get
@@ -27,8 +28,6 @@ public class Weapon : MonoBehaviour
             damage = value;
         }      
     }
-
-    private float damage;
 
     Vector3 defaultLocalPosition;   // 武器の初期座標
     Vector3 defaultLocalScale;      // 武器の初期スケール
@@ -44,6 +43,12 @@ public class Weapon : MonoBehaviour
 
     //タスクをキャンセルするための共通トークン
     readonly Canceler canceler = new Canceler();
+
+    //アクションのキャンセル
+    public void CancelActions()
+    {
+        canceler.Cancel();
+    }
 
     void Awake()
     {
@@ -124,7 +129,7 @@ public class Weapon : MonoBehaviour
         _ = ExcecuteActionLoop();   //呼び出し&Taskを破棄
     }
 
-    async Task ExcecuteActionLoop()
+    private async Task ExcecuteActionLoop()
     {
         await Wait(Parameters.START_INTERVAL);
 
@@ -144,7 +149,7 @@ public class Weapon : MonoBehaviour
         canceler.Cancel();
     }
 
-    async public Task ExecuteAttack()
+    public async Task ExecuteAttack()
     {
         WarpDefault();
 
@@ -158,19 +163,19 @@ public class Weapon : MonoBehaviour
     }
 
     //基本はこちらが呼び出される
-    async virtual protected Task Attack()
+    protected async virtual Task Attack()
     {
         await Task.Yield();
     }
 
-    //自動制御する武器が作れる(おまけ要素)
-    async virtual protected Task ActionLoop()
+    //自動制御する武器にする
+    protected async virtual Task ActionLoop()
     {
         await Task.Yield();
     }
 
     //指定秒数待つ
-    async protected Task Wait(float sec)
+    protected async Task Wait(float sec)
     {
         if (canceler.IsCancel) return;
 
@@ -178,7 +183,7 @@ public class Weapon : MonoBehaviour
     }
 
     //初期位置にワープ
-    void WarpDefault()
+    private void WarpDefault()
     {
         //武器を握った状態にする
         SetGripWeapon(true);
@@ -211,7 +216,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を初期位置にリセットする
-    async protected Task Default()
+    protected async Task Default()
     {
         //武器を握るモードにする
         SetGripWeapon(true);
@@ -247,7 +252,7 @@ public class Weapon : MonoBehaviour
     }
 
     //居合い抜き
-    async protected Task Drawing()
+    protected async Task Drawing()
     {
         if (canceler.IsCancel) return;
 
@@ -271,7 +276,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を指定された(x, y)位置にs秒で移動させる
-    async protected Task Move(float x, float y, float s)
+    protected async Task Move(float x, float y, float s)
     {
         if (canceler.IsCancel) return;
 
@@ -298,7 +303,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器をangle度s秒でその場回転させる
-    async protected Task Spin(float angle, float s)
+    protected async Task Spin(float angle, float s)
     {
         if (canceler.IsCancel) return;
 
@@ -322,7 +327,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器をモンスターの周囲で回転させる(上方向が基準で0°)
-    async protected Task Rotate(float startAngle, float rotAngle, float second) 
+    protected async Task Rotate(float startAngle, float rotAngle, float second) 
     {
         if (canceler.IsCancel) return;
 
@@ -385,34 +390,8 @@ public class Weapon : MonoBehaviour
         WarpDefault();
     }
 
-    //武器をモンスターの周囲を1回転する
-    async protected Task Rotation360()
-    {
-        if (canceler.IsCancel) return;
-
-        Transform centerObject = Owner.transform;
-
-        float rotationSpeed = 400.0f; // 回転速度
-        float angle = 0;
-        float angleAmount = 0;
-
-        while (angleAmount < 360 && canceler.IsNotCancel)
-        {
-            //回転：中心が基準
-            angle = rotationSpeed * Time.deltaTime;
-            transform.RotateAround(centerObject.position, Vector3.forward, angle);
-
-            //位置：半径を元に移動して補正する
-            Vector3 desiredPosition = (transform.position - centerObject.position).normalized * orbitRadius + centerObject.position;
-            transform.position = desiredPosition;
-
-            angleAmount += angle;
-            await Task.Yield();
-        }
-    }
-
     //武器を指定された方向に飛ばす (向きは-1~1の少数で指定 上向き:1, 正面:0, 下向き: -1)
-    async public Task Shot(float directionY, float power)
+    public async Task Shot(float directionY, float power)
     {
         if (canceler.IsCancel) return;
 
@@ -443,7 +422,8 @@ public class Weapon : MonoBehaviour
         isShot = false;
     }
 
-    async protected Task Clone(int num)
+    //武器を複製する
+    protected async Task Clone(int num)
     {
         if (canceler.IsCancel) return;
 
@@ -458,30 +438,8 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //武器をモンスターによる制御から切り離す
-    async protected Task Purge()
-    {
-        SetGripWeapon(false);
-
-        // ワールド座標を保存
-        Vector3 worldPosition = transform.position;
-
-        // 親オブジェクトから切り離す
-        transform.SetParent(null);
-
-        // 元の位置に戻す
-        transform.position = worldPosition;
-
-        await Task.Yield();
-    }
-
-    private bool HasComponent<T>(GameObject obj) where T : Component
-    {
-        return obj.GetComponent<T>() != null;
-    }
-
     //自分のBodyの当たり判定から1度出た武器は当たるようになる
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag(Tags.Body))
         {
@@ -499,7 +457,8 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    void SetActive(bool value) 
+    //武器を有効・無効を切り替える
+    private void SetActive(bool value) 
     {
         foreach (GameObject weapon in weapons)  
         {
@@ -508,7 +467,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を握っているかどうかの状態をセット
-    void SetGripWeapon(bool value) 
+    private void SetGripWeapon(bool value) 
     {
         if (value)
         {
@@ -524,7 +483,8 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    float CalculateScaledArea(PolygonCollider2D collider)
+    //コライダーの面積を計算
+    private float CalculateScaledArea(PolygonCollider2D collider)
     {
         // ローカル座標での面積を計算
         Vector2[] points = collider.points;
@@ -544,6 +504,7 @@ public class Weapon : MonoBehaviour
         return totalScaledArea;
     }
 
+    //ダメージを計算
     public float CalcutlateDamage() 
     {
         if (isShot)
@@ -556,5 +517,11 @@ public class Weapon : MonoBehaviour
             if (speed < 1) speed = 1;
             return rb.mass * speed * Parameters.WEAPON_DAMAGE_SCALE;
         }
+    }
+
+    //コンポネントを所持しているかどうか
+    private bool HasComponent<T>(GameObject obj) where T : Component
+    {
+        return obj.GetComponent<T>() != null;
     }
 }

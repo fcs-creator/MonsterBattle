@@ -40,7 +40,7 @@ public static class Parameters
     //ボディ
     public const float MASS_MAGNIFICATION = 3;                                  //面積に対する重さの倍率
     public const float MASS_MAX = 100;                                          //最大質量
-    public const float MASS_MIN = 5;                                            //最小質量
+    public const float MASS_MIN = 0.01f;                                        //最小質量
 
     //武器
     public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.25f;                    //武器が当たったときの上方向への吹き飛ばしの加算値
