@@ -80,7 +80,7 @@ public class Body : MonoBehaviour
         return totalScaledArea;
     }
 
-    public async Task Flash()
+    public async void Flash()
     {
         float elapsedTime = 0f;
 

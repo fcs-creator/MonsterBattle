@@ -28,14 +28,17 @@ public class Yoda : Monster
         //Attack();
 
         //await Forward(Distance * 50);
-        if (atk)
-        {
-            await Attack();
-        }
-        else
-        {
-            //await Forward(Distance * 10);
-        }
-        atk = !atk;
+
+        await Attack();
+
+        //if (atk)
+        //{
+        //    await Attack();
+        //}
+        //else
+        //{
+        //    //await Forward(Distance * 10);
+        //}
+        //atk = !atk;
     }
 }

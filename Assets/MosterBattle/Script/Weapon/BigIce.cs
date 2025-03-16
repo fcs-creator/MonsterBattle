@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class BigIce: Weapon
 {
-    async protected override Task Attack() 
+    async protected override Task Attack(int number) 
     {
         await Rotate(0,100,0.5f);
 

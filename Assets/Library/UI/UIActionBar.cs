@@ -1,17 +1,20 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.TextCore.Text;
 using TMPro;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 using System.Threading.Tasks;
+using System.Threading;
 
 public class UIActionBar : MonoBehaviour
 {
-    public Monster Owner { get; set; }       // ƒLƒƒƒ‰ƒNƒ^[‚ÌQÆ
-    public Transform Character { get; set; } // ƒLƒƒƒ‰ƒNƒ^[‚ÌTransform
-    public Vector3 Offset { get; set; }      // ƒLƒƒƒ‰ƒNƒ^[‚©‚ç‚ÌƒIƒtƒZƒbƒg
-    TextMeshProUGUI text;                    // ƒQ[ƒW‚Ì‰æ‘œ
+    public Monster Owner { get; set; }       // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å‚ç…§
+    public Transform Character { get; set; } // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®Transform
+    public Vector3 Offset { get; set; }      // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+    TextMeshProUGUI text;                    // ã‚²ãƒ¼ã‚¸ã®ç”»åƒ
     
+    Canceler canceler = new Canceler();
+
     void Awake()
     {
         text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -35,34 +38,57 @@ public class UIActionBar : MonoBehaviour
         Hide();
     }
 
-    // ƒeƒLƒXƒg‚ğ•\¦‚·‚éƒƒ\ƒbƒh
+    // ãƒ†ã‚­ã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void SendText(string value)
     {
         UpdatePosition();
 
         text.text = value;
-
         gameObject.SetActive(true);
 
-        Invoke("Hide", 1);
+        canceler.Cancel();
+        canceler.Reset();
+
+        Hide();
     }
 
-    void Hide() 
+    private async void Hide()
     {
-        gameObject.SetActive(false);
+        try
+        {
+            // 1ç§’å¾…æ©Ÿ (ã‚­ãƒ£ãƒ³ã‚»ãƒ«å¯èƒ½)
+            await Task.Delay(1000, canceler.Token);
+
+            // ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¦ã„ãªã„å ´åˆã«éè¡¨ç¤ºã«ã™ã‚‹
+            gameObject?.SetActive(false);
+        }
+        catch (TaskCanceledException)
+        {
+            // ã‚¿ã‚¹ã‚¯ãŒã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸå ´åˆã®å‡¦ç†ï¼ˆç‰¹ã«ä½•ã‚‚è¡Œã‚ãªã„ï¼‰
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒç ´æ£„ã•ã‚Œã‚‹éš›ã«ãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾
+        if (canceler != null)
+        {
+            canceler.Cancel();
+            canceler.Dispose();
+        }
     }
 
     void UpdatePosition() 
     {
         if (Character != null)
         {
-            // ƒJƒƒ‰‚ÌQÆ‚ª³‚µ‚¢‚©ƒ`ƒFƒbƒN
+            // ã‚«ãƒ¡ãƒ©ã®å‚ç…§ãŒæ­£ã—ã„ã‹ãƒã‚§ãƒƒã‚¯
             if (Camera.main != null)
             {
-                // ƒLƒƒƒ‰ƒNƒ^[‚Ìƒ[ƒ‹ƒhÀ•W‚ğƒXƒNƒŠ[ƒ“À•W‚É•ÏŠ·
+                // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã«å¤‰æ›
                 Vector3 screenPosition = Camera.main.WorldToScreenPoint(Character.position + Offset);
 
-                // ƒXƒNƒŠ[ƒ“À•W‚ğƒLƒƒƒ“ƒoƒX‚ÌÀ•W‚É•ÏŠ·
+                // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’ã‚­ãƒ£ãƒ³ãƒã‚¹ã®åº§æ¨™ã«å¤‰æ›
                 Vector2 localPoint;
                 Canvas canvas = GameObject.Find("UIPlay").GetComponent<Canvas>();
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -72,7 +98,7 @@ public class UIActionBar : MonoBehaviour
                     out localPoint
                 );
 
-                //ƒo[‚ÌˆÊ’u‚ğXV
+                //ãƒãƒ¼ã®ä½ç½®ã‚’æ›´æ–°
                 transform.localPosition = localPoint;
             }
             else

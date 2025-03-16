@@ -27,12 +27,15 @@ public static class Parameters
     public const float ACTION_INTERVAL_DASH = 2.0f;                             //ダッシュ
     public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //バックステップ
     public const float ACTION_INTERVAL_JUMP = 1.0f;                             //ジャンプ
-    public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
-    public const float ACTION_INTERVAL_SHOT = 0.5f;                             //武器を投げる
+    public const float ACTION_INTERVAL_ATTACK = 2.0f;                           //武器で攻撃
+    public const float ACTION_INTERVAL_SHOT = 1.0f;                             //武器を投げる
     public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
     public const float ACTION_INTERVAL_FLOATING = 1.0f;                         //浮遊
+
+    //状態フラグの判定調整
     public const float BACKSTEP_CANCELATION_VELOCITY = 0.2f;                    //バックステップ判定を解除する速度
+
 
     public static readonly Vector2 FORWARD_JUMP_DIRECTION = new Vector2(0.3f, 0.7f);    //前ジャンプの方向
     public static readonly Vector2 BACKWARD_JUMP_DIRECTION = new Vector2(-0.3f, 0.7f);  //後ジャンプの方向
@@ -46,10 +49,9 @@ public static class Parameters
     public const float WEAPON_ONHIT_ADD_DIRECTION_Y = 0.25f;                    //武器が当たったときの上方向への吹き飛ばしの加算値
     public const float WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING = 0.2f;        //ガード時の武器のダメージの軽減率
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
-    public const float WEAPON_STRIKE_FORCE = 300;                               //武器が当たったときに吹き飛ばす力
+    public const float WEAPON_STRIKE_FORCE = 240;                               //武器が当たったときに吹き飛ばす力
     public const float WEAPON_SHOT_FORCE_SCALE = 5;                             //武器を投げる力の補正倍率
-    public const float WEAPON_DAMAGE = 15;                                      //武器によるダメージ値
-    public const float WEAPON_DAMAGE_SCALE = 3.0f;                              //武器のダメージ倍率
+    public const float WEAPON_DAMAGE_SCALE = 1;                                 //武器のダメージ倍率
     public const float WEAPON_GRAVITY_SCALE = 3;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
@@ -57,11 +59,16 @@ public static class Parameters
     public const float MASS_WEAPON_MAGNIFICATION = 1;                           //面積に対する重さの倍率
     public const float MASS_WEAPON_MAX = 30;                                    //最大質量
     public const float MASS_WEAPON_MIN = 3;                                     //最小質量
-    
+    public const int   WEAPON_CLONE_MAX = 10;                                   //クローンの最大数
+    public const float WEAPON_CLONE_SCALE_RATE = 0.5f;                          //クローンのスケール倍率
+    public const float WEAPON_CLONE_DESTROY_DURATION = 5;                       //クローンの破棄までの時間
+    public const float WEAPON_INTERVAL_CLONE = 3.0f;                            //クローン後の待ち時間
+    public const float WEAPON_MAX_VELOCITY_X = 30;                              //武器の最高速度
+    public const float WEAPON_MAX_VELOCITY_Y = 30;                              //武器の最高速度
 
     //ガード
-    public const float GUARD_DURATION = 1.0f;                                   //継続時間
-    public const float GUARD_STUN_DURATION = 3f;                                //ガードが決まった時のスタン時間
+    public const float GUARD_DURATION = 1.5f;                                   //継続時間
+    public const float GUARD_STUN_DURATION = 4f;                                //ガードが決まった時のスタン時間
     public const float GUARD_FORCE_SCALE = 50;                                  //ガードが決まった時に吹き飛ばす力(向きは相手の逆ベクトル)
 
     //魔法
@@ -73,8 +80,8 @@ public static class Parameters
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間
 
     //ステージの壁
-    public const float WALL_FORCE = 50;                                         //壁に当たった時に受ける力
-    public const float WALL_DAMAGE = 10;                                        //壁に当たった時のダメージ値
+    public const float WALL_FORCE = 150;                                        //壁に当たった時に受ける力
+    public const float WALL_DAMAGE = 7.5f;                                      //壁に当たった時のダメージ値
 
     //UI
     public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 5f);            //HPバーの表示オフセット位置

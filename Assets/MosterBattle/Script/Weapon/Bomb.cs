@@ -1,11 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class Bomb: Weapon
 {
-    async protected override Task Attack()
+    async protected override Task Attack(int number)
     {
-        await Clone(100);
+        var clones = await Clone(100);
+
+        for (int i = 0; i < clones.Length; i++)
+        {
+            await clones[i].Shot(Random.Range(-1,1), 10);
+        }
 
         //await Move(0, -10, 0.5f);
         //

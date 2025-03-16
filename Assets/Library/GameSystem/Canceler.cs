@@ -36,4 +36,9 @@ public class Canceler : ICancellable
         cts?.Dispose();
         cts = new CancellationTokenSource();
     }
+
+    public void Dispose()
+    {
+        cts?.Dispose();
+    }
 }

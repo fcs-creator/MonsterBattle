@@ -48,6 +48,11 @@ public class Monster : MonoBehaviour
         canceler.Cancel();
     }
 
+    public void ResetActions()
+    {
+        canceler.Reset();
+    }
+
     void Awake()
     {
         //物理挙動を追加
@@ -146,7 +151,14 @@ public class Monster : MonoBehaviour
 
         while (!IsDead && canceler.IsNotCancel)
         {
-            await ActionLoop();
+            if (!IsStunned)
+            {
+                await ActionLoop();
+            }
+            else 
+            {
+                ActionBar.SendText("Stun");
+            }
 
             await Task.Yield();
         }
@@ -165,7 +177,7 @@ public class Monster : MonoBehaviour
     }
 
     // 攻撃
-    protected async virtual Task Attack() 
+    protected async virtual Task Attack(int number = 1) 
     {
         if(canceler.IsCancel) return;
 
@@ -173,7 +185,7 @@ public class Monster : MonoBehaviour
 
         IsAttacking = true;
 
-        await weapon?.ExecuteAttack();
+        await weapon?.ExecuteAttack(number);
 
         await Wait(Parameters.ACTION_INTERVAL_ATTACK);
 
@@ -358,7 +370,7 @@ public class Monster : MonoBehaviour
 
         weapon.CancelActions();
 
-        await body.Flash();
+        body.Flash();
 
         await Wait(Parameters.GUARD_STUN_DURATION);
 
@@ -366,6 +378,8 @@ public class Monster : MonoBehaviour
 
         //スタン可能にする
         IsStunable = true;
+
+        weapon.ResetActions();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -385,7 +399,7 @@ public class Monster : MonoBehaviour
                 //ダメージ加えて吹き飛ばす
                 HpBar.TakeDamage(Parameters.WALL_DAMAGE);
                 Vector2 direction = (transform.position - obj.transform.position).normalized;
-                rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
+                rb?.AddForce(direction * Parameters.WALL_FORCE, ForceMode2D.Impulse);
             }
         }
 
@@ -493,9 +507,6 @@ public class Monster : MonoBehaviour
                     Vector2 direction = (transform.position - obj.transform.position).normalized;
                     direction = new Vector2(direction.x, direction.y + Parameters.WEAPON_ONHIT_ADD_DIRECTION_Y).normalized;
 
-                    //武器のダメージ値の計算
-                    weapon.CalcutlateDamage();
-
                     if (IsGuarding)
                     {
                         HpBar.TakeDamage(weapon.Damage * Parameters.WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING);
@@ -506,8 +517,11 @@ public class Monster : MonoBehaviour
                         PlayHitWeaponVFX(other);
 
                         //ダメージ加えて吹き飛ばす
-                        HpBar.TakeDamage(weapon.Damage);
+                        float damage = weapon.Damage;
+                        HpBar.TakeDamage(damage);
                         rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
+
+                        Debug.Log("Damage : " + weapon.Owner.gameObject.name +" -> " + gameObject.name +" : " + damage);
                     }
                 }
             }

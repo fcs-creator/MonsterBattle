@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class WeaponSpear: Weapon
 {
-    async protected override Task Attack() 
+    async protected override Task Attack(int number) 
     {
         await Spin(360, 0.2f);
 

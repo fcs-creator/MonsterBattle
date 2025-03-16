@@ -40,6 +40,7 @@ public class Weapon : MonoBehaviour
     float orbitRadius;
 
     bool isShot;
+    bool isClone = false;
 
     //タスクをキャンセルするための共通トークン
     readonly Canceler canceler = new Canceler();
@@ -47,7 +48,20 @@ public class Weapon : MonoBehaviour
     //アクションのキャンセル
     public void CancelActions()
     {
+        SetActive(false);
         canceler.Cancel();
+    }
+
+    public void ResetActions()
+    {
+        canceler.Reset();
+        SetActive(true);
+    }
+
+    public void OnDestroy()
+    {
+        canceler.Cancel();
+        canceler.Dispose();
     }
 
     void Awake()
@@ -64,9 +78,6 @@ public class Weapon : MonoBehaviour
             rb.simulated = true;
             SetGripWeapon(true);
         }
-
-        //武器のダメージ
-        Damage = Parameters.WEAPON_DAMAGE;
 
         //武器の吹き飛ばす力
         StrikeForce = Parameters.WEAPON_STRIKE_FORCE;
@@ -88,10 +99,8 @@ public class Weapon : MonoBehaviour
             weapons.Add(child.gameObject);// 子オブジェクトをリストに追加
         }
 
+        //面積を計算
         float area = 0.0f;
-        float massMag = Parameters.MASS_WEAPON_MAGNIFICATION;
-        float massMax = Parameters.MASS_WEAPON_MAX;
-        float massMin = Parameters.MASS_WEAPON_MIN;
 
         foreach (GameObject obj in weapons)
         {
@@ -115,6 +124,10 @@ public class Weapon : MonoBehaviour
             }
         }
 
+        //質量を設定
+        float massMag = Parameters.MASS_WEAPON_MAGNIFICATION;
+        float massMax = Parameters.MASS_WEAPON_MAX;
+        float massMin = Parameters.MASS_WEAPON_MIN;
         rb.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // 質量を設定
         Debug.Log("Weapon >> " + transform.parent.name + " : " + rb.mass + "kg");
 
@@ -126,7 +139,10 @@ public class Weapon : MonoBehaviour
 
     void Start()
     {
-        _ = ExcecuteActionLoop();   //呼び出し&Taskを破棄
+        if (!isClone) 
+        {
+            _ = ExcecuteActionLoop();   //呼び出し&Taskを破棄
+        }
     }
 
     private async Task ExcecuteActionLoop()
@@ -141,7 +157,7 @@ public class Weapon : MonoBehaviour
             return;
         }
 
-        while (!Owner.IsDead)
+        while (!Owner.IsDead && canceler.IsNotCancel)
         {
             await ActionLoop();
         }
@@ -149,7 +165,7 @@ public class Weapon : MonoBehaviour
         canceler.Cancel();
     }
 
-    public async Task ExecuteAttack()
+    public async Task ExecuteAttack(int number)
     {
         WarpDefault();
 
@@ -157,13 +173,13 @@ public class Weapon : MonoBehaviour
 
         SetActive(true);
 
-        await Attack();
+        await Attack(number);
 
         SetActive(false);
     }
 
     //基本はこちらが呼び出される
-    protected async virtual Task Attack()
+    protected async virtual Task Attack(int number)
     {
         await Task.Yield();
     }
@@ -216,7 +232,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を初期位置にリセットする
-    protected async Task Default()
+    public async Task Default()
     {
         //武器を握るモードにする
         SetGripWeapon(true);
@@ -252,7 +268,7 @@ public class Weapon : MonoBehaviour
     }
 
     //居合い抜き
-    protected async Task Drawing()
+    public async Task Drawing()
     {
         if (canceler.IsCancel) return;
 
@@ -276,7 +292,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を指定された(x, y)位置にs秒で移動させる
-    protected async Task Move(float x, float y, float s)
+    public async Task Move(float x, float y, float s)
     {
         if (canceler.IsCancel) return;
 
@@ -303,7 +319,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器をangle度s秒でその場回転させる
-    protected async Task Spin(float angle, float s)
+    public async Task Spin(float angle, float s)
     {
         if (canceler.IsCancel) return;
 
@@ -327,7 +343,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器をモンスターの周囲で回転させる(上方向が基準で0°)
-    protected async Task Rotate(float startAngle, float rotAngle, float second) 
+    public async Task Rotate(float startAngle, float rotAngle, float second) 
     {
         if (canceler.IsCancel) return;
 
@@ -390,7 +406,7 @@ public class Weapon : MonoBehaviour
         WarpDefault();
     }
 
-    //武器を指定された方向に飛ばす (向きは-1~1の少数で指定 上向き:1, 正面:0, 下向き: -1)
+    //武器を前方に飛ばす (向きは-1~1の少数で指定 上向き:1, 正面:0, 下向き: -1)
     public async Task Shot(float directionY, float power)
     {
         if (canceler.IsCancel) return;
@@ -422,19 +438,82 @@ public class Weapon : MonoBehaviour
         isShot = false;
     }
 
-    //武器を複製する
-    protected async Task Clone(int num)
+    //武器を指定方向に飛ばす
+    public async Task ShotDirection(Vector2 direction, float power) 
     {
         if (canceler.IsCancel) return;
 
-        Owner.ActionBar.SendText("Clone");
+        isShot = true;
 
-        for (int i = 0; i < num; i++)
+        Owner.ActionBar.SendText("Weapon-ShotDirection");
+
+        //武器から手を離す
+        SetGripWeapon(false);
+
+        //SE再生
+        AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_SHOT);
+
+        //飛ばす
+        rb.AddForce(direction.normalized * power * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
+
+        await Wait(Parameters.ACTION_INTERVAL_SHOT);
+
+        isShot = false;
+    }
+
+    //武器を複製する
+    protected async Task<Weapon[]> Clone(int num)
+    {
+        int n = Mathf.Clamp(num, 1, Parameters.WEAPON_CLONE_MAX);
+        Weapon[] clones = new Weapon[n];
+
+        if (canceler.IsNotCancel) 
         {
-            GameObject clone = Instantiate(transform.gameObject, transform.position, transform.rotation, Owner.transform);
-            Weapon cloneWeapon = clone.transform.GetComponent<Weapon>();
-            cloneWeapon.SetActive(true);
-            await cloneWeapon.Shot(-1, 20);
+            Owner.ActionBar.SendText("Clone");
+
+            Vector2 center = Owner.transform.position;
+            float radius = orbitRadius;
+
+            for (int i = 0; i < n; i++)
+            {
+                // クローンを生成
+                GameObject cloneObj = Instantiate(transform.gameObject, transform.position, transform.rotation, Owner.transform);
+
+                // クローンのスケールを設定
+                var scale = cloneObj.transform.localScale;
+                var rate = Parameters.WEAPON_CLONE_SCALE_RATE;
+                cloneObj.transform.localScale = new Vector3(scale.x * rate, scale.y * rate, scale.z);
+
+                // クローンの位置を円周上に配置
+                float angle = 2 * Mathf.PI / n * i; // ラジアン単位で計算
+                float x = center.x + radius * Mathf.Cos(angle);
+                float y = center.y + radius * Mathf.Sin(angle);
+                cloneObj.transform.position = new Vector3(x, y, 0);
+                cloneObj.SetActive(true);
+
+                // クローンの武器を取得
+                clones[i] = cloneObj.transform.GetComponent<Weapon>();
+                clones[i].canceler.Reset();
+                clones[i].isClone = true;
+
+                // クローンが行動している間に消してしまうと止まる
+                //_ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
+            }
+
+            SetActive(false);
+        }
+
+        await Wait(Parameters.WEAPON_INTERVAL_CLONE);
+
+        return clones;
+    }
+
+    private async Task DestroyCloneAfterDelay(GameObject cloneObj, float delay)
+    {
+        await Task.Delay((int)(delay * 1000));
+        if (cloneObj != null)
+        {
+            Destroy(cloneObj);
         }
     }
 
@@ -444,11 +523,11 @@ public class Weapon : MonoBehaviour
         if (other.CompareTag(Tags.Body))
         {
             GameObject monsterObj = other.transform.parent.gameObject;
-
+        
             if (HasComponent<Monster>(monsterObj))
             {
                 Monster monster = monsterObj.GetComponent<Monster>();
-
+        
                 if (Owner == monster)
                 {
                     IsHitableOwner = true;

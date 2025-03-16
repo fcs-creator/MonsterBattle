@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class WeaponTest: Weapon
 {
-    async protected override Task Attack() 
+    async protected override Task Attack(int number) 
     {
         await Move(10, 0, 0.5f);
 

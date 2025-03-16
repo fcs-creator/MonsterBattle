@@ -13,6 +13,7 @@ TagManager:
   - Collection
   - Guard
   - StageWall
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -56,11 +57,11 @@ TagManager:
   - name: Guard
     uniqueID: 43884335
     locked: 0
-  - name: Body
-    uniqueID: 930408577
-    locked: 0
   - name: Weapon
     uniqueID: 38872877
+    locked: 0
+  - name: Body
+    uniqueID: 930408577
     locked: 0
   - name: VFXStatus
     uniqueID: 3479013963
