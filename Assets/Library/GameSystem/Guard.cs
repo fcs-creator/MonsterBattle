@@ -1,13 +1,25 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+
+public enum GuardType 
+{
+    None,
+    Shield,
+    Reflector
+}
 
 public class Guard : MonoBehaviour
 {
-    public Monster Owner { get; private set; }          // •Ší‚ÌŠ—LÒ(ƒ‚ƒ“ƒXƒ^[)
+    public Monster Owner { get; private set; }
+    public GuardType type = Parameters.GUARD_DEFAULT_TYPE;                      // ç¾åœ¨ã®ã‚¿ã‚¤ãƒ—
+    [HideInInspector] public GuardType oldType = Parameters.GUARD_DEFAULT_TYPE; // å‰ã®ã‚¿ã‚¤ãƒ—
+    [HideInInspector] public float offsetX;
+    [HideInInspector] public float offsetY;
+    [HideInInspector] public float scale;
 
     void Awake()
     {
-        // 1‚Âã‚ÌŠK‘w‚É‚¢‚éƒ‚ƒ“ƒXƒ^[‚ÌƒIƒuƒWƒFƒNƒg‚ğ’T‚µ‚ÄƒZƒbƒg
-        Owner = transform.parent.GetComponent<Monster>();
+        // ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼æ¢ã—ã¦ã‚»ãƒƒãƒˆ
+        Owner = transform.GetComponent<Monster>();
         gameObject.tag = Tags.Guard;
         var collider = gameObject.AddComponent<PolygonCollider2D>();
         collider.autoTiling = true;
@@ -28,17 +40,17 @@ public class Guard : MonoBehaviour
                 {
                     weapon.Owner.IsStunned = true;
 
-                    //ƒK[ƒhƒGƒtƒFƒNƒg‚ÌÄ¶
+                    //ã‚¬ãƒ¼ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å†ç”Ÿ
                     PlayGuardVFX(obj, other);
 
-                    //•Ší‚ÌŠ—LÒ‚ğ‚«”ò‚Î‚·•ûŒü‚ğŒvZ
+                    //æ­¦å™¨ã®æ‰€æœ‰è€…ã‚’å¹ãé£›ã°ã™æ–¹å‘ã‚’è¨ˆç®—
                     Vector2 direction = (weapon.Owner.transform.position - transform.position).normalized;
                     weapon.Owner.GetComponent<Rigidbody2D>().AddForce(direction * weapon.Damage * Parameters.GUARD_FORCE_SCALE, ForceMode2D.Impulse);
 
-                    //ƒpƒŠƒB‰¹‚ğÄ¶
+                    //ãƒ‘ãƒªã‚£éŸ³ã‚’å†ç”Ÿ
                     AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
 
-                    //ƒXƒ^ƒ“ó‘Ô‚ğ—LŒø‚É‚·‚é
+                    //ã‚¹ã‚¿ãƒ³çŠ¶æ…‹ã‚’æœ‰åŠ¹ã«ã™ã‚‹
                     weapon.Owner.IsStunned = true;
 
                     Debug.Log("Guard Hit->Stun Flag On !!!!");
@@ -47,17 +59,17 @@ public class Guard : MonoBehaviour
         }
     }
 
-    //ƒK[ƒhƒqƒbƒgƒGƒtƒFƒNƒg‚ÌÄ¶
+    //ã‚¬ãƒ¼ãƒ‰ãƒ’ãƒƒãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å†ç”Ÿ
     void PlayGuardVFX(GameObject weapon, Collider2D weaponCollider) 
     {
-        // Õ“Ë“_‚ğæ“¾
+        // è¡çªç‚¹ã‚’å–å¾—
         Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
 
-        // ©•ª‚ÌˆÊ’u‚ğŠî€‚É‚µ‚ÄÕ“Ë‚Ì–@üƒxƒNƒgƒ‹‚ğŒvZ
+        // è‡ªåˆ†ã®ä½ç½®ã‚’åŸºæº–ã«ã—ã¦è¡çªã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—
         Vector3 hitNormal = (weapon.transform.position - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(hitNormal);
 
-        // ƒK[ƒhƒGƒtƒFƒNƒg‚ÌÄ¶
+        // ã‚¬ãƒ¼ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å†ç”Ÿ
         VFXManager.Instance.Play(VFX.Guard, collisionPoint, rotation);
     }
 

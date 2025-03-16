@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class Nishikun : Monster
@@ -11,7 +11,7 @@ public class Nishikun : Monster
 
         await Attack();
 
-        await BackStep(50);
+        await Backward(50);
 
         await JumpForward(30);
     }

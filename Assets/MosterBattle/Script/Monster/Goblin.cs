@@ -9,7 +9,7 @@ public class Goblin : Monster
 
         await Attack();
 
-        await BackStep(25);
+        await Backward(25);
 
         await Attack();
     }

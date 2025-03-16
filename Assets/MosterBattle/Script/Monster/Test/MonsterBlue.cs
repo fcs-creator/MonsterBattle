@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class MonsterBlue : Monster
@@ -15,7 +15,7 @@ public class MonsterBlue : Monster
         
         await Wait(1);
         
-        await BackStep(6);
+        await Backward(6);
         
         await MagicBook.FireBall(this, 3, 10);
         

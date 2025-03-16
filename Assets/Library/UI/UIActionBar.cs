@@ -60,7 +60,7 @@ public class UIActionBar : MonoBehaviour
             await Task.Delay(1000, canceler.Token);
 
             // キャンセルされていない場合に非表示にする
-            gameObject?.SetActive(false);
+            this?.gameObject?.SetActive(false);
         }
         catch (TaskCanceledException)
         {

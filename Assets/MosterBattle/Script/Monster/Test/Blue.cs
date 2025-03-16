@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class Blue : Monster
@@ -9,7 +9,7 @@ public class Blue : Monster
 
         await Attack();
 
-        await BackStep(20);
+        await Backward(20);
 
         await Jump(50);
 

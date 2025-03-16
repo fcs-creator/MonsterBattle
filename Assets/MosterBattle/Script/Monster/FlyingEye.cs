@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Threading.Tasks;
 
 public class FlyingEye : Monster
@@ -7,7 +7,7 @@ public class FlyingEye : Monster
     {
         await Forward(75);
 
-        await BackStep(25);
+        await Backward(25);
     }
 
 }

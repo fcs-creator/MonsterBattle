@@ -24,13 +24,14 @@ public static class Parameters
 
     //アクション
     public const float START_INTERVAL = 0;                                      //アクション開始までの待ち時間
-    public const float ACTION_INTERVAL_DASH = 2.0f;                             //ダッシュ
-    public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //バックステップ
+    public const float ACTION_INTERVAL_FORWARD = 1.0f;                          //前移動
+    public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //後移動
     public const float ACTION_INTERVAL_JUMP = 1.0f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 2.0f;                           //武器で攻撃
     public const float ACTION_INTERVAL_SHOT = 1.0f;                             //武器を投げる
     public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
+    public const float ACTION_INTERVAL_MOVE = 1.0f;                             //自由移動
     public const float ACTION_INTERVAL_FLOATING = 1.0f;                         //浮遊
 
     //状態フラグの判定調整
@@ -67,9 +68,29 @@ public static class Parameters
     public const float WEAPON_MAX_VELOCITY_Y = 30;                              //武器の最高速度
 
     //ガード
-    public const float GUARD_DURATION = 1.5f;                                   //継続時間
-    public const float GUARD_STUN_DURATION = 4f;                                //ガードが決まった時のスタン時間
-    public const float GUARD_FORCE_SCALE = 50;                                  //ガードが決まった時に吹き飛ばす力(向きは相手の逆ベクトル)
+    public const float GUARD_DURATION = 1.5f;                                               //ガードの継続時間
+    public const float GUARD_STUN_DURATION = 4f;                                            //ガードが決まった時のスタン時間
+    public const float GUARD_FORCE_SCALE = 50;                                              //ガードが決まった時に吹き飛ばす力(向きは相手の逆ベクトル)
+    public const GuardType GUARD_DEFAULT_TYPE = GuardType.Shield;                           //ガードの初期タイプ
+
+    //シールド
+    public const string SHIELD_SPRITE_RESOURCE_PATH = "Textures/Guard/Shield";              //シールドのスプライトのパス
+    public static readonly Vector2 SHIELD_DEFAULT_OFFSET = new Vector2(0,0);                //シールドの初期オフセット
+    public static readonly Color SHIELD_DEFALUT_COLOR = new Color(0.2f, 1f, 0f, 0.27f);     //シールドの初期色
+    public const float SHIELD_DEFALUT_SCALE = 2;                                            //シールドの初期スケール
+    public const float SHIELD_MAX_OFFSET = 5;                                               //シールドの最大の距離
+    public const float SHIELD_MIN_SCALE = 1;                                                //シールドの最小スケール
+    public const float SHIELD_MAX_SCALE = 3;                                                //シールドの最大スケール
+                                                                
+    //リフレクター
+    public const string REFLECTOR_SPRITE_RESOURCE_PATH = "Textures/Guard/Reflector";        //リフレクターのスプライトのパス
+    public static readonly Vector2 REFLECTOR_DEFAULT_OFFSET = new Vector2(4, 0);            //リフレクターの初期オフセット
+    public static readonly Color REFLECTOR_DEFALUT_COLOR = new Color(0f, 0.6f, 1f, 0.75f);  //リフレクターの初期色
+    public const float REFLECTOR_DEFAULT_SCALE = 2;                                         //リフレクターの初期スケール
+    public const float REFLECTOR_MIN_OFFSET = 3;                                            //リフレクターの最大オフセット
+    public const float REFLECTOR_MAX_OFFSET = 6;                                            //リフレクターの最大オフセット
+    public const float REFLECTOR_MIN_SCALE = 1;                                             //リフレクターの最小スケール
+    public const float REFLECTOR_MAX_SCALE = 3;                                             //リフレクターの最大スケール
 
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
@@ -124,6 +145,8 @@ public static class Parameters
 
 public class GameManager : MonoBehaviour
 {
+    public static int AliveMonstersNum { get; private set; }
+
     bool gameSet;
     Monster[] allMonsters;
 
@@ -142,6 +165,9 @@ public class GameManager : MonoBehaviour
 
         //全てのモンスターを取得(非アクティブのモンスターは除外)
         allMonsters = FindObjectsByType<Monster>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+
+        //生きているモンスターの数
+        AliveMonstersNum = allMonsters.Length;
 
         //全てのモンスターに対して処理を行う
         foreach (Monster monster in allMonsters)
@@ -236,9 +262,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        int ariveMonstersNum = allMonsters.Length - deadMonsters;
+        AliveMonstersNum = allMonsters.Length - deadMonsters;
 
-        if (ariveMonstersNum <= 1)
+        if (AliveMonstersNum <= 1)
         {
             gameSet = true;
 

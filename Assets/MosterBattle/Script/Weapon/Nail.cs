@@ -5,6 +5,13 @@ public class Nail: Weapon
 {
     async protected override Task Attack(int number) 
     {
+        if (number == 2)
+        {
+            
+        }
+
+
+
         await Drawing();
 
         var clones = await Clone(10);

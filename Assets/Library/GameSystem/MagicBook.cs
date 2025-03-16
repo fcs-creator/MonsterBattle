@@ -1,20 +1,20 @@
-using System.Security.Cryptography;
+ï»¿using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class MagicBook : MonoBehaviour
 {
-    [SerializeField] GameObject fireBallPrefab;     //ƒtƒ@ƒCƒA[ƒ{[ƒ‹‚ÌƒvƒŒƒnƒu
-    [SerializeField] GameObject thunderPrefab;      //ƒTƒ“ƒ_[‚ÌƒvƒŒƒnƒu
-    [SerializeField] bool isActiveRotating = false; //‰ñ“]‚·‚é‚©‚Ç‚¤‚©
-    [SerializeField] bool isActiveUpDowning = false; //ã‰º‚·‚é‚©‚Ç‚¤‚©
+    [SerializeField] GameObject fireBallPrefab;     //ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ã®ãƒ—ãƒ¬ãƒãƒ–
+    [SerializeField] GameObject thunderPrefab;      //ã‚µãƒ³ãƒ€ãƒ¼ã®ãƒ—ãƒ¬ãƒãƒ–
+    [SerializeField] bool isActiveRotating = false; //å›è»¢ã™ã‚‹ã‹ã©ã†ã‹
+    [SerializeField] bool isActiveUpDowning = false; //ä¸Šä¸‹ã™ã‚‹ã‹ã©ã†ã‹
 
-    float rotationSpeed = 120.0f; //‰ñ“]‘¬“x
+    float rotationSpeed = 120.0f; //å›è»¢é€Ÿåº¦
 
-    //ã‰ºˆÚ“®
-    float upDownSpeed = 1f;     //ã‰º‚·‚é‘¬“x
-    public float amplitude = 1.0f; // U•: ã‰º‚ÌˆÚ“®—Ê
+    //ä¸Šä¸‹ç§»å‹•
+    float upDownSpeed = 1f;     //ä¸Šä¸‹ã™ã‚‹é€Ÿåº¦
+    public float amplitude = 1.0f; // æŒ¯å¹…: ä¸Šä¸‹ã®ç§»å‹•é‡
     Vector3 startPosition;
 
     void Start()
@@ -33,7 +33,7 @@ public class MagicBook : MonoBehaviour
             GameObject obj = Instantiate(fireBallPrefab, monster.transform.position, Quaternion.identity);
             FireBall fireBall = obj.GetComponent<FireBall>();
             fireBall.Owner = monster;
-            fireBall.Direction = monster.Direction;
+            fireBall.Direction = monster.EnemyDirection;
             fireBall.Speed = speed;
 
             await Task.Delay(200);
@@ -47,7 +47,7 @@ public class MagicBook : MonoBehaviour
         GameObject obj = Instantiate(thunderPrefab, monster.transform.position, Quaternion.identity);
         Thunder thunder = obj.GetComponent<Thunder>();
         thunder.Owner = monster;
-        thunder.Direction = monster.Direction;
+        thunder.Direction = monster.EnemyDirection;
 
         await Task.Delay(500);
     }
@@ -67,20 +67,20 @@ public class MagicBook : MonoBehaviour
 
     void UpDown() 
     {
-        // ã‰º‚ÉŠŠ‚ç‚©‚É“®‚©‚·
+        // ä¸Šä¸‹ã«æ»‘ã‚‰ã‹ã«å‹•ã‹ã™
         float newY = startPosition.y + Mathf.Sin(Time.time * upDownSpeed) * amplitude;
         transform.position = new Vector3(startPosition.x, newY, startPosition.z);
     }
     
     void Rotate() 
     {
-        // Œ»İ‚Ì‰ñ“]‚ğæ“¾
+        // ç¾åœ¨ã®å›è»¢ã‚’å–å¾—
         Quaternion currentRotation = transform.localRotation;
 
-        // Y²‚Ì‰ñ“]‚ğ‘‰Á
+        // Yè»¸ã®å›è»¢ã‚’å¢—åŠ 
         float newYRotation = currentRotation.eulerAngles.y + rotationSpeed * Time.deltaTime;
 
-        // V‚µ‚¢‰ñ“]‚ğİ’è
+        // æ–°ã—ã„å›è»¢ã‚’è¨­å®š
         transform.localRotation = Quaternion.Euler(currentRotation.eulerAngles.x, newYRotation, currentRotation.eulerAngles.z);
     }
 }

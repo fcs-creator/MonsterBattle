@@ -6,9 +6,12 @@ using Unity.VisualScripting;
 using System.Threading;
 using System;
 using UnityEditor.Experimental.GraphView;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] Sprite sprite;
+
     public Monster Enemy { get; set; }                  //最も近い敵
     public List<Monster> Enemies { get; set; }          //全ての敵
     public MagicBook MagicBook { get; set; }            //魔法の書
@@ -17,8 +20,8 @@ public class Monster : MonoBehaviour
 
     public bool IsAttacking { get; private set; }                                               //攻撃中か
     public bool IsGuarding { get; private set; }                                                //防御中か
-    public bool IsBackSteping { get; private set; }                                             //バックステップ中か
-    public bool IsForward { get; private set; }                                                 //ダッシュ中か
+    public bool IsForward { get; private set; }                                                 //前方向に進んでいるか
+    public bool IsBackward { get; private set; }                                                //後方向に進んでいるか
     public bool IsJumping { get; private set; }                                                 //ジャンプ中か
     public bool IsGrounded { get; private set; }                                                //地面にいるか
     public bool IsAirborne { get { return !IsGrounded; } private set { IsAirborne = value; } }  //空中にいるか
@@ -35,10 +38,18 @@ public class Monster : MonoBehaviour
 
     int EnemyCheckCount = 0;
 
-    //敵の情報
+    //ゲームの情報
+    public int AliveMonsterNum { get { return GameManager.AliveMonstersNum; } }
+
+    //自分の情報
     public Vector2 Position { get { return new Vector2(transform.position.x, transform.position.y); } }
-    public Vector2 Direction { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).normalized; } }
-    public float Distance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
+    public float Hp { get { return HpBar.Hp; } }
+    public Monster Target { get { return Enemy; } }
+
+    //敵の情報
+    public Vector2 EnemyDirection { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).normalized; } }
+    public float EnemyDistance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
+    public float EnemyHp { get { return Enemy.HpBar.Hp; } }
 
     //タスクをキャンセル
     readonly Canceler canceler = new Canceler();
@@ -98,11 +109,11 @@ public class Monster : MonoBehaviour
 
         rb.linearVelocity = clampedVelocity;
 
-        if (IsBackSteping)
+        if (IsBackward)
         {
             if (Mathf.Abs(rb.linearVelocity.x) < Parameters.BACKSTEP_CANCELATION_VELOCITY)
             {
-                IsBackSteping = false;
+                IsBackward = false;
             }
         }
 
@@ -145,6 +156,7 @@ public class Monster : MonoBehaviour
     private async Task ExcecuteActionLoop()
     {
         IsFacingRight = true;
+
         if (transform.position.x >= 0) Flip();
 
         await Wait(Parameters.START_INTERVAL);
@@ -225,27 +237,27 @@ public class Monster : MonoBehaviour
         LookAtEnemy();
 
         //相手に向かって進む
-        rb.AddForce(Direction.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
+        rb.AddForce(EnemyDirection.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
 
-        await Wait(Parameters.ACTION_INTERVAL_DASH);
+        await Wait(Parameters.ACTION_INTERVAL_FORWARD);
 
         IsForward = false;
     }
 
     //バックステップ：相手から離れる
-    protected async virtual Task BackStep(float force)
+    protected async virtual Task Backward(float force)
     {
         if (canceler.IsCancel) return;
 
         ActionBar.SendText("BackStep");
 
-        IsBackSteping = true;
+        IsBackward = true;
 
         //相手を見る
         LookAtEnemy();
 
         //相手から離れる
-        rb.AddForce(-Direction.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
+        rb.AddForce(-EnemyDirection.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
         
         await Wait(Parameters.ACTION_INTERVAL_BACKSTEP);
     }
@@ -271,7 +283,7 @@ public class Monster : MonoBehaviour
         Vector2 dir = Vector2.zero;
         dir = Parameters.FORWARD_JUMP_DIRECTION;
 
-        if (Direction.x < 0)
+        if (EnemyDirection.x < 0)
         {
             dir.x *= -1;
         }
@@ -290,7 +302,7 @@ public class Monster : MonoBehaviour
         Vector2 dir = Vector2.zero;
         dir = Parameters.BACKWARD_JUMP_DIRECTION;
 
-        if (Direction.x < 0)
+        if (EnemyDirection.x < 0)
         {
             dir.x *= -1;
         }
@@ -318,7 +330,7 @@ public class Monster : MonoBehaviour
 
         rb.AddForce(new Vector2(x, y).normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
 
-        await Wait(Parameters.ACTION_INTERVAL_DASH);
+        await Wait(Parameters.ACTION_INTERVAL_MOVE);
 
         IsForward = false;
     }
@@ -569,11 +581,11 @@ public class Monster : MonoBehaviour
     // 相手の方を向く
     public void LookAtEnemy() 
     {
-        if (Direction.x > 0 && !IsFacingRight)
+        if (EnemyDirection.x > 0 && !IsFacingRight)
         {
             Flip();
         }
-        else if (Direction.x < 0 && IsFacingRight)
+        else if (EnemyDirection.x < 0 && IsFacingRight)
         {
             Flip();
         }

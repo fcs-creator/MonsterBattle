@@ -7,7 +7,7 @@ public class FighterJet : Monster
     {
         await Floating(true);
 
-        await Move(Enemy.Direction.x, 0, Enemy.Distance * 1f);
+        await Move(EnemyDirection.x, 0, EnemyDistance * 1f);
 
         await Attack();
 
