@@ -517,6 +517,8 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    
+
     //自分のBodyの当たり判定から1度出た武器は当たるようになる
     private void OnTriggerExit2D(Collider2D other)
     {

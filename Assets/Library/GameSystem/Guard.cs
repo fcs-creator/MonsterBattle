@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 
 public enum GuardType 
 {
@@ -16,21 +17,67 @@ public class Guard : MonoBehaviour
     [HideInInspector] public float offsetY;
     [HideInInspector] public float scale;
 
+    //ガードの実体
+    GameObject instance;
+
+    public void SetOwner(Monster monster)
+    {
+        Owner = monster;
+    }
+
+    //タスクをキャンセル
+    readonly Canceler canceler = new Canceler();
+
+    public void CancelActions()
+    {
+        canceler.Cancel();
+    }
+
+    public void ResetActions()
+    {
+        canceler.Reset();
+    }
+
     void Awake()
     {
-        // モンスター探してセット
+        //モンスターは同じ階層
         Owner = transform.GetComponent<Monster>();
-        gameObject.tag = Tags.Guard;
-        var collider = gameObject.AddComponent<PolygonCollider2D>();
+
+        //ガードの実体は1つ下の階層
+        instance = transform.Find("Guard").gameObject;
+
+        //ガードの実体にタグを設定
+        instance.tag = Tags.Guard;
+
+        //ガードの実体にコライダーをトリガーとして追加
+        var collider = instance.AddComponent<PolygonCollider2D>();
         collider.autoTiling = true;
         collider.isTrigger = true;
+
+        //ガードの実体を隠しておく
+        instance.SetActive(false);
+    }
+
+    public async Task ExecuteGuard() 
+    {
+        instance.SetActive(true);
+
+        await Wait(Parameters.GUARD_DURATION);
+
+        instance.SetActive(false);
+    }
+
+    private async Task Wait(float sec) 
+    {
+        await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         GameObject obj = other.gameObject;
 
-        if(obj.CompareTag(Tags.Weapon))
+        //ガードと接触した時の処理
+        if (obj.CompareTag(Tags.Weapon))
         {
             if (HasComponent<Weapon>(obj))
             {
@@ -60,7 +107,7 @@ public class Guard : MonoBehaviour
     }
 
     //ガードヒットエフェクトの再生
-    void PlayGuardVFX(GameObject weapon, Collider2D weaponCollider) 
+    void PlayGuardVFX(GameObject weapon, Collider2D weaponCollider)
     {
         // 衝突点を取得
         Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);

@@ -10,8 +10,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 public class Monster : MonoBehaviour
 {
-    [SerializeField] Sprite sprite;
-
     public Monster Enemy { get; set; }                  //最も近い敵
     public List<Monster> Enemies { get; set; }          //全ての敵
     public MagicBook MagicBook { get; set; }            //魔法の書
@@ -77,8 +75,8 @@ public class Monster : MonoBehaviour
         weapon?.gameObject.SetActive(true);
 
         // 防具の設定
-        guard = transform.Find("Guard").AddComponent<Guard>();
-        guard?.gameObject.SetActive(false);
+        guard = transform.GetComponent<Guard>();
+        guard.SetOwner(this);
 
         //アクションバーの所有者を登録
         ActionBar.Owner = this;
@@ -213,11 +211,8 @@ public class Monster : MonoBehaviour
 
         IsGuarding = true;
 
-        guard?.gameObject.SetActive(true);
-
-        await Wait(Parameters.GUARD_DURATION);
-
-        guard?.gameObject.SetActive(false);
+        //ガード実行
+        await guard.ExecuteGuard();
 
         IsGuarding = false;
 
