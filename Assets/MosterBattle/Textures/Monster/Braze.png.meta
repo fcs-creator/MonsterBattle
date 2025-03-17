@@ -139,7 +139,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Braze_0
+      name: Braze
       rect:
         serializedVersion: 2
         x: 11
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Braze_0: 1488369032495627275
+      Braze: 1488369032495627275
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

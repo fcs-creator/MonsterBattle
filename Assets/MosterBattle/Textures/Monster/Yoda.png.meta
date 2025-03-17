@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Yoda_0
+      name: Yoda
       rect:
         serializedVersion: 2
         x: 886
@@ -121,7 +121,7 @@ TextureImporter:
         width: 2964
         height: 3783
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9021cac93f5ec9f419cfbc3a1b221dc1
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Yoda_0: -8417057339762755630
+      Yoda: -8417057339762755630
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -7,17 +7,17 @@ public class Glacia : Monster
     {
         await Guard();
 
-        //if (Distance > 10)
-        //{
-        //    await Forward(80);
-        //}
-        //else 
-        //{
-        //    await BackStep(80);
-        //
-        //    await Attack();
-        //
-        //    await Guard();
-        //}
+        if (EnemyDistance > 10)
+        {
+            await Forward(80);
+        }
+        else 
+        {
+            await Backward(80);
+        
+            await Attack();
+        
+            await Guard();
+        }
     }
 }

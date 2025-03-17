@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Inosan_0
+      name: Inosan
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Inosan_0: 5562156272136072181
+      Inosan: 5562156272136072181
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

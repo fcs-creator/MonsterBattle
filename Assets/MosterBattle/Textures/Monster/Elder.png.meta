@@ -139,7 +139,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Elder_0
+      name: Elder
       rect:
         serializedVersion: 2
         x: 0
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Elder_0: -7123529365577447762
+      Elder: -7123529365577447762
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

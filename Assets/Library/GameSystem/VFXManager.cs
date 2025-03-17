@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Rendering;
 
 public enum VFX
@@ -33,7 +33,7 @@ public class VFXManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // ƒV[ƒ“ŠÔ‚Å•Û‚·‚éê‡‚ÍˆÈ‰º‚ğ—LŒø‰»
+        // ã‚·ãƒ¼ãƒ³é–“ã§ä¿æŒã™ã‚‹å ´åˆã¯ä»¥ä¸‹ã‚’æœ‰åŠ¹åŒ–
         // DontDestroyOnLoad(gameObject);
     }
 
@@ -54,7 +54,7 @@ public class VFXManager : MonoBehaviour
                 AudioManager.Instance.PlaySE(SE.HitStrikeL);
                 break;
             case VFX.Guard:
-                PlayVFX(guardPrefab, position, rotation, Parameters.VFX_GUARD_SCALE);
+                PlayVFX(guardPrefab, position, GetRandomRotation(), Parameters.VFX_GUARD_SCALE);
                 AudioManager.Instance.PlaySE(SE.Guard);
                 break;
             case VFX.Dead:
@@ -66,7 +66,7 @@ public class VFXManager : MonoBehaviour
                 AudioManager.Instance.PlaySE(SE.HitWall);
                 break;
             default:
-                Debug.LogWarning("w’è‚µ‚½VFX‚ª‘¶İ‚µ‚Ü‚¹‚ñI");
+                Debug.LogWarning("æŒ‡å®šã—ãŸVFXãŒå­˜åœ¨ã—ã¾ã›ã‚“ï¼");
                 break;
         }
     }
@@ -85,8 +85,8 @@ public class VFXManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("w’è‚µ‚½VFX‚ÉParticleSystem‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚¹‚ñI");
-            Destroy(vfx, 2f); // ƒp[ƒeƒBƒNƒ‹‚ª‚È‚¢ê‡‚ÌƒfƒtƒHƒ‹ƒgíœƒ^ƒCƒ~ƒ“ƒO
+            Debug.LogWarning("æŒ‡å®šã—ãŸVFXã«ParticleSystemãŒå«ã¾ã‚Œã¦ã„ã¾ã›ã‚“ï¼");
+            Destroy(vfx, 2f); // ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãŒãªã„å ´åˆã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå‰Šé™¤ã‚¿ã‚¤ãƒŸãƒ³ã‚°
         }
     }
 

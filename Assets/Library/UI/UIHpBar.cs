@@ -1,15 +1,15 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class UIHPBar : MonoBehaviour
 {
-    public Transform Character { get; set; } // ƒLƒƒƒ‰ƒNƒ^[‚ÌTransform
-    public Vector3 Offset { get; set; }      // ƒLƒƒƒ‰ƒNƒ^[‚©‚ç‚ÌƒIƒtƒZƒbƒg
-    public float Hp { get; private set; }    // Œ»İ‚ÌHP
+    public Transform Character { get; set; } // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®Transform
+    public Vector3 Offset { get; set; }      // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+    public float Hp { get; private set; }    // ç¾åœ¨ã®HP
 
-    Image gauge;                    // ƒQ[ƒW‚Ì‰æ‘œ
-    const float MAX_HP = 100.0f;    // Å‘åHP
+    Image gauge;                    // ã‚²ãƒ¼ã‚¸ã®ç”»åƒ
+    const float MAX_HP = 100.0f;    // æœ€å¤§HP
 
     void Awake()
     {
@@ -25,13 +25,13 @@ public class UIHPBar : MonoBehaviour
     {
         if (Character != null)
         {
-            // ƒJƒƒ‰‚ÌQÆ‚ª³‚µ‚¢‚©ƒ`ƒFƒbƒN
+            // ã‚«ãƒ¡ãƒ©ã®å‚ç…§ãŒæ­£ã—ã„ã‹ãƒã‚§ãƒƒã‚¯
             if (Camera.main != null)
             {
-                // ƒLƒƒƒ‰ƒNƒ^[‚Ìƒ[ƒ‹ƒhÀ•W‚ğƒXƒNƒŠ[ƒ“À•W‚É•ÏŠ·
+                // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã«å¤‰æ›
                 Vector3 screenPosition = Camera.main.WorldToScreenPoint(Character.position + Offset);
 
-                // ƒXƒNƒŠ[ƒ“À•W‚ğƒLƒƒƒ“ƒoƒX‚ÌÀ•W‚É•ÏŠ·
+                // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’ã‚­ãƒ£ãƒ³ãƒã‚¹ã®åº§æ¨™ã«å¤‰æ›
                 Vector2 localPoint;
                 Canvas canvas = GameObject.Find("UIPlay").GetComponent<Canvas>();
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -41,7 +41,7 @@ public class UIHPBar : MonoBehaviour
                     out localPoint
                 );
 
-                // HPƒo[‚ÌˆÊ’u‚ğXV
+                // HPãƒãƒ¼ã®ä½ç½®ã‚’æ›´æ–°
                 transform.localPosition = localPoint;
             }
             else
@@ -49,21 +49,15 @@ public class UIHPBar : MonoBehaviour
                 Debug.LogError("Main Camera not found. Ensure your camera has the 'MainCamera' tag.");
             }
         }
-        else
-        {
-            Debug.LogError("Character Transform is not assigned.");
-
-
-        }
     }
 
-    // ƒ_ƒ[ƒW‚ğó‚¯‚éƒƒ\ƒbƒh
+    // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void TakeDamage(float damage)
     {
         SetHp(Hp-damage);
     }
 
-    // HP‚ğXV‚·‚éƒƒ\ƒbƒh
+    // HPã‚’æ›´æ–°ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void SetHp(float value)
     {
         Hp = Mathf.Clamp(value, 0, MAX_HP);
