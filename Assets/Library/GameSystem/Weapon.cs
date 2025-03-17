@@ -137,14 +137,6 @@ public class Weapon : MonoBehaviour
         SetActive(false);
     }
 
-    void Start()
-    {
-        if (!isClone) 
-        {
-            _ = ExcecuteActionLoop();   //呼び出し&Taskを破棄
-        }
-    }
-
     void FixedUpdate()
     {
         //最高速度を指定
@@ -162,6 +154,8 @@ public class Weapon : MonoBehaviour
     //攻撃実行：モンスター側から呼ばれる
     public async Task ExecuteAttack(int number)
     {
+        if (isClone) return;
+
         WarpDefault();
 
         IsHitableOwner = false;

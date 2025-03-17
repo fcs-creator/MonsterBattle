@@ -389,6 +389,8 @@ public class Monster : MonoBehaviour
         weapon.ResetActions();
     }
 
+    //==============衝突判定=================//
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject obj = collision.gameObject;
@@ -534,6 +536,8 @@ public class Monster : MonoBehaviour
             }
         }
     }
+
+    //==============補助関数=================//
 
     // 武器のヒットエフェクトの再生
     private void PlayHitWeaponVFX(Collider2D weaponCollider)
