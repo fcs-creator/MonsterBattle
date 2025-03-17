@@ -72,11 +72,4 @@ public class Guard : MonoBehaviour
     {
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
-
-    
-
-    bool HasComponent<T>(GameObject obj) where T : Component
-    {
-        return obj.GetComponent<T>() != null;
-    }
 }
