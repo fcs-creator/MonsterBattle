@@ -406,9 +406,7 @@ public class Monster : MonoBehaviour
 
         weapon.CancelActions();
 
-        body.Flash();
-
-        await Wait(Parameters.GUARD_STUN_DURATION);
+        await body.Flash();
 
         IsStunned = false;
 

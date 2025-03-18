@@ -7,7 +7,7 @@ public class Braze : Monster
     {
         await Attack();
 
-        await Forward(100);
+        await Forward(50);
 
         //await Guard();
 

@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework.Internal;
 using System;
 using System.Threading.Tasks;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Timeline;
@@ -17,8 +18,8 @@ public class Guard : MonoBehaviour
 {
     public Monster Owner { get; private set; }
 
-    [SerializeField] GuardType type= Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
-    [SerializeField] GuardType oldType = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
+    [SerializeField] GuardType type;//= Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
+    [SerializeField] GuardType oldType;// = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
     [SerializeField] float offsetX;
     [SerializeField] float offsetY;
     [SerializeField] float scale;
@@ -77,6 +78,17 @@ public class Guard : MonoBehaviour
         instance.SetActive(false);
     }
 
+    private void Start()
+    {
+        type = GuardType.Reflector;
+    }
+
+    public void SetType(GuardType value) 
+    {
+        oldType = type;
+        type = value;
+    }
+
     public async Task ExecuteGuard() 
     {
         instance.SetActive(true);
@@ -96,6 +108,4 @@ public class Guard : MonoBehaviour
     {
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
-
-    
 }

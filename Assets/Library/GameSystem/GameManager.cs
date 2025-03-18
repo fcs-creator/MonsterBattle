@@ -91,6 +91,8 @@ public static class Parameters
     public const float REFLECTOR_MAX_OFFSET = 6;                                            //リフレクターの最大オフセット
     public const float REFLECTOR_MIN_SCALE = 1;                                             //リフレクターの最小スケール
     public const float REFLECTOR_MAX_SCALE = 3;                                             //リフレクターの最大スケール
+    public const float REFLECT_WEAPON_FORCE = 100;                                           //武器を反射した時の力の強さ
+    public const float REFLECT_WEAPON_DAMAGE_RATE = 2.0f;                                   //武器を反射した時のダメージ倍率
 
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
@@ -185,11 +187,11 @@ public class GameManager : MonoBehaviour
             monster.MagicBook = magicBook;
 
             //カメラの追従のターゲットを設定
-            GameObject objCameraTartget = new GameObject();
-            objCameraTartget.name = "CameraFollowTarget";
-            objCameraTartget.transform.position = new Vector3(0,0,0);
-            objCameraTartget.transform.rotation = Quaternion.identity;
-            objCameraTartget.transform.SetParent(monster.transform);
+            //GameObject objCameraTartget = new GameObject();
+            //objCameraTartget.name = "CameraFollowTarget";
+            //objCameraTartget.transform.position = new Vector3(0,0,0);
+            //objCameraTartget.transform.rotation = Quaternion.identity;
+            //objCameraTartget.transform.SetParent(monster.transform);
         }
     }
 
@@ -205,13 +207,7 @@ public class GameManager : MonoBehaviour
 
         while (!gameSet) 
         {
-            foreach (var monster in allMonsters)
-            {
-                _ = monster.Action(); // 各モンスターのActionを呼び出し
-            }
-
-            // 指定された時間（ミリ秒）だけ待機
-            await Task.Delay(5000);
+            await Task.Yield();
         }
 
         foreach (var monster in allMonsters)

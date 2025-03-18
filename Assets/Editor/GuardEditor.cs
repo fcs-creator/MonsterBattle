@@ -56,7 +56,9 @@ public class GuardEditor : Editor
         // 現在の値を判別
         GuardType guardType = (GuardType)type.enumValueIndex;
         GuardType oldGuardType = (GuardType)oldType.enumValueIndex;
-        
+
+        //instance.GetComponent<Guard>().SetType(guardType);
+
         switch (guardType)
         {
             case GuardType.None:
@@ -167,6 +169,9 @@ public class GuardEditor : Editor
             if (lossyScale.y != 0) y = scale.floatValue / lossyScale.y;
             instance.transform.localScale = new Vector3(x, y, 0);
             instance.transform.position = worldPosition + new Vector3(offsetX.floatValue, offsetY.floatValue, 0);
+
+            //instance.GetComponent<Guard>().SetType(guardType);
+            
 
             EditorUtility.SetDirty(guard);
         }

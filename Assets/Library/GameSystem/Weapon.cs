@@ -11,6 +11,7 @@ using System.Threading;
 public class Weapon : MonoBehaviour
 {
     public Monster Owner { get; private set; }          // 武器の所有者(モンスター)
+    Monster defaultOwner; 
     public bool IsHitableOwner { get; private set; }    // 武器が所有者に当たるか
     public float StrikeForce { get; private set; }      // 武器の吹き飛ばす力
 
@@ -20,7 +21,14 @@ public class Weapon : MonoBehaviour
     {
         get
         {
-            damage = CalcutlateDamage();
+            if (isReflect)
+            {
+                damage = CalcutlateDamage() * Parameters.REFLECT_WEAPON_DAMAGE_RATE; 
+            }
+            else
+            {
+                damage = CalcutlateDamage();
+            }
             return damage;
         }
         private set
@@ -41,6 +49,17 @@ public class Weapon : MonoBehaviour
 
     bool isShot;
     bool isClone = false;
+    bool isReflect;
+
+
+    //無効な
+    bool isDisable
+    {
+        get 
+        {
+            return Owner.IsDead || canceler.IsCancel;
+        }
+    }
 
     //武器の所有者をセット
     public void SetOwner(Monster owner) 
@@ -74,6 +93,7 @@ public class Weapon : MonoBehaviour
     {
         // 1つ上の階層にいるモンスターのオブジェクトを探してセット
         Owner = transform.parent.GetComponent<Monster>();
+        defaultOwner = Owner;
 
         // 物理挙動を追加して無効にしておく
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -138,14 +158,10 @@ public class Weapon : MonoBehaviour
         Debug.Log("Weapon >> " + transform.parent.name + " : " + rb.mass + "kg");
 
         isShot = false;
+        isReflect = false;
 
         // 最初は武器を隠しておく
         SetActive(true);
-    }
-
-    private void Start()
-    {
-        SetActive(false);
     }
 
     void FixedUpdate()
@@ -165,6 +181,8 @@ public class Weapon : MonoBehaviour
     //攻撃実行：モンスター側から呼ばれる
     public async Task ExecuteAttack(int number)
     {
+        if (isDisable) return;
+
         if (isClone) return;
 
         if (Owner == null) 
@@ -194,6 +212,8 @@ public class Weapon : MonoBehaviour
     //武器を初期位置にリセットする
     public async Task Default()
     {
+        if (isDisable) return;
+
         //武器を握るモードにする
         SetGripWeapon(true);
 
@@ -230,7 +250,7 @@ public class Weapon : MonoBehaviour
     //居合い抜き
     public async Task Drawing()
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         Owner.ActionBar.SendText("Weapon-Drawing");
 
@@ -254,7 +274,7 @@ public class Weapon : MonoBehaviour
     //武器を指定された(x, y)位置にs秒で移動させる
     public async Task Move(float x, float y, float s)
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         Owner.ActionBar.SendText("Weapon-Move");
 
@@ -262,8 +282,10 @@ public class Weapon : MonoBehaviour
         Vector2 target = start + new Vector2(x, y);
         float elapsedTime = 0f;
 
-        while (elapsedTime < s && canceler.IsNotCancel)
+        while (elapsedTime < s)
         {
+            if (isDisable) break;
+
             // 経過時間の割合を計算
             float t = elapsedTime / s;
             // 線形補間（Lerp）で位置を更新
@@ -281,14 +303,16 @@ public class Weapon : MonoBehaviour
     //武器をangle度s秒でその場回転させる
     public async Task Spin(float angle, float s)
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         float elapsed = 0f;
         float initialRotation = transform.rotation.eulerAngles.z;
         float targetRotation = initialRotation + angle;
 
-        while (elapsed < s && canceler.IsNotCancel)
+        while (elapsed < s)
         {
+            if(isDisable) break;
+
             elapsed += Time.deltaTime;
             float t = elapsed / s;
             float zRotation = Mathf.Lerp(initialRotation, targetRotation, t);
@@ -305,7 +329,7 @@ public class Weapon : MonoBehaviour
     //武器をモンスターの周囲で回転させる(上方向が基準で0°)
     public async Task Rotate(float startAngle, float rotAngle, float second) 
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         Owner.ActionBar.SendText("Weapon-Rotate");
 
@@ -334,8 +358,10 @@ public class Weapon : MonoBehaviour
 
         Transform centerObject = Owner.transform;
 
-        while (!stop && canceler.IsNotCancel)
+        while (!stop)
         {
+            if (isDisable) break;
+ 
             //フレーム毎の回転量を計算
             step = (rotAngle / second) * Time.deltaTime;
 
@@ -369,7 +395,7 @@ public class Weapon : MonoBehaviour
     //武器を前方に飛ばす (向きは-1~1の少数で指定 上向き:1, 正面:0, 下向き: -1)
     public async Task Shot(float directionY, float power)
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         isShot = true;
         
@@ -401,7 +427,7 @@ public class Weapon : MonoBehaviour
     //武器を指定方向に飛ばす
     public async Task ShotDirection(Vector2 direction, float power) 
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         isShot = true;
 
@@ -424,43 +450,42 @@ public class Weapon : MonoBehaviour
     //武器をクローンする
     protected async Task<Weapon[]> Clone(int num)
     {
+        if (isDisable) return null;
+
         int n = Mathf.Clamp(num, 1, Parameters.WEAPON_CLONE_MAX);
         Weapon[] clones = new Weapon[n];
+      
+        Owner.ActionBar.SendText("Clone");
 
-        if (canceler.IsNotCancel) 
+        Vector2 center = Owner.transform.position;
+        float radius = orbitRadius;
+
+        for (int i = 0; i < n; i++)
         {
-            Owner.ActionBar.SendText("Clone");
+            if (isDisable) break;
 
-            Vector2 center = Owner.transform.position;
-            float radius = orbitRadius;
+            // クローンを生成
+            GameObject cloneObj = Instantiate(transform.gameObject, transform.position, transform.rotation, Owner.transform);
 
-            for (int i = 0; i < n; i++)
-            {
-                // クローンを生成
-                GameObject cloneObj = Instantiate(transform.gameObject, transform.position, transform.rotation, Owner.transform);
+            // クローンのスケールを設定
+            var scale = cloneObj.transform.localScale;
+            var rate = Parameters.WEAPON_CLONE_SCALE_RATE;
+            cloneObj.transform.localScale = new Vector3(scale.x * rate, scale.y * rate, scale.z);
 
-                // クローンのスケールを設定
-                var scale = cloneObj.transform.localScale;
-                var rate = Parameters.WEAPON_CLONE_SCALE_RATE;
-                cloneObj.transform.localScale = new Vector3(scale.x * rate, scale.y * rate, scale.z);
+            // クローンの位置を円周上に配置
+            float angle = 2 * Mathf.PI / n * i; // ラジアン単位で計算
+            float x = center.x + radius * Mathf.Cos(angle);
+            float y = center.y + radius * Mathf.Sin(angle);
+            cloneObj.transform.position = new Vector3(x, y, 0);
+            cloneObj.SetActive(true);
 
-                // クローンの位置を円周上に配置
-                float angle = 2 * Mathf.PI / n * i; // ラジアン単位で計算
-                float x = center.x + radius * Mathf.Cos(angle);
-                float y = center.y + radius * Mathf.Sin(angle);
-                cloneObj.transform.position = new Vector3(x, y, 0);
-                cloneObj.SetActive(true);
+            // クローンの武器を取得
+            clones[i] = cloneObj.transform.GetComponent<Weapon>();
+            clones[i].canceler.Reset();
+            clones[i].isClone = true;
 
-                // クローンの武器を取得
-                clones[i] = cloneObj.transform.GetComponent<Weapon>();
-                clones[i].canceler.Reset();
-                clones[i].isClone = true;
-
-                // クローンが行動している間に消してしまうと止まる
-                //_ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
-            }
-
-            SetActive(false);
+            // クローンが行動している間に消してしまうと止まる
+            //_ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
         }
 
         await Wait(Parameters.WEAPON_INTERVAL_CLONE);
@@ -482,22 +507,47 @@ public class Weapon : MonoBehaviour
 
             if (guard.Owner != Owner)
             {
-                Owner.IsStunned = true;
+                Debug.Log(isShot);
+                Debug.Log(guard.Type);
 
-                //ガードエフェクトの再生
-                PlayGuardVFX(obj, other);
+                if (guard.Type == GuardType.Shield)
+                {
+                    Owner.IsStunned = true;
 
-                //武器の所有者を吹き飛ばす方向を計算
-                Vector2 direction = (Owner.transform.position - guard.Instance.transform.position).normalized;
-                Owner.GetComponent<Rigidbody2D>().AddForce(direction * Damage * Parameters.GUARD_FORCE_SCALE, ForceMode2D.Impulse);
+                    //ガードエフェクトの再生
+                    PlayGuardVFX(obj, other);
 
-                //パリィ音を再生
-                AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
+                    //武器の所有者を吹き飛ばす方向を計算
+                    Vector2 direction = (Owner.transform.position - guard.Instance.transform.position).normalized;
+                    Owner.GetComponent<Rigidbody2D>().AddForce(direction * Damage * Parameters.GUARD_FORCE_SCALE, ForceMode2D.Impulse);
 
-                //スタン状態を有効にする
-                Owner.IsStunned = true;
+                    //パリィ音を再生
+                    AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
 
-                Debug.Log("Guard Hit->Stun Flag On !!!!");
+                    //スタン状態を有効にする
+                    Owner.IsStunned = true;
+                }
+                else if (guard.Type == GuardType.Reflector) 
+                {
+                    if (isShot) 
+                    {
+                        //武器の所有者を吹き飛ばす方向を計算
+                        Vector2 direction = (transform.position - guard.Instance.transform.position).normalized;
+
+                        //一時的に所有者をガードした人にする
+                        SetOwner(guard.Owner);
+
+                        //反射させる
+                        var lv = rb.linearVelocity;
+                        rb.linearVelocity = new Vector2(lv.x*-1, lv.y);
+
+                        rb.AddForce(direction * Parameters.REFLECT_WEAPON_FORCE, ForceMode2D.Impulse);
+                        
+                        
+                    }
+                }
+
+                
             }
         }
     }
@@ -527,6 +577,7 @@ public class Weapon : MonoBehaviour
     private async Task DestroyCloneAfterDelay(GameObject cloneObj, float delay)
     {
         await Task.Delay((int)(delay * 1000));
+
         if (cloneObj != null)
         {
             Destroy(cloneObj);
@@ -550,14 +601,16 @@ public class Weapon : MonoBehaviour
     //指定秒数待つ
     protected async Task Wait(float sec)
     {
-        if (canceler.IsCancel) return;
-
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
     //初期位置にワープ
     private void WarpDefault()
     {
+        //所有者を戻す
+        SetOwner(defaultOwner);
+        isReflect = false;
+
         //武器を握った状態にする
         SetGripWeapon(true);
 
@@ -570,12 +623,14 @@ public class Weapon : MonoBehaviour
     //動きの繋がりを補完する関数
     private async Task Lerp(Vector3 startPosition, Quaternion startRotation, Vector3 startScale, Vector3 endPosition, Quaternion endRotation, Vector3 endScale, float second)
     {
-        if (canceler.IsCancel) return;
+        if (isDisable) return;
 
         float elapsedTime = 0f;
 
-        while (elapsedTime < second && canceler.IsNotCancel)
+        while (elapsedTime < second)
         {
+            if (isDisable) break;
+
             float t = elapsedTime / second;
 
             // 補間を行う
