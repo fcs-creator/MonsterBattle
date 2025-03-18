@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: 6e8af3651f211594cb65fb5af7eb773b
+guid: 781e0a36c7ad17743adeef7208d14d96
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8009452900143176816
-    second: "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF
-      35_0"
+      213: -3587327749314998302
+    second: DeathMaster2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -114,14 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF
-        35_0"
+      name: DeathMaster2_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 3
-        width: 290
-        height: 290
+        x: 0
+        y: 0
+        width: 240
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 07c914e0afa472f60800000000000000
-      internalID: 8009452900143176816
+      spriteID: 2ef8d212b60473ec0800000000000000
+      internalID: -3587327749314998302
       vertices: []
       indices: 
       edges: []
@@ -149,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF 35_0": 8009452900143176816
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

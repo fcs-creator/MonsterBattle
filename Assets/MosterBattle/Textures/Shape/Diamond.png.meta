@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: d6eec37a6f727584c96786262a5fd6a8
+guid: 607368a43ececc64ea6240825ee50a1e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3625043607559282579
-    second: Isometric Diamond
+      213: 920458426037345334
+    second: "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF
+      33_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +38,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,12 +52,12 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 256
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: 0
+  spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -68,7 +69,7 @@ TextureImporter:
   ignorePngGamma: 0
   applyGammaDecoding: 0
   swizzle: 50462976
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
@@ -97,32 +98,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -139,56 +114,33 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Diamond
+      name: "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF
+        33_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 256
-        height: 128
+        x: 3
+        y: 2
+        width: 297
+        height: 293
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline:
-      - - {x: -4, y: 64}
-        - {x: -128, y: 2}
-        - {x: -128, y: -2}
-        - {x: -4, y: -64}
-        - {x: 4, y: -64}
-        - {x: 128, y: -2}
-        - {x: 128, y: 2}
-        - {x: 4, y: 64}
-      physicsShape:
-      - - {x: 0, y: 64}
-        - {x: -128, y: 0}
-        - {x: 0, y: -64}
-        - {x: 128, y: 0}
-      tessellationDetail: 0
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: 39f1fdb64fdbe4230800000000000000
-      internalID: 3625043607559282579
+      spriteID: 63c987acf0026cc00800000000000000
+      internalID: 920458426037345334
       vertices: []
       indices: 
       edges: []
       weights: []
-    outline:
-    - - {x: -4, y: 64}
-      - {x: -128, y: 2}
-      - {x: -128, y: -2}
-      - {x: -4, y: -64}
-      - {x: 4, y: -64}
-      - {x: 128, y: -2}
-      - {x: 128, y: 2}
-      - {x: 4, y: 64}
+    outline: []
     customData: 
-    physicsShape:
-    - - {x: 0, y: 64}
-      - {x: -128, y: 0}
-      - {x: 0, y: -64}
-      - {x: 128, y: 0}
+    physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -198,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Diamond: 3625043607559282579
+      "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF 33_0": 920458426037345334
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

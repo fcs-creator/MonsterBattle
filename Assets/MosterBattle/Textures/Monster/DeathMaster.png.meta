@@ -1,11 +1,16 @@
 fileFormatVersion: 2
-guid: 6e8af3651f211594cb65fb5af7eb773b
+guid: b0bbbabc6d784654d9e3c3a761a53f5c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8009452900143176816
-    second: "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF
-      35_0"
+      213: 7249448045438145
+    second: DeathMaster_0
+  - first:
+      213: 4433387101721826358
+    second: DeathMaster_1
+  - first:
+      213: 3037846640028649335
+    second: DeathMaster_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -114,14 +119,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF
-        35_0"
+      name: DeathMaster_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 3
-        width: 290
-        height: 290
+        x: 0
+        y: 132
+        width: 12
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +134,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 07c914e0afa472f60800000000000000
-      internalID: 8009452900143176816
+      spriteID: 1c4e097a551c91000800000000000000
+      internalID: 7249448045438145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeathMaster_1
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 0
+        width: 242
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6349de5741e868d30800000000000000
+      internalID: 4433387101721826358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeathMaster_2
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 160
+        width: 12
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77785058c69982a20800000000000000
+      internalID: 3037846640028649335
       vertices: []
       indices: 
       edges: []
@@ -149,8 +197,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      "\u540D\u79F0\u672A\u8A2D\u5B9A\u306E\u30A2\u30FC\u30C8\u30EF\u30FC\u30AF 35_0": 8009452900143176816
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

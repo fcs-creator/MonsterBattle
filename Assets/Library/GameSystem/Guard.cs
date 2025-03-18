@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 
 public enum GuardType 
 {
@@ -16,65 +17,59 @@ public class Guard : MonoBehaviour
     [HideInInspector] public float offsetY;
     [HideInInspector] public float scale;
 
+    //ガードの実体
+    GameObject instance;
+    public GameObject Instance { get { return instance; } }
+
+    public void SetOwner(Monster monster)
+    {
+        Owner = monster;
+    }
+
+    //タスクをキャンセル
+    readonly Canceler canceler = new Canceler();
+
+    public void CancelActions()
+    {
+        canceler.Cancel();
+    }
+
+    public void ResetActions()
+    {
+        canceler.Reset();
+    }
+
     void Awake()
     {
-        // モンスター探してセット
+        //モンスターは同じ階層
         Owner = transform.GetComponent<Monster>();
-        gameObject.tag = Tags.Guard;
-        var collider = gameObject.AddComponent<PolygonCollider2D>();
+
+        //ガードの実体は1つ下の階層
+        instance = transform.Find("Guard").gameObject;
+
+        //ガードの実体にタグを設定
+        instance.tag = Tags.Guard;
+
+        //ガードの実体にコライダーをトリガーとして追加
+        var collider = instance.AddComponent<PolygonCollider2D>();
         collider.autoTiling = true;
         collider.isTrigger = true;
+
+        //ガードの実体を隠しておく
+        instance.SetActive(false);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public async Task ExecuteGuard() 
     {
-        GameObject obj = other.gameObject;
+        instance.SetActive(true);
 
-        if(obj.CompareTag(Tags.Weapon))
-        {
-            if (HasComponent<Weapon>(obj))
-            {
-                Weapon weapon = obj.GetComponent<Weapon>();
+        await Wait(Parameters.GUARD_DURATION);
 
-                if (weapon.Owner != Owner)
-                {
-                    weapon.Owner.IsStunned = true;
-
-                    //ガードエフェクトの再生
-                    PlayGuardVFX(obj, other);
-
-                    //武器の所有者を吹き飛ばす方向を計算
-                    Vector2 direction = (weapon.Owner.transform.position - transform.position).normalized;
-                    weapon.Owner.GetComponent<Rigidbody2D>().AddForce(direction * weapon.Damage * Parameters.GUARD_FORCE_SCALE, ForceMode2D.Impulse);
-
-                    //パリィ音を再生
-                    AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
-
-                    //スタン状態を有効にする
-                    weapon.Owner.IsStunned = true;
-
-                    Debug.Log("Guard Hit->Stun Flag On !!!!");
-                }
-            }
-        }
+        instance.SetActive(false);
     }
 
-    //ガードヒットエフェクトの再生
-    void PlayGuardVFX(GameObject weapon, Collider2D weaponCollider) 
+    private async Task Wait(float sec) 
     {
-        // 衝突点を取得
-        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
-
-        // 自分の位置を基準にして衝突の法線ベクトルを計算
-        Vector3 hitNormal = (weapon.transform.position - transform.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(hitNormal);
-
-        // ガードエフェクトの再生
-        VFXManager.Instance.Play(VFX.Guard, collisionPoint, rotation);
-    }
-
-    bool HasComponent<T>(GameObject obj) where T : Component
-    {
-        return obj.GetComponent<T>() != null;
+        await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 }

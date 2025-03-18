@@ -137,36 +137,25 @@ public class Weapon : MonoBehaviour
         SetActive(false);
     }
 
-    void Start()
+    void FixedUpdate()
     {
-        if (!isClone) 
-        {
-            _ = ExcecuteActionLoop();   //呼び出し&Taskを破棄
-        }
+        //最高速度を指定
+        Vector2 maxVelocity = new Vector2(Parameters.WEAPON_MAX_VELOCITY_X, Parameters.WEAPON_MAX_VELOCITY_Y);
+        Vector2 clampedVelocity = new Vector2(
+            Mathf.Clamp(rb.linearVelocity.x, -maxVelocity.x, maxVelocity.x),
+            Mathf.Clamp(rb.linearVelocity.y, -maxVelocity.y, maxVelocity.y)
+        );
+
+        rb.linearVelocity = clampedVelocity;
     }
 
-    private async Task ExcecuteActionLoop()
-    {
-        await Wait(Parameters.START_INTERVAL);
+    //===============実行用関数================//
 
-        if (Owner == null)
-        {
-            Debug.Log(gameObject.name);
-            Debug.LogError("Error: Weapon Owner is null");
-
-            return;
-        }
-
-        while (!Owner.IsDead && canceler.IsNotCancel)
-        {
-            await ActionLoop();
-        }
-
-        canceler.Cancel();
-    }
-
+    //攻撃実行：モンスター側から呼ばれる
     public async Task ExecuteAttack(int number)
     {
+        if (isClone) return;
+
         WarpDefault();
 
         IsHitableOwner = false;
@@ -178,58 +167,13 @@ public class Weapon : MonoBehaviour
         SetActive(false);
     }
 
-    //基本はこちらが呼び出される
+    //攻撃 : プレイヤーがカスタマイズする関数
     protected async virtual Task Attack(int number)
     {
         await Task.Yield();
     }
 
-    //自動制御する武器にする
-    protected async virtual Task ActionLoop()
-    {
-        await Task.Yield();
-    }
-
-    //指定秒数待つ
-    protected async Task Wait(float sec)
-    {
-        if (canceler.IsCancel) return;
-
-        await Task.Delay((int)(sec * 1000), canceler.Token);
-    }
-
-    //初期位置にワープ
-    private void WarpDefault()
-    {
-        //武器を握った状態にする
-        SetGripWeapon(true);
-
-        transform.SetParent(Owner.transform);
-        transform.localPosition = defaultLocalPosition;
-        transform.rotation = defaultRotation;
-        transform.localScale = defaultLocalScale;
-    }
-
-    //動きの繋がりを補完する関数
-    async Task Lerp(Vector3 startPosition, Quaternion startRotation, Vector3 startScale, Vector3 endPosition, Quaternion endRotation, Vector3 endScale, float second)
-    {
-        if (canceler.IsCancel) return;
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < second && canceler.IsNotCancel)
-        {
-            float t = elapsedTime / second;
-
-            // 補間を行う
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            transform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
-            transform.localScale = Vector3.Lerp(startScale, endScale, t);
-
-            elapsedTime += Time.deltaTime;
-            await Task.Yield();
-        }
-    }
+    //=================武器の技================//
 
     //武器を初期位置にリセットする
     public async Task Default()
@@ -461,7 +405,7 @@ public class Weapon : MonoBehaviour
         isShot = false;
     }
 
-    //武器を複製する
+    //武器をクローンする
     protected async Task<Weapon[]> Clone(int num)
     {
         int n = Mathf.Clamp(num, 1, Parameters.WEAPON_CLONE_MAX);
@@ -508,12 +452,37 @@ public class Weapon : MonoBehaviour
         return clones;
     }
 
-    private async Task DestroyCloneAfterDelay(GameObject cloneObj, float delay)
+    //==============衝突判定=================//
+
+    //ガードとの衝突処理
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        await Task.Delay((int)(delay * 1000));
-        if (cloneObj != null)
+        GameObject obj = other.gameObject;
+
+        //ガードと接触した時の処理
+        if (obj.CompareTag(Tags.Guard))
         {
-            Destroy(cloneObj);
+            var guard = obj.transform.parent.GetComponent<Guard>();
+
+            if (guard.Owner != Owner)
+            {
+                Owner.IsStunned = true;
+
+                //ガードエフェクトの再生
+                PlayGuardVFX(obj, other);
+
+                //武器の所有者を吹き飛ばす方向を計算
+                Vector2 direction = (Owner.transform.position - guard.Instance.transform.position).normalized;
+                Owner.GetComponent<Rigidbody2D>().AddForce(direction * Damage * Parameters.GUARD_FORCE_SCALE, ForceMode2D.Impulse);
+
+                //パリィ音を再生
+                AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
+
+                //スタン状態を有効にする
+                Owner.IsStunned = true;
+
+                Debug.Log("Guard Hit->Stun Flag On !!!!");
+            }
         }
     }
 
@@ -533,6 +502,73 @@ public class Weapon : MonoBehaviour
                     IsHitableOwner = true;
                 }
             }
+        }
+    }
+
+    //==============補助関数=================//
+
+    //一定時間経過後にクローンを削除する処理
+    private async Task DestroyCloneAfterDelay(GameObject cloneObj, float delay)
+    {
+        await Task.Delay((int)(delay * 1000));
+        if (cloneObj != null)
+        {
+            Destroy(cloneObj);
+        }
+    }
+
+    //ガードヒットエフェクトの再生
+    void PlayGuardVFX(GameObject weapon, Collider2D weaponCollider)
+    {
+        // 衝突点を取得
+        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
+
+        // 自分の位置を基準にして衝突の法線ベクトルを計算
+        Vector3 hitNormal = (weapon.transform.position - transform.position).normalized;
+        Quaternion rotation = Quaternion.LookRotation(hitNormal);
+
+        // ガードエフェクトの再生
+        VFXManager.Instance.Play(VFX.Guard, collisionPoint, rotation);
+    }
+
+    //指定秒数待つ
+    protected async Task Wait(float sec)
+    {
+        if (canceler.IsCancel) return;
+
+        await Task.Delay((int)(sec * 1000), canceler.Token);
+    }
+
+    //初期位置にワープ
+    private void WarpDefault()
+    {
+        //武器を握った状態にする
+        SetGripWeapon(true);
+
+        transform.SetParent(Owner.transform);
+        transform.localPosition = defaultLocalPosition;
+        transform.rotation = defaultRotation;
+        transform.localScale = defaultLocalScale;
+    }
+
+    //動きの繋がりを補完する関数
+    private async Task Lerp(Vector3 startPosition, Quaternion startRotation, Vector3 startScale, Vector3 endPosition, Quaternion endRotation, Vector3 endScale, float second)
+    {
+        if (canceler.IsCancel) return;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < second && canceler.IsNotCancel)
+        {
+            float t = elapsedTime / second;
+
+            // 補間を行う
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
+            transform.localScale = Vector3.Lerp(startScale, endScale, t);
+
+            elapsedTime += Time.deltaTime;
+            await Task.Yield();
         }
     }
 
@@ -584,7 +620,7 @@ public class Weapon : MonoBehaviour
     }
 
     //ダメージを計算
-    public float CalcutlateDamage() 
+    private float CalcutlateDamage() 
     {
         if (isShot)
         {
@@ -603,4 +639,5 @@ public class Weapon : MonoBehaviour
     {
         return obj.GetComponent<T>() != null;
     }
+
 }

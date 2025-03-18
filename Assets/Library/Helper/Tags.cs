@@ -17,5 +17,4 @@ public static class Tags {
     public const string StageWall = "StageWall";
     public const string Reflector = "Reflector";
     public const string Shield = "Shield";
-    public const string Attack = "Attack";
 }
