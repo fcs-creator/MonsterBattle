@@ -5,13 +5,14 @@ public class Braze : Monster
 {
     protected override async Task ActionLoop()
     {
+        await Forward(50);
+
         await Attack();
 
-        await Forward(50);
 
         //await Guard();
 
-       
+
 
         //
         //await Attack();

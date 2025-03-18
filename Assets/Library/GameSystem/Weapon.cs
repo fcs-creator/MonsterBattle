@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviour
         {
             if (isReflect)
             {
-                damage = CalcutlateDamage() * Parameters.REFLECT_WEAPON_DAMAGE_RATE; 
+                damage = CalcutlateDamage() * reflectionDamageRate; 
             }
             else
             {
@@ -36,6 +36,8 @@ public class Weapon : MonoBehaviour
             damage = value;
         }      
     }
+
+    float reflectionDamageRate = 1f;
 
     Vector3 defaultLocalPosition;   // 武器の初期座標
     Vector3 defaultLocalScale;      // 武器の初期スケール
@@ -80,7 +82,6 @@ public class Weapon : MonoBehaviour
     public void ResetActions()
     {
         canceler.Reset();
-        SetActive(true);
     }
 
     public void OnDestroy()
@@ -89,7 +90,7 @@ public class Weapon : MonoBehaviour
         canceler.Dispose();
     }
 
-    void Awake()
+    void Start()
     {
         // 1つ上の階層にいるモンスターのオブジェクトを探してセット
         Owner = transform.parent.GetComponent<Monster>();
@@ -161,8 +162,9 @@ public class Weapon : MonoBehaviour
         isReflect = false;
 
         // 最初は武器を隠しておく
-        SetActive(true);
+        SetActive(false);
     }
+
 
     void FixedUpdate()
     {
@@ -189,6 +191,8 @@ public class Weapon : MonoBehaviour
         {
             Debug.LogError("Ownerがいません");
         }
+
+        defaultOwner = Owner;
 
         WarpDefault();
 
@@ -422,6 +426,8 @@ public class Weapon : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
         isShot = false;
+
+        WarpDefault();
     }
 
     //武器を指定方向に飛ばす
@@ -445,6 +451,8 @@ public class Weapon : MonoBehaviour
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
         isShot = false;
+
+        WarpDefault();
     }
 
     //武器をクローンする
@@ -508,9 +516,9 @@ public class Weapon : MonoBehaviour
             if (guard.Owner != Owner)
             {
                 Debug.Log(isShot);
-                Debug.Log(guard.Type);
+                Debug.Log(guard.type);
 
-                if (guard.Type == GuardType.Shield)
+                if (guard.type == GuardType.Shield)
                 {
                     Owner.IsStunned = true;
 
@@ -527,27 +535,30 @@ public class Weapon : MonoBehaviour
                     //スタン状態を有効にする
                     Owner.IsStunned = true;
                 }
-                else if (guard.Type == GuardType.Reflector) 
+                else if (guard.type == GuardType.Reflector) 
                 {
                     if (isShot) 
                     {
+                        //反射を有効にする
+                        isReflect = true;
+
                         //武器の所有者を吹き飛ばす方向を計算
                         Vector2 direction = (transform.position - guard.Instance.transform.position).normalized;
 
                         //一時的に所有者をガードした人にする
                         SetOwner(guard.Owner);
 
+                        //ダメージ倍率を格納
+                        reflectionDamageRate = guard.ReflectionRate;
+                        Debug.Log(reflectionDamageRate);
+
                         //反射させる
                         var lv = rb.linearVelocity;
                         rb.linearVelocity = new Vector2(lv.x*-1, lv.y);
 
                         rb.AddForce(direction * Parameters.REFLECT_WEAPON_FORCE, ForceMode2D.Impulse);
-                        
-                        
                     }
                 }
-
-                
             }
         }
     }
@@ -609,7 +620,7 @@ public class Weapon : MonoBehaviour
     {
         //所有者を戻す
         SetOwner(defaultOwner);
-        isReflect = false;
+        reflectionDamageRate = 1.0f;
 
         //武器を握った状態にする
         SetGripWeapon(true);

@@ -147,6 +147,8 @@ public class Monster : MonoBehaviour
         //スタン状態の処理
         if (IsStunned && IsStunable)
         {
+            IsStunable = false;
+
             _ = Stun();
         }
 
@@ -224,7 +226,7 @@ public class Monster : MonoBehaviour
 
         IsAttacking = true;
 
-        await weapon?.ExecuteAttack(number);
+        await weapon.ExecuteAttack(number);
 
         await Wait(Parameters.ACTION_INTERVAL_ATTACK);
 
@@ -401,9 +403,6 @@ public class Monster : MonoBehaviour
     // スタン状態の処理
     private async Task Stun() 
     {
-        //スタン不可にする
-        IsStunable = false;
-
         weapon.CancelActions();
 
         await body.Flash();

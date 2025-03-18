@@ -16,29 +16,65 @@ public enum GuardType
 
 public class Guard : MonoBehaviour
 {
-    public Monster Owner { get; private set; }
+    [HideInInspector] public Monster Owner { get; private set; }
+    [HideInInspector] public GuardType type = Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
+    [HideInInspector] public GuardType oldType = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
+    [HideInInspector] public float offsetX;
+    [HideInInspector] public float offsetY;
+    [HideInInspector] public float scale;
+    [HideInInspector] public bool isDisplay = true;
 
-    [SerializeField] GuardType type;//= Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
-    [SerializeField] GuardType oldType;// = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
-    [SerializeField] float offsetX;
-    [SerializeField] float offsetY;
-    [SerializeField] float scale;
-    [SerializeField] bool isDisplay = true;
-
-    public GuardType Type => type;
-    public GuardType OldType => oldType;
-    public float OffsetX => offsetX;
-    public float OffsetY => offsetY;
-    public float Scale => scale;
-    public bool IsDisplay => isDisplay;
+    float defaultOffsetX;
 
     //ガードの実体
     GameObject instance;
     public GameObject Instance { get { return instance; } }
 
+    //跳ね返した時の
+    private float reflectionRate;
+    public float ReflectionRate 
+    {
+        get 
+        {
+            var scaleRate = MapValueToRange(scale, Parameters.REFLECTOR_MIN_SCALE, Parameters.REFLECTOR_MAX_SCALE);
+            Debug.Log(Parameters.REFLECT_DAMAGE_RATE + (1.0f / scaleRate));
+            return Parameters.REFLECT_DAMAGE_RATE + (1.0f / scaleRate);
+        }
+
+    }
+
+    //１～2までの値をマップして返す
+    public float MapValueToRange(float value, float minValue, float maxValue)
+    {
+        // 最大値と最小値が同じ場合（計算できないため処理を防ぐ）
+        if (Mathf.Approximately(maxValue, minValue))
+        {
+            Debug.LogError("maxValueとminValueが同じです。正しい範囲を指定してください。");
+            return 1f; // デフォルト値を返す
+        }
+        
+        // 値を1から2の範囲に変換
+        return Mathf.Clamp(1f + (value - minValue) / (maxValue - minValue), 1.0f, 2.0f);
+    }
+
+
     public void SetOwner(Monster monster)
     {
         Owner = monster;
+    }
+
+    //エディタのカスタマイズを反映
+    public void UpdateCustomize()
+    {
+        //ガードオブジェクトを探す
+        instance = transform.Find("Guard").gameObject;
+
+        if (!instance)
+        {
+            Debug.LogError("Guardが見つかりません");
+        }
+
+        instance.SetActive(isDisplay);
     }
 
     //タスクをキャンセル
@@ -80,7 +116,20 @@ public class Guard : MonoBehaviour
 
     private void Start()
     {
-        type = GuardType.Reflector;
+        defaultOffsetX = offsetX;
+    }
+
+    private void Update()
+    {
+        //モンスターの向きによって出す方向を変える
+        if (Owner.IsFacingRight)
+        {
+            offsetX = defaultOffsetX;
+        }
+        else
+        {
+            offsetX = -defaultOffsetX;
+        }
     }
 
     public void SetType(GuardType value) 
@@ -89,15 +138,9 @@ public class Guard : MonoBehaviour
         type = value;
     }
 
-    public async Task ExecuteGuard() 
+    public async Task ExecuteGuard()
     {
         instance.SetActive(true);
-
-        //モンスターの向きによって出す方向を変える
-        if (!Owner.IsFacingRight)
-        {
-            offsetX *= -1;
-        }
 
         await Wait(Parameters.GUARD_DURATION);
 

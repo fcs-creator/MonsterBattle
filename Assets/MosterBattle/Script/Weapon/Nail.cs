@@ -7,7 +7,19 @@ public class Nail: Weapon
     {
         await Drawing();
 
+        await Shot(0.2f, 25);
+
         await Shot(0.2f, 50);
+
+        await Shot(0.2f, 100);
+
+        await Shot(0.2f, 250);
+
+        await Shot(0.2f, 500);
+
+        await Shot(0.2f, 1000);
+
+        await Shot(0.2f, 10000);
 
         //var clones = await Clone(10);
         //

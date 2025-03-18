@@ -23,13 +23,13 @@ public static class Parameters
     public const int LAND_VELOCITY = 10;                                        //着地時に速度を0にするための閾値
 
     //アクション
-    public const float START_INTERVAL = 0;                                      //アクション開始までの待ち時間
+    public const float START_INTERVAL = 1;                                      //アクション開始までの待ち時間
     public const float ACTION_INTERVAL_FORWARD = 1.0f;                          //前移動
     public const float ACTION_INTERVAL_BACKSTEP = 1.0f;                         //後移動
     public const float ACTION_INTERVAL_JUMP = 1.0f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 2.0f;                           //武器で攻撃
-    public const float ACTION_INTERVAL_SHOT = 1.0f;                             //武器を投げる
-    public const float ACTION_INTERVAL_GUARD = 2.0f;                            //ガード
+    public const float ACTION_INTERVAL_SHOT = 1.5f;                             //武器を投げる
+    public const float ACTION_INTERVAL_GUARD = 1.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
     public const float ACTION_INTERVAL_MOVE = 1.0f;                             //自由移動
     public const float ACTION_INTERVAL_FLOATING = 1.0f;                         //浮遊
@@ -64,11 +64,11 @@ public static class Parameters
     public const float WEAPON_CLONE_SCALE_RATE = 0.5f;                          //クローンのスケール倍率
     public const float WEAPON_CLONE_DESTROY_DURATION = 5;                       //クローンの破棄までの時間
     public const float WEAPON_INTERVAL_CLONE = 3.0f;                            //クローン後の待ち時間
-    public const float WEAPON_MAX_VELOCITY_X = 30;                              //武器の最高速度
-    public const float WEAPON_MAX_VELOCITY_Y = 30;                              //武器の最高速度
+    public const float WEAPON_MAX_VELOCITY_X = 120;                              //武器の最高速度
+    public const float WEAPON_MAX_VELOCITY_Y = 120;                              //武器の最高速度
 
     //ガード
-    public const float GUARD_DURATION = 1.5f;                                               //ガードの継続時間
+    public const float GUARD_DURATION = 2f;                                               //ガードの継続時間
     public const float GUARD_STUN_DURATION = 4f;                                            //ガードが決まった時のスタン時間
     public const float GUARD_FORCE_SCALE = 50;                                              //ガードが決まった時に吹き飛ばす力(向きは相手の逆ベクトル)
     public const GuardType GUARD_DEFAULT_TYPE = GuardType.Shield;                           //ガードの初期タイプ
@@ -91,8 +91,8 @@ public static class Parameters
     public const float REFLECTOR_MAX_OFFSET = 6;                                            //リフレクターの最大オフセット
     public const float REFLECTOR_MIN_SCALE = 1;                                             //リフレクターの最小スケール
     public const float REFLECTOR_MAX_SCALE = 3;                                             //リフレクターの最大スケール
-    public const float REFLECT_WEAPON_FORCE = 100;                                           //武器を反射した時の力の強さ
-    public const float REFLECT_WEAPON_DAMAGE_RATE = 2.0f;                                   //武器を反射した時のダメージ倍率
+    public const float REFLECT_WEAPON_FORCE = 100;                                          //武器を反射した時の力の強さ
+    public const float REFLECT_DAMAGE_RATE = 2f;                                          //武器を反射した時基本ダメージ倍率
 
     //魔法
     public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
@@ -185,6 +185,11 @@ public class GameManager : MonoBehaviour
 
             //魔法書を設定
             monster.MagicBook = magicBook;
+
+            //Awakeを呼ぶために一度全てアクティブ状態にする
+            monster.transform.Find("Body").gameObject.SetActive(true);
+            monster.transform.Find("Weapon").gameObject.SetActive(true);
+            monster.transform.Find("Guard").gameObject.SetActive(true);
 
             //カメラの追従のターゲットを設定
             //GameObject objCameraTartget = new GameObject();
