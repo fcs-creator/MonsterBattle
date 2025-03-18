@@ -172,7 +172,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      WolfNail_0: -4709544374447785089
+      WolfNail_1: 250984976597157299
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      EvilWizardWoman_0: 114803088538142711
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

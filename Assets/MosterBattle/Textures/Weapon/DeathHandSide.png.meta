@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      DeathHandSide_0: 4529520924865975031
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

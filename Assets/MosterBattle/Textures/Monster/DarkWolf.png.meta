@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      DarkWolf_0: 7663939042818268815
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

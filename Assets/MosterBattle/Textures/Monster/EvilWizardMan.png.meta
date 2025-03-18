@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      EvilWizardMan_0: -673879059587250648
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
