@@ -11,6 +11,8 @@ public class MonsterEditor : Editor
     //シリアライズされた変数
     SerializedProperty monsterSprite;
 
+    GameObject bodyObj;
+
     private void OnEnable()
     {
         // 対象のオブジェクトをSerializedObjectとして取得
@@ -20,14 +22,11 @@ public class MonsterEditor : Editor
         monsterSprite = serializedObjectRef.FindProperty("monsterSprite");
     }
 
-
-
     public override void OnInspectorGUI()
     {
         // SerializedObjectを更新
         serializedObjectRef.Update();
 
-        
         // 元のインスペクターを描画
         //DrawDefaultInspector();
 
@@ -42,25 +41,13 @@ public class MonsterEditor : Editor
         {
             monster.name = inputName;
         }
-        else 
+        else
         {
             monster.name = "????";
         }
 
-        //monster.Sprite = (Sprite)EditorGUILayout.ObjectField("見た目", monsterSprite, typeof(Sprite), allowSceneObjects: false);
-        //monster.Sprite = (Sprite)EditorGUILayout.PropertyField(monster.Sprite);
-        
-        //EditorGUILayout.PropertyField(monsterSprite, new GUIContent("見た目"));
-
         EditorGUILayout.LabelField("見た目");
-        //Rect rect = GUILayoutUtility.GetRect(100, 100); // 幅300、高さ100のフィールド領域を確保
-        //monsterSprite.objectReferenceValue = EditorGUI.ObjectField(
-        //    rect,
-        //    monsterSprite.objectReferenceValue,
-        //    typeof(Sprite),
-        //    false
-        //);
-
+        
         // ObjectFieldの固定サイズ（幅300px, 高さ100px）
         Rect fixedRect = new Rect(GUILayoutUtility.GetLastRect().xMax - 75 - 10, GUILayoutUtility.GetLastRect().yMax + 5, 75,75); // インスペクタ内の固定位置
 
@@ -77,7 +64,17 @@ public class MonsterEditor : Editor
 
         // 変更を適用
         serializedObjectRef.ApplyModifiedProperties();
-        
+
+        if(bodyObj == null) 
+        {
+            bodyObj = monster.transform.Find("Body").gameObject;
+        }
+
+        if (bodyObj.transform.localPosition != Vector3.zero)
+        {
+            bodyObj.transform.localPosition = Vector3.zero;
+        }
+
         // 変更があればオブジェクトを更新
         if (GUI.changed)
         {

@@ -42,6 +42,12 @@ public class Weapon : MonoBehaviour
     bool isShot;
     bool isClone = false;
 
+    //武器の所有者をセット
+    public void SetOwner(Monster owner) 
+    {
+        Owner = owner;
+    }
+
     //タスクをキャンセルするための共通トークン
     readonly Canceler canceler = new Canceler();
 
@@ -134,6 +140,11 @@ public class Weapon : MonoBehaviour
         isShot = false;
 
         // 最初は武器を隠しておく
+        SetActive(true);
+    }
+
+    private void Start()
+    {
         SetActive(false);
     }
 
@@ -155,6 +166,11 @@ public class Weapon : MonoBehaviour
     public async Task ExecuteAttack(int number)
     {
         if (isClone) return;
+
+        if (Owner == null) 
+        {
+            Debug.LogError("Ownerがいません");
+        }
 
         WarpDefault();
 

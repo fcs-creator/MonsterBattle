@@ -107,6 +107,8 @@ public static class Parameters
     //UI
     public static readonly Vector2 HPBAR_OFFSET = new Vector2(0, 5f);            //HPバーの表示オフセット位置
     public static readonly Vector2 ACTIONBAR_OFFSET = new Vector2(0,-5f);        //アクションバーの表示オフセット位置
+    public const string HPBAR_RESOUCE_PATH = "Prefabs/UI/HpBar";                 //HPバーのプレハブのパス
+    public const string ACTIONBAR_RESOUCE_PATH = "Prefabs/UI/ActionBar";         //アクションバーのプレハブのパス                     
 
     //VFX
     public const VFX VFX_HIT_S = VFX.HitS;                                      //弱ヒット時に使用するVFX
@@ -181,24 +183,6 @@ public class GameManager : MonoBehaviour
 
             //魔法書を設定
             monster.MagicBook = magicBook;
-
-            //HPバーを設定
-            GameObject objHpBar = Instantiate(hpBarPrefab, Vector3.zero, Quaternion.identity);
-            UIHPBar hpBar = objHpBar.GetComponent<UIHPBar>();
-            hpBar.Character = monster.transform;
-            hpBar.Offset = Parameters.HPBAR_OFFSET;
-            monster.SetHpBar(hpBar);
-            objHpBar.transform.SetParent(GameObject.Find("UIPlay").transform);
-            objHpBar.transform.localScale = new Vector3(1, 1, 1);
-
-            //アクションテキストを設定
-            GameObject actionBarObj = Instantiate(actionBarPrefab, Vector3.zero, Quaternion.identity);
-            UIActionBar actionBar = actionBarObj.GetComponent<UIActionBar>();
-            actionBar.Character = monster.transform;
-            actionBar.Offset = Parameters.ACTIONBAR_OFFSET;
-            monster.SetActionBar(actionBar);
-            actionBar.transform.SetParent(GameObject.Find("UIPlay").transform);
-            actionBar.transform.localScale = new Vector3(1, 1, 1);
 
             //カメラの追従のターゲットを設定
             GameObject objCameraTartget = new GameObject();

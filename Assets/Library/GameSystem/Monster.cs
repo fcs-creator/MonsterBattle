@@ -79,17 +79,36 @@ public class Monster : MonoBehaviour
         rb = gameObject.AddComponent<Rigidbody2D>();
 
         // 本体の設定
-        body = transform.Find("Body").AddComponent<Body>();
+        body = transform.Find("Body").AddComponent<Body>(); //準備のできたタイミングで明示的にAddしてあげると良い
 
         // 武器の設定
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
+        weapon.SetOwner(this);
 
         // 防具の設定
         guard = transform.GetComponent<Guard>();
         guard.SetOwner(this);
 
-        //アクションバーの所有者を登録
-        ActionBar.Owner = this;
+        //HPバーを設定
+        GameObject hpBarPrefab = Resources.Load<GameObject>(Parameters.HPBAR_RESOUCE_PATH);
+        GameObject objHpBar = Instantiate(hpBarPrefab, Vector3.zero, Quaternion.identity);
+        UIHPBar hpBar = objHpBar.GetComponent<UIHPBar>();
+        hpBar.Character = transform;
+        hpBar.Offset = Parameters.HPBAR_OFFSET;
+        HpBar = hpBar;
+        objHpBar.transform.SetParent(GameObject.Find("UIPlay").transform);
+        objHpBar.transform.localScale = new Vector3(1, 1, 1);
+
+        //アクションバーを設定
+        GameObject actionBarPrefab = Resources.Load<GameObject>(Parameters.ACTIONBAR_RESOUCE_PATH);
+        GameObject actionBarObj = Instantiate(actionBarPrefab, Vector3.zero, Quaternion.identity);
+        UIActionBar actionBar = actionBarObj.GetComponent<UIActionBar>();
+        actionBar.Character = transform;
+        actionBar.Offset = Parameters.ACTIONBAR_OFFSET;
+        actionBar.Owner = this;
+        ActionBar = actionBar;
+        actionBar.transform.SetParent(GameObject.Find("UIPlay").transform);
+        actionBar.transform.localScale = new Vector3(1, 1, 1);
 
         IsStunable = true;
         IsDead = false;
@@ -598,18 +617,6 @@ public class Monster : MonoBehaviour
         {
             Flip();
         }
-    }
-
-    // Hpバーの設定
-    public void SetHpBar(UIHPBar hpBar)
-    {
-        this.HpBar = hpBar;
-    }
-
-    // アクションバーの設定
-    public void SetActionBar(UIActionBar actionBar)
-    {
-        this.ActionBar = actionBar;
     }
 
     // 敵の情報の更新

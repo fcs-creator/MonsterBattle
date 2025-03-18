@@ -1,5 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using NUnit.Framework.Internal;
+using System;
+using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Timeline;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum GuardType 
 {
@@ -10,13 +15,21 @@ public enum GuardType
 
 public class Guard : MonoBehaviour
 {
-    [HideInInspector] public Monster Owner { get; private set; }
-    [HideInInspector] public GuardType type = Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
-    [HideInInspector] public GuardType oldType = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
-    [HideInInspector] public float offsetX;
-    [HideInInspector] public float offsetY;
-    [HideInInspector] public float scale;
-    [HideInInspector] public bool isDisplay = true;
+    public Monster Owner { get; private set; }
+
+    [SerializeField] GuardType type= Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
+    [SerializeField] GuardType oldType = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
+    [SerializeField] float offsetX;
+    [SerializeField] float offsetY;
+    [SerializeField] float scale;
+    [SerializeField] bool isDisplay = true;
+
+    public GuardType Type => type;
+    public GuardType OldType => oldType;
+    public float OffsetX => offsetX;
+    public float OffsetY => offsetY;
+    public float Scale => scale;
+    public bool IsDisplay => isDisplay;
 
     //ガードの実体
     GameObject instance;
@@ -38,20 +51,6 @@ public class Guard : MonoBehaviour
     public void ResetActions()
     {
         canceler.Reset();
-    }
-
-    //エディタのカスタマイズを反映
-    public void UpdateCustomize()
-    {
-        //ガードオブジェクトを探す
-        instance = transform.Find("Guard").gameObject;
-
-        if (!instance) 
-        {
-            Debug.LogError("Guardが見つかりません");
-        }
-
-        instance.SetActive(isDisplay);
     }
 
     void Awake()
@@ -81,6 +80,12 @@ public class Guard : MonoBehaviour
     public async Task ExecuteGuard() 
     {
         instance.SetActive(true);
+
+        //モンスターの向きによって出す方向を変える
+        if (!Owner.IsFacingRight)
+        {
+            offsetX *= -1;
+        }
 
         await Wait(Parameters.GUARD_DURATION);
 
