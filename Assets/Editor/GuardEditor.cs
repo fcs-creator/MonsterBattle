@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Threading;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -6,13 +7,46 @@ using UnityEngine;
 [CustomEditor(typeof(Guard))]
 public class GuardEditor : Editor
 {
+    //シリアライズオブジェクト
+    SerializedObject serializedObjectRef;
+
+    //シリアライズされた変数
+    SerializedProperty guardType;
+    SerializedProperty guardOldType;
+    SerializedProperty offsetX;
+    SerializedProperty offsetY;
+    SerializedProperty scale;
+    SerializedProperty isDisplay;
+
+
+    private void OnEnable()
+    {
+        // 対象のオブジェクトをSerializedObjectとして取得
+        serializedObjectRef = new SerializedObject(target);
+
+        // 個々のプロパティを取得
+        //guardType = serializedObjectRef.FindProperty("myString");
+        //guardOldType = serializedObjectRef.FindProperty("myInt");
+        //offsetX = serializedObjectRef.FindProperty("myInt");
+        //offsetY = serializedObjectRef.FindProperty("myInt");
+        //scale = serializedObjectRef.FindProperty("myInt");
+        //isDisplay = serializedObjectRef.FindProperty("myInt");
+    }
+
+
     public override void OnInspectorGUI()
     {
         // 元のインスペクターを描画
-        DrawDefaultInspector();
+        //DrawDefaultInspector();
 
         // ターゲットスクリプトの参照を取得
         Guard guard = (Guard)target;
+
+        //題目
+        GUILayout.Label("【 防具の設定 】", EditorStyles.boldLabel);
+
+        // Enum選択リストを追加
+        guard.type = (GuardType)EditorGUILayout.EnumPopup("タイプ", guard.type);
 
         GameObject guardObj = guard.transform.Find("Guard").gameObject;
         if (guardObj == null) return;
@@ -33,15 +67,15 @@ public class GuardEditor : Editor
                 sr.sprite = Resources.Load<Sprite>(Parameters.SHIELD_SPRITE_RESOURCE_PATH);
                 sr.color = Parameters.SHIELD_DEFALUT_COLOR;
                 var maxOffset = Parameters.SHIELD_MAX_OFFSET;
-                guard.offsetX = EditorGUILayout.Slider("Offset X", guard.offsetX, -maxOffset, maxOffset);
-                guard.offsetY = EditorGUILayout.Slider("Offset Y", guard.offsetY, -maxOffset, maxOffset);
-                guard.scale = EditorGUILayout.Slider("Scale", guard.scale, Parameters.SHIELD_MIN_SCALE, Parameters.SHIELD_MAX_SCALE);
+                guard.offsetX = EditorGUILayout.Slider("位置X", guard.offsetX, -maxOffset, maxOffset);
+                guard.offsetY = EditorGUILayout.Slider("位置Y", guard.offsetY, -maxOffset, maxOffset);
+                guard.scale = EditorGUILayout.Slider("大きさ", guard.scale, Parameters.SHIELD_MIN_SCALE, Parameters.SHIELD_MAX_SCALE);
                 break;
             case GuardType.Reflector:
                 sr.sprite = Resources.Load<Sprite>(Parameters.REFLECTOR_SPRITE_RESOURCE_PATH);
                 sr.color = Parameters.REFLECTOR_DEFALUT_COLOR;
-                guard.offsetX = EditorGUILayout.Slider("Offset", guard.offsetX, Parameters.REFLECTOR_MIN_OFFSET, Parameters.REFLECTOR_MAX_OFFSET);
-                guard.scale = EditorGUILayout.Slider("Scale", guard.scale, Parameters.REFLECTOR_MIN_SCALE, Parameters.REFLECTOR_MAX_SCALE);
+                guard.offsetX = EditorGUILayout.Slider("位置", guard.offsetX, Parameters.REFLECTOR_MIN_OFFSET, Parameters.REFLECTOR_MAX_OFFSET);
+                guard.scale = EditorGUILayout.Slider("大きさ", guard.scale, Parameters.REFLECTOR_MIN_SCALE, Parameters.REFLECTOR_MAX_SCALE);
                 break;
             default:
                 break;
@@ -58,11 +92,17 @@ public class GuardEditor : Editor
         guardObj.transform.localScale = new Vector3(x, y, 0);
         guardObj.transform.position = worldPosition + new Vector3(guard.offsetX, guard.offsetY, 0);
 
+        // チェックボックスを描画
+        guard.isDisplay = EditorGUILayout.Toggle("表示", guard.isDisplay);
+
         // ヒエラルキーのオブジェクトに反映
         if (GUI.changed)
         {
             if (guard.oldType != guard.type) 
             {
+                //タイプが変わったときは強制的に表示
+                guard.isDisplay = true;
+
                 switch (guard.type)
                 {
                     case GuardType.None:
@@ -97,14 +137,9 @@ public class GuardEditor : Editor
             if (lossyScale.y != 0) y = guard.scale / lossyScale.y;
             guardObj.transform.localScale = new Vector3(x, y, 0);
 
+            //更新
+            guard.UpdateCustomize();
             EditorUtility.SetDirty(guard);
         }
-
-
-        // カスタムボタンをインスペクターに追加
-        //if (GUILayout.Button("変更を適用"))
-        //{
-        //    guard.UpdateCustomize();
-        //}
     }
 }

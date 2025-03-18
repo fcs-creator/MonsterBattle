@@ -14,6 +14,32 @@ public class Body : MonoBehaviour
     Color originalColor;
     float flashDuration = 0.1f;
 
+    public void SetSprite(Sprite sprite) 
+    {
+        if (sr)
+        {
+            sr.sprite = sprite;
+
+            // コンポーネントの取得
+            Collider2D collider = GetComponent<PolygonCollider2D>();
+            if (collider != null)
+            {
+                // コンポーネントの削除
+                Destroy(collider);
+            }
+
+            //コライダーを再設定
+            bodyCollider = gameObject.AddComponent<PolygonCollider2D>();
+            bodyCollider.autoTiling = true;
+
+            UpdateMassBasedOnArea();
+        }
+        else 
+        {
+            Debug.LogError("bodyのSpriteRendererがありません");
+        }
+    }
+
     //タスクをキャンセル
     readonly Canceler canceler = new Canceler();
 

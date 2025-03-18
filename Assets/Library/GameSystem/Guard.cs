@@ -10,12 +10,13 @@ public enum GuardType
 
 public class Guard : MonoBehaviour
 {
-    public Monster Owner { get; private set; }
-    public GuardType type = Parameters.GUARD_DEFAULT_TYPE;                      // 現在のタイプ
+    [HideInInspector] public Monster Owner { get; private set; }
+    [HideInInspector] public GuardType type = Parameters.GUARD_DEFAULT_TYPE;    // 現在のタイプ
     [HideInInspector] public GuardType oldType = Parameters.GUARD_DEFAULT_TYPE; // 前のタイプ
     [HideInInspector] public float offsetX;
     [HideInInspector] public float offsetY;
     [HideInInspector] public float scale;
+    [HideInInspector] public bool isDisplay = true;
 
     //ガードの実体
     GameObject instance;
@@ -39,6 +40,20 @@ public class Guard : MonoBehaviour
         canceler.Reset();
     }
 
+    //エディタのカスタマイズを反映
+    public void UpdateCustomize()
+    {
+        //ガードオブジェクトを探す
+        instance = transform.Find("Guard").gameObject;
+
+        if (!instance) 
+        {
+            Debug.LogError("Guardが見つかりません");
+        }
+
+        instance.SetActive(isDisplay);
+    }
+
     void Awake()
     {
         //モンスターは同じ階層
@@ -49,6 +64,10 @@ public class Guard : MonoBehaviour
 
         //ガードの実体にタグを設定
         instance.tag = Tags.Guard;
+
+        //ガードの実体にソートレイヤーを設定
+        var sr = instance.GetComponent<SpriteRenderer>();
+        sr.sortingLayerName = SortLayer.Guard;
 
         //ガードの実体にコライダーをトリガーとして追加
         var collider = instance.AddComponent<PolygonCollider2D>();
@@ -72,4 +91,6 @@ public class Guard : MonoBehaviour
     {
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
+
+    
 }

@@ -10,6 +10,9 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] private Sprite monsterSprite;
+    public Sprite MonsterSprite => monsterSprite;
+
     public Monster Enemy { get; set; }                  //最も近い敵
     public List<Monster> Enemies { get; set; }          //全ての敵
     public MagicBook MagicBook { get; set; }            //魔法の書
@@ -49,6 +52,14 @@ public class Monster : MonoBehaviour
     public float EnemyDistance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
     public float EnemyHp { get { return Enemy.HpBar.Hp; } }
 
+    public void UpdateCustomize() 
+    {
+        var bodyObj = transform.Find("Body").gameObject;
+        bodyObj.transform.localPosition = Vector3.zero;
+        var sr = bodyObj.GetComponent<SpriteRenderer>();
+        sr.sprite = monsterSprite;
+    }
+
     //タスクをキャンセル
     readonly Canceler canceler = new Canceler();
 
@@ -72,7 +83,6 @@ public class Monster : MonoBehaviour
 
         // 武器の設定
         weapon = transform.Find("Weapon").GetComponent<Weapon>();
-        weapon?.gameObject.SetActive(true);
 
         // 防具の設定
         guard = transform.GetComponent<Guard>();

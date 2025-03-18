@@ -76,11 +76,11 @@ public static class Parameters
     //シールド
     public const string SHIELD_SPRITE_RESOURCE_PATH = "Textures/Guard/Shield";              //シールドのスプライトのパス
     public static readonly Vector2 SHIELD_DEFAULT_OFFSET = new Vector2(0,0);                //シールドの初期オフセット
-    public static readonly Color SHIELD_DEFALUT_COLOR = new Color(0.2f, 1f, 0f, 0.27f);     //シールドの初期色
-    public const float SHIELD_DEFALUT_SCALE = 2;                                            //シールドの初期スケール
+    public static readonly Color SHIELD_DEFALUT_COLOR = new Color(0.2f, 1f, 0f, 0.5f);     //シールドの初期色
+    public const float SHIELD_DEFALUT_SCALE = 2.5f;                                         //シールドの初期スケール
     public const float SHIELD_MAX_OFFSET = 5;                                               //シールドの最大の距離
     public const float SHIELD_MIN_SCALE = 1;                                                //シールドの最小スケール
-    public const float SHIELD_MAX_SCALE = 3;                                                //シールドの最大スケール
+    public const float SHIELD_MAX_SCALE = 3.5f;                                             //シールドの最大スケール
                                                                 
     //リフレクター
     public const string REFLECTOR_SPRITE_RESOURCE_PATH = "Textures/Guard/Reflector";        //リフレクターのスプライトのパス
