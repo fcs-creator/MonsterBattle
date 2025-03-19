@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: d6d608d3568aea24bb899de40428da46
+guid: 6a9feb42918539840b8f99b411068b79
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4176362632249098406
-    second: Slash_0
+      213: 5996597560043986465
+    second: SlimeMove_0
+  - first:
+      213: 6243811869700527958
+    second: SlimeMove_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +116,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Slash_0
+      name: Slime
       rect:
         serializedVersion: 2
-        x: 91
-        y: 21
-        width: 113
-        height: 252
+        x: 0
+        y: 0
+        width: 300
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6a04c6ccfab65f930800000000000000
-      internalID: 4176362632249098406
+      spriteID: 6571ed970d976a650800000000000000
+      internalID: 6243811869700527958
       vertices: []
       indices: 
       edges: []
@@ -138,7 +141,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: c0a81d39e4f9a0e4881b13e344a8e9e8
     internalID: 0
     vertices: []
     indices: 
@@ -147,7 +150,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Slime: 6243811869700527958
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

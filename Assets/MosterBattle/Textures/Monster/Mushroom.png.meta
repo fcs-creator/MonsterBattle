@@ -142,9 +142,9 @@ TextureImporter:
       name: Mushroom
       rect:
         serializedVersion: 2
-        x: 53
+        x: 0
         y: 0
-        width: 194
+        width: 300
         height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

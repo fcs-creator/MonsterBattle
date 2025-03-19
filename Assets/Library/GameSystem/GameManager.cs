@@ -42,7 +42,7 @@ public static class Parameters
     public static readonly Vector2 BACKWARD_JUMP_DIRECTION = new Vector2(-0.3f, 0.7f);  //後ジャンプの方向
 
     //ボディ
-    public const float MASS_MAGNIFICATION = 3;                                  //面積に対する重さの倍率
+    public const float MASS_MAGNIFICATION = 5f;                                //面積に対する重さの倍率
     public const float MASS_MAX = 100;                                          //最大質量
     public const float MASS_MIN = 0.01f;                                        //最小質量
 
@@ -52,7 +52,7 @@ public static class Parameters
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
     public const float WEAPON_STRIKE_FORCE = 240;                               //武器が当たったときに吹き飛ばす力
     public const float WEAPON_SHOT_FORCE_SCALE = 5;                             //武器を投げる力の補正倍率
-    public const float WEAPON_DAMAGE_SCALE = 1;                                 //武器のダメージ倍率
+    public const float WEAPON_DAMAGE_SCALE = 2.5f;                              //武器のダメージ倍率
     public const float WEAPON_GRAVITY_SCALE = 3;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
