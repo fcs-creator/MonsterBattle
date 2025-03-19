@@ -119,37 +119,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DeathMaster_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 132
-        width: 12
-        height: 30
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1c4e097a551c91000800000000000000
-      internalID: 7249448045438145
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: DeathMaster_1
       rect:
         serializedVersion: 2
-        x: 15
+        x: 0
         y: 0
-        width: 242
+        width: 267
         height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -162,33 +140,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: DeathMaster_2
-      rect:
-        serializedVersion: 2
-        x: 255
-        y: 160
-        width: 12
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 77785058c69982a20800000000000000
-      internalID: 3037846640028649335
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5b8f087a49e6a4b48b0770d474e490a0
     internalID: 0
     vertices: []
     indices: 
