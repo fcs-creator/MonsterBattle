@@ -73,11 +73,6 @@ public class Monster : MonoBehaviour
         canceler.Cancel();
     }
 
-    public void ResetActions()
-    {
-        canceler.Reset();
-    }
-
     void Awake()
     {
         //物理挙動を追加
@@ -247,9 +242,14 @@ public class Monster : MonoBehaviour
 
     protected async Task Wait(float sec)
     {
-        if (canceler.IsCancel) return;
-
-        await Task.Delay((int)(sec * 1000), canceler.Token);
+        try
+        {
+            await Task.Delay((int)(sec * 1000), canceler.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            //タスクがキャンセルされた時の処理
+        }
     }
 
     // 攻撃
@@ -477,8 +477,6 @@ public class Monster : MonoBehaviour
         {
             if (collision.contactCount > 0)
             {
-                Debug.Log(gameObject.name + " > Hit Wall");
-
                 var contact = collision.contacts;
                 PlayHitWallVFX(contact[0].point);
 

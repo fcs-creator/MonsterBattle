@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d658db07680993046ade01151d9f1145
+guid: d3dd1deab654c22439eb5fff5076dcca
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 114803088538142711
-    second: EvilWizardWoman_0
+      213: -5891790036882248870
+    second: EvilSummoner_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EvilWizardWoman_0
+      name: EvilSummoner
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 177
-        height: 284
+        width: 300
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7f70f6ffcccd79100800000000000000
-      internalID: 114803088538142711
+      spriteID: a5ba2707d282c3ea0800000000000000
+      internalID: -5891790036882248870
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ac8d37638999d1f4eb7251df227dd382
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      EvilWizardWoman_0: 114803088538142711
+      EvilSummoner: -5891790036882248870
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

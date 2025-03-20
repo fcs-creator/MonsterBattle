@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Threading.Tasks;
 
-public class SlimeWeapon : Weapon
+public class EvilSummonerWeapon: Weapon
 {
     async protected override Task Attack(int number) 
     {
-        await Task.Yield();
+        await Drawing();
+
+        await ShotDirection(Owner.EnemyDirection, 45);
     }
 }

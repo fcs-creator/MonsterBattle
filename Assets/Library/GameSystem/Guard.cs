@@ -149,6 +149,13 @@ public class Guard : MonoBehaviour
 
     private async Task Wait(float sec) 
     {
-        await Task.Delay((int)(sec * 1000), canceler.Token);
+        try
+        {
+            await Task.Delay((int)(sec * 1000), canceler.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            //タスクがキャンセルされた時の処理
+        }
     }
 }
