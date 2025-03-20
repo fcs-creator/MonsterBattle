@@ -6613,7 +6613,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2825973505105441508, guid: 29380f2877888e74e8904c5d1dd5483c, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -6621,7 +6621,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &213248586
@@ -7689,6 +7689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: 0}
+  IsEnemy: 1
 --- !u!1 &367052611
 GameObject:
   m_ObjectHideFlags: 0
@@ -8017,7 +8018,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5714286, y: 0.5714286, z: 0}
+  m_LocalScale: {x: 1.4285715, y: 1.4285715, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1488920992}
@@ -8066,15 +8067,15 @@ SpriteRenderer:
   m_SortingLayerID: 43884335
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: -7809785511404226330, guid: 33e12ad41a5c9e14b9c3c9e48669c655, type: 3}
+  m_Color: {r: 0.2, g: 1, b: 0, a: 0.5}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.94, y: 2.94}
+  m_Size: {x: 1.08, y: 2.88}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &432019486
@@ -9411,6 +9412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: -7123529365577447762, guid: 428ca65bfb2c25346a49645a90371132, type: 3}
+  IsEnemy: 1
 --- !u!114 &666659428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9505,7 +9507,7 @@ SpriteRenderer:
   m_SortingLayerID: 930408577
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 4433387101721826358, guid: b0bbbabc6d784654d9e3c3a761a53f5c, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9513,7 +9515,7 @@ SpriteRenderer:
   m_Size: {x: 1.5, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &722814640
@@ -15195,6 +15197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: 1488369032495627275, guid: 6fe0337bab2cc1046bc5e52274f48041, type: 3}
+  IsEnemy: 0
 --- !u!114 &1488920994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15207,11 +15210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e956240291e2fa418ac31877165a8c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  oldType: 0
+  type: 1
+  oldType: 1
   offsetX: 0
   offsetY: 0
-  scale: 1
+  scale: 2.5
   isDisplay: 1
 --- !u!1 &1515775940
 GameObject:
@@ -23134,6 +23137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: 0}
+  IsEnemy: 1
 --- !u!4 &1708977345
 Transform:
   m_ObjectHideFlags: 0
@@ -23795,7 +23799,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -7809785511404226330, guid: 33e12ad41a5c9e14b9c3c9e48669c655, type: 3}
-  m_Color: {r: 0.2, g: 1, b: 0, a: 0.27}
+  m_Color: {r: 0.2, g: 1, b: 0, a: 0.5}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -25030,6 +25034,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: -8573772102263965959, guid: 83a91ee40f07c404db7b7c1c4cebcf87, type: 3}
+  IsEnemy: 1
 --- !u!114 &2055449302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25152,7 +25157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2070235469
 Transform:
   m_ObjectHideFlags: 0
@@ -26049,6 +26054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: 4315506946141470425, guid: 8831aa36b103ec84d84e47f582bebeda, type: 3}
+  IsEnemy: 1
 --- !u!114 &4624676410071712451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26333,6 +26339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: 8749302817991680212, guid: f7adf347d65aa534192ed834df7a4d14, type: 3}
+  IsEnemy: 1
 --- !u!114 &6898811802608013034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26619,6 +26626,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSprite: {fileID: -7282886668606283007, guid: f65097b1763565741b04be7af4340e76, type: 3}
+  IsEnemy: 1
 --- !u!114 &8792617673540408337
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,38 +2,40 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomEditor(typeof(Monster),true)]
+[CustomEditor(typeof(Monster), true)]
 public class MonsterEditor : Editor
 {
-    //シリアライズオブジェクト
-    SerializedObject serializedObjectRef;
 
-    //シリアライズされた変数
-    SerializedProperty monsterSprite;
-
-    GameObject bodyObj;
-
-    private void OnEnable()
-    {
-        // 対象のオブジェクトをSerializedObjectとして取得
-        serializedObjectRef = new SerializedObject(target);
-
-        // 個々のプロパティを取得
-        monsterSprite = serializedObjectRef.FindProperty("monsterSprite");
-    }
+    private static bool showDetail = false;
 
     public override void OnInspectorGUI()
     {
-        // SerializedObjectを更新
-        serializedObjectRef.Update();
 
-        // 元のインスペクターを描画
-        DrawDefaultInspector();
-
-        // Monsterクラスの参照
         Monster monster = (Monster)target;
 
-        //題目
+        if (!showDetail)
+        {
+            DrawCustomInspector(monster);
+        }
+        else
+        {
+            // 通常のインスペクタ表示
+            DrawDefaultInspector();
+        }
+
+        // 詳細モードボタン
+        if (GUILayout.Button(showDetail ? "詳細" : "もどる"))
+        {
+            showDetail = !showDetail;
+        }
+
+    }
+
+    private void DrawCustomInspector(Monster monster)
+    {
+
+        serializedObject.Update();
+
         GUILayout.Label("【 モンスターの設定 】", EditorStyles.boldLabel);
 
         string inputName = EditorGUILayout.TextField("名前", monster.name);
@@ -41,47 +43,26 @@ public class MonsterEditor : Editor
         {
             monster.name = inputName;
         }
-        else
-        {
-            monster.name = "????";
-        }
 
         EditorGUILayout.LabelField("見た目");
-        
+
+        // monsterのスプライトを表示、設定する
         // ObjectFieldの固定サイズ（幅300px, 高さ100px）
-        Rect fixedRect = new Rect(GUILayoutUtility.GetLastRect().xMax - 75 - 10, GUILayoutUtility.GetLastRect().yMax + 5, 75,75); // インスペクタ内の固定位置
+        Rect fixedRect = new Rect(GUILayoutUtility.GetLastRect().xMax - 75 - 10, GUILayoutUtility.GetLastRect().yMax + 5, 75, 75); // インスペクタ内の固定位置
 
-        // 固定サイズのObjectFieldを描画
-        monsterSprite.objectReferenceValue = EditorGUI.ObjectField(
-            fixedRect,
-            monsterSprite.objectReferenceValue,
-            typeof(Sprite),
-            false
-        );
-
-        // 空白を追加して次の項目にスペースを設ける
-        GUILayout.Space(fixedRect.height + 10);
-
-        // 変更を適用
-        serializedObjectRef.ApplyModifiedProperties();
-
-        if(bodyObj == null) 
+        if (monster.Sprite == null)
         {
-            bodyObj = monster.transform.Find("Body").gameObject;
+            EditorGUILayout.HelpBox("Spriteが設定されていません", MessageType.Error);
+        }
+        else
+        {
+            // monsterのスプライトを表示、設定する
+            monster.Sprite.sprite = (Sprite)EditorGUILayout.ObjectField("ユニット画像", monster.Sprite.sprite, typeof(Sprite), false);
         }
 
-        if (bodyObj.transform.localPosition != Vector3.zero)
-        {
-            bodyObj.transform.localPosition = Vector3.zero;
-        }
+        // 変更を保存
+        serializedObject.ApplyModifiedProperties();
 
-        // 変更があればオブジェクトを更新
-        if (GUI.changed)
-        {
-            monster.UpdateCustomize();
-
-            EditorUtility.SetDirty(target);
-        }
-        
     }
+
 }

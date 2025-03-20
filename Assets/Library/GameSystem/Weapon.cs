@@ -11,7 +11,7 @@ using System.Threading;
 public class Weapon : MonoBehaviour
 {
     public Monster Owner { get; private set; }          // 武器の所有者(モンスター)
-    Monster defaultOwner; 
+    Monster defaultOwner;
     public bool IsHitableOwner { get; private set; }    // 武器が所有者に当たるか
     public float StrikeForce { get; private set; }      // 武器の吹き飛ばす力
 
@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviour
         {
             if (isReflect)
             {
-                damage = CalcutlateDamage() * reflectionDamageRate; 
+                damage = CalcutlateDamage() * reflectionDamageRate;
             }
             else
             {
@@ -34,7 +34,7 @@ public class Weapon : MonoBehaviour
         private set
         {
             damage = value;
-        }      
+        }
     }
 
     float reflectionDamageRate = 1f;
@@ -57,14 +57,14 @@ public class Weapon : MonoBehaviour
     //無効な
     bool isDisable
     {
-        get 
+        get
         {
             return Owner.IsDead || canceler.IsCancel;
         }
     }
 
     //武器の所有者をセット
-    public void SetOwner(Monster owner) 
+    public void SetOwner(Monster owner)
     {
         Owner = owner;
     }
@@ -147,7 +147,8 @@ public class Weapon : MonoBehaviour
                     weaponCollider.autoTiling = true;
                     weaponCollider.isTrigger = true;
                     area += CalculateScaledArea(weaponCollider);
-                };
+                }
+                ;
             }
         }
 
@@ -187,7 +188,7 @@ public class Weapon : MonoBehaviour
 
         if (isClone) return;
 
-        if (Owner == null) 
+        if (Owner == null)
         {
             Debug.LogError("Ownerがいません");
         }
@@ -254,7 +255,7 @@ public class Weapon : MonoBehaviour
     //居合い抜き
     public async Task Drawing()
     {
-        if (isDisable) return;
+        if (!isDisable) return;
 
         Owner.ActionBar.SendText("Weapon-Drawing");
 
@@ -315,7 +316,7 @@ public class Weapon : MonoBehaviour
 
         while (elapsed < s)
         {
-            if(isDisable) break;
+            if (isDisable) break;
 
             elapsed += Time.deltaTime;
             float t = elapsed / s;
@@ -331,7 +332,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器をモンスターの周囲で回転させる(上方向が基準で0°)
-    public async Task Rotate(float startAngle, float rotAngle, float second) 
+    public async Task Rotate(float startAngle, float rotAngle, float second)
     {
         if (isDisable) return;
 
@@ -365,7 +366,7 @@ public class Weapon : MonoBehaviour
         while (!stop)
         {
             if (isDisable) break;
- 
+
             //フレーム毎の回転量を計算
             step = (rotAngle / second) * Time.deltaTime;
 
@@ -402,7 +403,7 @@ public class Weapon : MonoBehaviour
         if (isDisable) return;
 
         isShot = true;
-        
+
         Owner.ActionBar.SendText("Weapon-Shot");
 
         float dirY = Mathf.Clamp(directionY, -1.0f, 1.0f);
@@ -421,7 +422,7 @@ public class Weapon : MonoBehaviour
         AudioManager.Instance.PlaySE(Parameters.SE_WEAPON_SHOT);
 
         //飛ばす
-        rb.AddForce(new Vector2(dirX,dirY) * power * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(dirX, dirY) * power * Parameters.WEAPON_SHOT_FORCE_SCALE, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_SHOT);
 
@@ -431,7 +432,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を指定方向に飛ばす
-    public async Task ShotDirection(Vector2 direction, float power) 
+    public async Task ShotDirection(Vector2 direction, float power)
     {
         if (isDisable) return;
 
@@ -462,7 +463,7 @@ public class Weapon : MonoBehaviour
 
         int n = Mathf.Clamp(num, 1, Parameters.WEAPON_CLONE_MAX);
         Weapon[] clones = new Weapon[n];
-      
+
         Owner.ActionBar.SendText("Clone");
 
         Vector2 center = Owner.transform.position;
@@ -530,9 +531,9 @@ public class Weapon : MonoBehaviour
                     //スタン状態を有効にする
                     Owner.IsStunned = true;
                 }
-                else if (guard.type == GuardType.Reflector) 
+                else if (guard.type == GuardType.Reflector)
                 {
-                    if (isShot) 
+                    if (isShot)
                     {
                         //反射を有効にする
                         isReflect = true;
@@ -552,7 +553,7 @@ public class Weapon : MonoBehaviour
 
                         //反射させる
                         var lv = rb.linearVelocity;
-                        rb.linearVelocity = new Vector2(lv.x*-1, lv.y);
+                        rb.linearVelocity = new Vector2(lv.x * -1, lv.y);
 
                         rb.AddForce(direction * Parameters.REFLECT_WEAPON_FORCE, ForceMode2D.Impulse);
                     }
@@ -567,11 +568,11 @@ public class Weapon : MonoBehaviour
         if (other.CompareTag(Tags.Body))
         {
             GameObject monsterObj = other.transform.parent.gameObject;
-        
+
             if (HasComponent<Monster>(monsterObj))
             {
                 Monster monster = monsterObj.GetComponent<Monster>();
-        
+
                 if (Owner == monster)
                 {
                     IsHitableOwner = true;
@@ -656,16 +657,16 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を有効・無効を切り替える
-    private void SetActive(bool value) 
+    private void SetActive(bool value)
     {
-        foreach (GameObject weapon in weapons)  
+        foreach (GameObject weapon in weapons)
         {
             weapon.SetActive(value);
         }
     }
 
     //武器を握っているかどうかの状態をセット
-    private void SetGripWeapon(bool value) 
+    private void SetGripWeapon(bool value)
     {
         if (value)
         {
@@ -703,13 +704,13 @@ public class Weapon : MonoBehaviour
     }
 
     //ダメージを計算
-    private float CalcutlateDamage() 
+    private float CalcutlateDamage()
     {
         if (isShot)
         {
             return rb.mass * Parameters.WEAPON_DAMAGE_SCALE;
         }
-        else 
+        else
         {
             float speed = rb.linearVelocity.magnitude;
             if (speed < 1) speed = 1;

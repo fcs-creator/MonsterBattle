@@ -11,8 +11,7 @@ using System.IO;
 
 public class Monster : MonoBehaviour
 {
-    [HideInInspector] public Sprite monsterSprite;
-    public Sprite MonsterSprite => monsterSprite;
+    public SpriteRenderer Sprite;
 
     public Monster Enemy { get; set; }                  //最も近い敵
     public List<Monster> Enemies { get; set; }          //全ての敵
@@ -53,14 +52,16 @@ public class Monster : MonoBehaviour
     public float EnemyDistance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
     public float EnemyHp { get { return Enemy.HpBar.Hp; } }
 
-    public void UpdateCustomize() 
-    {
-        var bodyObj = transform.Find("Body").gameObject;
-        bodyObj.transform.localPosition = Vector3.zero;
-        var sr = bodyObj.GetComponent<SpriteRenderer>();
-        sr.sprite = monsterSprite;
-    }
-
+    public bool IsEnemy = false;
+    /*
+        public void UpdateCustomize()
+        {
+            var bodyObj = transform.Find("Body").gameObject;
+            bodyObj.transform.localPosition = Vector3.zero;
+            var sr = bodyObj.GetComponent<SpriteRenderer>();
+            sr.sprite = monsterSprite;
+        }
+    */
     //タスクをキャンセル
     readonly Canceler canceler = new Canceler();
 
@@ -197,7 +198,7 @@ public class Monster : MonoBehaviour
             {
                 await ActionLoop();
             }
-            else 
+            else
             {
                 ActionBar.SendText("Stun");
             }
@@ -213,15 +214,15 @@ public class Monster : MonoBehaviour
 
     protected async Task Wait(float sec)
     {
-        if(canceler.IsCancel) return;
+        if (canceler.IsCancel) return;
 
         await Task.Delay((int)(sec * 1000), canceler.Token);
     }
 
     // 攻撃
-    protected async virtual Task Attack(int number = 1) 
+    protected async virtual Task Attack(int number = 1)
     {
-        if(canceler.IsCancel) return;
+        if (canceler.IsCancel) return;
 
         ActionBar.SendText("Attack");
 
@@ -235,7 +236,7 @@ public class Monster : MonoBehaviour
     }
 
     // ガード
-    protected async virtual Task Guard() 
+    protected async virtual Task Guard()
     {
         if (canceler.IsCancel) return;
 
@@ -252,7 +253,7 @@ public class Monster : MonoBehaviour
     }
 
     //ダッシュ：相手に向かって進む
-    protected async virtual Task Forward(float force) 
+    protected async virtual Task Forward(float force)
     {
         if (canceler.IsCancel) return;
 
@@ -285,12 +286,12 @@ public class Monster : MonoBehaviour
 
         //相手から離れる
         rb.AddForce(-EnemyDirection.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
-        
+
         await Wait(Parameters.ACTION_INTERVAL_BACKWARD);
     }
 
     // 垂直ジャンプ
-    protected async virtual Task Jump(float height) 
+    protected async virtual Task Jump(float height)
     {
         if (canceler.IsCancel) return;
 
@@ -418,7 +419,7 @@ public class Monster : MonoBehaviour
     }
 
     // スタン状態の処理
-    private async Task Stun() 
+    private async Task Stun()
     {
         weapon.CancelActions();
 
@@ -441,7 +442,7 @@ public class Monster : MonoBehaviour
         //ステージの壁との接触時の処理
         if (obj.CompareTag(Tags.StageWall))
         {
-            if(collision.contactCount > 0) 
+            if (collision.contactCount > 0)
             {
                 Debug.Log(gameObject.name + " > Hit Wall");
 
@@ -462,12 +463,12 @@ public class Monster : MonoBehaviour
             IsJumping = false;
             IsGrounded = true;
 
-            if(rb.linearVelocity.magnitude > Parameters.LAND_VELOCITY)
+            if (rb.linearVelocity.magnitude > Parameters.LAND_VELOCITY)
             {
                 //着地音を再生
                 AudioManager.Instance.PlaySE(Parameters.SE_LAND);
             }
-            
+
         }
 
         //魔法によるダメージ
@@ -475,7 +476,7 @@ public class Monster : MonoBehaviour
         {
             Magic magic = obj.GetComponent<Magic>();
 
-            if(magic.Owner != this)
+            if (magic.Owner != this)
             {
                 HpBar.TakeDamage(magic.Damage);
             }
@@ -587,7 +588,7 @@ public class Monster : MonoBehaviour
                         HpBar.TakeDamage(damage);
                         rb.AddForce(direction * weapon.StrikeForce, ForceMode2D.Impulse);
 
-                        Debug.Log("Damage : " + weapon.Owner.gameObject.name +" -> " + gameObject.name +" : " + damage);
+                        Debug.Log("Damage : " + weapon.Owner.gameObject.name + " -> " + gameObject.name + " : " + damage);
                     }
                 }
             }
@@ -614,21 +615,21 @@ public class Monster : MonoBehaviour
     }
 
     // ノックバック処理
-    private void Knockback(GameObject enemy) 
+    private void Knockback(GameObject enemy)
     {
         if (HasComponent<Rigidbody2D>(enemy) && HasComponent<Rigidbody2D>(gameObject))
-        { 
+        {
             Vector2 dir = (enemy.transform.position - gameObject.transform.position).normalized;
 
             float ownDirX;
             float enemyDirX;
-            
-            if (dir.x < 0) 
+
+            if (dir.x < 0)
             {
                 ownDirX = dir.x;
                 enemyDirX = -dir.x;
             }
-            else 
+            else
             {
                 ownDirX = -dir.x;
                 enemyDirX = dir.x;
@@ -640,7 +641,7 @@ public class Monster : MonoBehaviour
     }
 
     // キャラクターの向きを反転する
-    private void Flip() 
+    private void Flip()
     {
         IsFacingRight = !IsFacingRight;
         Vector3 scale = transform.localScale;
