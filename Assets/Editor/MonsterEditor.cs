@@ -8,6 +8,9 @@ public class MonsterEditor : Editor
 
     private static bool showDetail = false;
 
+    [SerializeField]
+    private CreateNewWeaponScript weaponScript = null;
+
     public override void OnInspectorGUI()
     {
 
@@ -23,8 +26,12 @@ public class MonsterEditor : Editor
             DrawDefaultInspector();
         }
 
+        GUILayout.Space(10);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Space(5);
+
         // 詳細モードボタン
-        if (GUILayout.Button(showDetail ? "詳細" : "もどる"))
+        if (GUILayout.Button(showDetail ? "もどる" : "詳細"))
         {
             showDetail = !showDetail;
         }
@@ -44,12 +51,7 @@ public class MonsterEditor : Editor
             monster.name = inputName;
         }
 
-        EditorGUILayout.LabelField("見た目");
-
         // monsterのスプライトを表示、設定する
-        // ObjectFieldの固定サイズ（幅300px, 高さ100px）
-        Rect fixedRect = new Rect(GUILayoutUtility.GetLastRect().xMax - 75 - 10, GUILayoutUtility.GetLastRect().yMax + 5, 75, 75); // インスペクタ内の固定位置
-
         if (monster.Sprite == null)
         {
             EditorGUILayout.HelpBox("Spriteが設定されていません", MessageType.Error);
@@ -57,11 +59,87 @@ public class MonsterEditor : Editor
         else
         {
             // monsterのスプライトを表示、設定する
-            monster.Sprite.sprite = (Sprite)EditorGUILayout.ObjectField("ユニット画像", monster.Sprite.sprite, typeof(Sprite), false);
+            monster.Sprite.sprite = (Sprite)EditorGUILayout.ObjectField("見た目", monster.Sprite.sprite, typeof(Sprite), false);
         }
+
+        // プログラムするボタン
+        GUILayout.Space(10);
+        if (GUILayout.Button("モンスターにプログラムする"))
+        {
+            // Scriptファイルを開く
+            MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(monster.ScriptFile);
+            AssetDatabase.OpenAsset(script);
+
+        }
+
+        GUILayout.Space(5);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Space(5);
+
+        GUILayout.Label("【 武器の設定 】", EditorStyles.boldLabel);
+
+        drawWeaponList(monster);
 
         // 変更を保存
         serializedObject.ApplyModifiedProperties();
+
+    }
+
+    private void drawWeaponList(Monster monster)
+    {
+        foreach (var weapon in monster.Weapons)
+        {
+            GUILayout.BeginHorizontal();
+
+            // 武器のスプライトを表示、設定する
+            if (weapon.Sprite == null)
+            {
+                EditorGUILayout.HelpBox("Spriteが設定されていません", MessageType.Error);
+            }
+            else
+            {
+                weapon.Sprite.sprite = (Sprite)EditorGUILayout.ObjectField("見た目", weapon.Sprite.sprite, typeof(Sprite), false);
+            }
+
+            if (GUILayout.Button("武器にプログラムする"))
+            {
+                // Scriptファイルを開く
+                MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(weapon.ScriptFile);
+                AssetDatabase.OpenAsset(script);
+            }
+
+            GUILayout.EndHorizontal();
+        }
+
+        // 武器追加ボタン
+        GUILayout.Space(5);
+        var isLoadingWeapon = weaponScript == null || string.IsNullOrEmpty(weaponScript.WeaponScriptName);
+
+        if (isLoadingWeapon)
+        {
+            if (GUILayout.Button("武器を追加する"))
+            {
+                weaponScript = new CreateNewWeaponScript();
+                weaponScript.Create(monster.name);
+
+                AssetDatabase.ImportAsset(weaponScript.WeaponScriptName, ImportAssetOptions.ForceUpdate);
+            }
+        }
+
+        if (!isLoadingWeapon && !weaponScript.IsScriptLoaded)
+        {
+            EditorGUILayout.HelpBox("読み込み中", MessageType.Info);
+        }
+
+        if (!isLoadingWeapon && weaponScript.IsScriptLoaded)
+        {
+            if (GUILayout.Button("武器を作成！"))
+            {
+                CreateNewWeaponScript.CreateWeaponObject(monster, weaponScript.WeaponScriptName);
+                weaponScript = null;
+            }
+        }
+
 
     }
 

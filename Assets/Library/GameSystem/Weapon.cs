@@ -15,6 +15,10 @@ public class Weapon : MonoBehaviour
     public bool IsHitableOwner { get; private set; }    // 武器が所有者に当たるか
     public float StrikeForce { get; private set; }      // 武器の吹き飛ばす力
 
+    public string ScriptFile = string.Empty;            // 武器のスクリプトファイル
+
+    public SpriteRenderer Sprite;  // 武器のスプライト
+
     // 武器のダメージ
     private float damage;
     public float Damage

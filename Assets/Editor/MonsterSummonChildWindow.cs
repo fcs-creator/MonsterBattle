@@ -8,7 +8,10 @@ public class MonsterSummonChildWindow : EditorWindow
 	public string monsterType;
 	private string monsterName = string.Empty;
 
-	private string scriptName = string.Empty;
+	private string monsterScriptName = string.Empty;
+	private string weaponScriptName = string.Empty;
+
+	private bool waitForAssetsImport = false;
 
 	public static void ShowWindow(string monsterType)
 	{
@@ -28,12 +31,11 @@ public class MonsterSummonChildWindow : EditorWindow
 
 		GUILayout.Space(5);
 
-		if (scriptName != string.Empty)
+		if (monsterScriptName != string.Empty && !waitForAssetsImport)
 		{
 			if (GUILayout.Button("召喚！"))
 			{
-				Debug.Log(scriptName);
-				MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(scriptName);
+				MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(monsterScriptName);
 
 				GameObject go = new GameObject(monsterName);
 				Monster monster = (Monster)go.AddComponent(script.GetClass());
@@ -41,6 +43,9 @@ public class MonsterSummonChildWindow : EditorWindow
 				go.transform.position = Vector3.zero;
 				go.transform.rotation = Quaternion.identity;
 				go.transform.localScale = Vector3.one;
+
+				// Scriptファイルを保存
+				monster.ScriptFile = monsterScriptName;
 
 				// XYのscaleを1.75に
 				go.transform.localScale = new Vector3(1.75f, 1.75f, 1);
@@ -81,13 +86,45 @@ public class MonsterSummonChildWindow : EditorWindow
 				// Guardを追加
 				go.AddComponent<Guard>();
 
-				scriptName = string.Empty;
+				// Weaponを追加
+				CreateNewWeaponScript.CreateWeaponObject(monster, weaponScriptName);
+				/*
+				GameObject weaponObj = new GameObject("Weapon");
+				weaponObj.transform.SetParent(go.transform);    // 子にする意味はあんまりないかもね
+				weaponObj.transform.localPosition = Vector3.zero;
+				weaponObj.transform.localRotation = Quaternion.identity;
+				weaponObj.transform.localScale = Vector3.one;
+
+				{
+					// SpriteRendererを追加
+					SpriteRenderer spriteRenderer = weaponObj.AddComponent<SpriteRenderer>();
+					// ソーティングレイヤーをWeaponに設定
+					spriteRenderer.sortingLayerName = "Weapon";
+					spriteRenderer.sortingOrder = 0;
+
+					// Weaponを追加
+					MonoScript weaponScript = AssetDatabase.LoadAssetAtPath<MonoScript>(weaponScriptName);
+					var w = (Weapon)weaponObj.AddComponent(weaponScript.GetClass());
+					w.ScriptFile = weaponScriptName;
+					w.Sprite = spriteRenderer;
+
+					monster.AddWeapon(w);
+				}
+				*/
+
+				monsterScriptName = string.Empty;
+				weaponScriptName = string.Empty;
 
 				Close();
 			}
 		}
 
-		if (scriptName == string.Empty)
+		if (waitForAssetsImport)
+		{
+			EditorGUILayout.HelpBox("読み込み中", MessageType.Info);
+		}
+
+		if (monsterScriptName == string.Empty && !waitForAssetsImport)
 		{
 			if (monsterName == string.Empty)
 			{
@@ -104,20 +141,32 @@ public class MonsterSummonChildWindow : EditorWindow
 						return;
 					}
 
-					CreateNewUnitScript(monsterName, monsterType);
+					CreateNewMonsterScript(monsterName, monsterType);
+					var util = new CreateNewWeaponScript();
+					util.Create(monsterName);
+
+					weaponScriptName = util.WeaponScriptName;
+
+					AssetDatabase.ImportAsset(monsterScriptName, ImportAssetOptions.ForceUpdate);
+					AssetDatabase.ImportAsset(weaponScriptName, ImportAssetOptions.ForceUpdate);
+
+					waitForAssetsImport = true;
+					EditorApplication.update += WaitForSeconds;
+
 				}
 			}
 		}
 
 	}
 
-	private void CreateNewUnitScript(string monsterName, string monsterType)
+	private void CreateNewMonsterScript(string monsterName, string monsterType)
 	{
-		string className = "Monster_CB";
+		string className = "MonsterTemplate";
 		string fileName = monsterName + ".cs";
 
 		string monsterDir = Path.Combine(EditorConst.ScriptPath, "MonsterScripts");
 
+#if false // ここを生かすとタイプ別のサンプルをコピーすることもできるよ
 		// Monster名がDefaultMonsterの場合
 		if (monsterType == EditorConst.DefaultMonsterName01 ||
 			monsterType == EditorConst.DefaultMonsterName02 ||
@@ -127,6 +176,13 @@ public class MonsterSummonChildWindow : EditorWindow
 			// monsterName にランダムな値をつけて重複を避ける
 			fileName = monsterType + "_" + Guid.NewGuid().ToString("N") + ".cs";
 		}
+		else
+		{
+			// 他のタイプは今のところ受け付けない
+			EditorUtility.DisplayDialog("エラー", "不正なモンスタータイプです", "OK");
+			return;
+		}
+#endif
 
 		string destinationFilePath = Path.Combine(monsterDir, fileName);
 
@@ -149,12 +205,24 @@ public class MonsterSummonChildWindow : EditorWindow
 		}
 		File.WriteAllLines(destinationFilePath, lines);
 
-		scriptName = destinationFilePath;
+		monsterScriptName = destinationFilePath;
+	}
 
-		AssetDatabase.Refresh();
+	private static float waitTime = 2.0f; // 待機時間（秒）
+	private static float elapsedTime = 0.0f;
 
-		AssetDatabase.ImportAsset(scriptName, ImportAssetOptions.ForceUpdate);
+	// この待ちが意味があるかは謎
+	private void WaitForSeconds()
+	{
+		elapsedTime += Time.deltaTime;
+		if (elapsedTime >= waitTime)
+		{
+			// 待機時間が経過したら次の処理を実行
+			EditorApplication.update -= WaitForSeconds;
+			elapsedTime = 0.0f;
 
+			waitForAssetsImport = false;
+		}
 	}
 
 }

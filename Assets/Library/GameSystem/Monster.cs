@@ -12,6 +12,10 @@ using System.IO;
 public class Monster : MonoBehaviour
 {
     public SpriteRenderer Sprite;
+    public String ScriptFile;
+    public int EnemyLevel = 0;
+
+    public List<Weapon> Weapons = new List<Weapon>();
 
     public Monster Enemy { get; set; }                  //最も近い敵
     public List<Monster> Enemies { get; set; }          //全ての敵
@@ -52,7 +56,6 @@ public class Monster : MonoBehaviour
     public float EnemyDistance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
     public float EnemyHp { get { return Enemy.HpBar.Hp; } }
 
-    public bool IsEnemy = false;
     /*
         public void UpdateCustomize()
         {
@@ -81,11 +84,15 @@ public class Monster : MonoBehaviour
         rb = gameObject.AddComponent<Rigidbody2D>();
 
         // 本体の設定
-        body = transform.Find("Body").AddComponent<Body>(); //準備のできたタイミングで明示的にAddしてあげると良い
+        body = transform.Find("Body").gameObject.AddComponent<Body>(); //準備のできたタイミングで明示的にAddしてあげると良い
 
         // 武器の設定
-        weapon = transform.Find("Weapon").GetComponent<Weapon>();
-        weapon.SetOwner(this);
+        if (weapon == null)
+        {
+            var w = transform.Find("Weapon").GetComponent<Weapon>();
+            AddWeapon(w);
+        }
+        SwitchWeapon(0);
 
         // 防具の設定
         guard = transform.GetComponent<Guard>();
@@ -115,6 +122,32 @@ public class Monster : MonoBehaviour
         IsStunable = true;
         IsDead = false;
         EnemyCheckCount = 0;
+    }
+
+    /// <summary>
+    /// 武器を切り替える
+    /// </summary>
+    /// <param name="index">武器の番号（存在しない場合は切り替わらない）</param>
+    public void SwitchWeapon(int index)
+    {
+        if (index < 0 || index >= Weapons.Count) return;
+
+        if (weapon != null)
+        {
+            weapon.ResetActions();
+            weapon.gameObject.SetActive(false);
+        }
+
+        weapon = Weapons[index];
+        weapon.gameObject.SetActive(true);
+        weapon.SetOwner(this);
+
+    }
+
+    public void AddWeapon(Weapon weapon)
+    {
+        Weapons.Add(weapon);
+        weapon.gameObject.SetActive(false);
     }
 
     void Start()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,10 +10,10 @@ public class MonsterSummonWindow : EditorWindow
 
     private GUIStyle buttonStyle;
 
-    [MenuItem("Window/Monster Summon")]
+    [MenuItem("Window/Monster Battle")]
     public static void ShowWindow()
     {
-        GetWindow<MonsterSummonWindow>("Monster Summon");
+        GetWindow<MonsterSummonWindow>("ユニモンバトル");
     }
 
     private void OnGUI()
@@ -25,26 +26,35 @@ public class MonsterSummonWindow : EditorWindow
 
         GUILayout.Space(30);
 
+        GUILayout.Label("モンスター召喚", EditorStyles.boldLabel);
+
+        defaultMonsterList();
+        GUILayout.Space(10);
+
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         GUILayout.Label("モンスター一覧", EditorStyles.boldLabel);
         GUILayout.Space(10);
 
         monsterList();
-
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-        GUILayout.Label("モンスター召喚", EditorStyles.boldLabel);
-
         GUILayout.Space(10);
 
-        defaultMonsterList();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Label("対戦相手選択", EditorStyles.boldLabel);
+        enemyList();
+
     }
+
+    private Vector2 monsterScrollPosition;
 
     private void monsterList()
     {
+        monsterScrollPosition = EditorGUILayout.BeginScrollView(monsterScrollPosition, GUILayout.Height(300));
+
         Monster[] monsters = FindObjectsByType<Monster>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID);
 
         foreach (var monster in monsters)
         {
-            if (monster.IsEnemy)
+            if (monster.EnemyLevel != 0)
             {
                 continue;
             }
@@ -69,8 +79,21 @@ public class MonsterSummonWindow : EditorWindow
                 EditorGUIUtility.PingObject(monster.gameObject);
             }
 
+            // 削除ボタン
+            if (GUILayout.Button("削除", GUILayout.Width(40), GUILayout.Height(40)))
+            {
+                if (EditorUtility.DisplayDialog("確認", monster.name + " を本当に削除しますか？", "OK", "キャンセル"))
+                {
+                    DestroyImmediate(monster.gameObject);
+                }
+            }
+
             GUILayout.EndHorizontal();
+
+            GUILayout.Space(5);
         }
+
+        EditorGUILayout.EndScrollView();
 
     }
 
@@ -85,8 +108,8 @@ public class MonsterSummonWindow : EditorWindow
             brazeTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/MosterBattle/Textures/Monster/Braze.png");
         }
 
-        GUILayout.Label(brazeTexture, GUILayout.Width(50), GUILayout.Height(50));
-        if (GUILayout.Button("Braze を召喚", GUILayout.Height(50)))
+        GUILayout.Label(brazeTexture, GUILayout.Width(30), GUILayout.Height(30));
+        if (GUILayout.Button("Braze を召喚", GUILayout.Height(30)))
         {
             OpenSummonWindow("Braze");
         }
@@ -102,8 +125,8 @@ public class MonsterSummonWindow : EditorWindow
             glaciaTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/MosterBattle/Textures/Monster/Glacia.png");
         }
 
-        GUILayout.Label(glaciaTexture, GUILayout.Width(50), GUILayout.Height(50));
-        if (GUILayout.Button("Glacia を召喚", GUILayout.Height(50)))
+        GUILayout.Label(glaciaTexture, GUILayout.Width(30), GUILayout.Height(30));
+        if (GUILayout.Button("Glacia を召喚", GUILayout.Height(30)))
         {
             OpenSummonWindow("Glacia");
         }
@@ -119,14 +142,64 @@ public class MonsterSummonWindow : EditorWindow
             elderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/MosterBattle/Textures/Monster/Elder.png");
         }
 
-        GUILayout.Label(elderTexture, GUILayout.Width(50), GUILayout.Height(50));
-        if (GUILayout.Button("Elder を召喚", GUILayout.Height(50)))
+        GUILayout.Label(elderTexture, GUILayout.Width(30), GUILayout.Height(30));
+        if (GUILayout.Button("Elder を召喚", GUILayout.Height(30)))
         {
             OpenSummonWindow("Elder");
         }
 
         GUILayout.EndHorizontal();
 
+    }
+
+    private Monster selectedEnemy = null;
+    private Vector2 enemyScrollPosition;
+
+    private void enemyList()
+    {
+        enemyScrollPosition = EditorGUILayout.BeginScrollView(enemyScrollPosition, GUILayout.Height(300));
+
+        Monster[] monsters = FindObjectsByType<Monster>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID);
+
+        List<Monster> enemyList = new List<Monster>();
+        enemyList.AddRange(monsters);
+        enemyList.Sort((a, b) => a.EnemyLevel - b.EnemyLevel);
+
+        foreach (var monster in enemyList)
+        {
+            if (monster.EnemyLevel == 0 || monster.Sprite == null)
+            {
+                continue;
+            }
+
+            // 一回非選択にするよ
+            if (selectedEnemy != monster)
+            {
+                monster.gameObject.SetActive(false);
+            }
+
+            GUILayout.Label("【 Level：" + monster.EnemyLevel + " 】" + monster.name, EditorStyles.boldLabel);
+            GUILayout.Label(monster.Sprite.sprite.texture, GUILayout.Width(120), GUILayout.Height(120));
+
+            if (monster.gameObject.activeSelf)
+            {
+                EditorGUILayout.HelpBox("選択中", MessageType.Info);
+                GUILayout.Space(8);
+            }
+            else
+            {
+                if (GUILayout.Button("戦う", buttonStyle, GUILayout.Height(30)))
+                {
+                    monster.gameObject.SetActive(true);
+                    if (selectedEnemy) selectedEnemy.gameObject.SetActive(false);
+                    selectedEnemy = monster;
+                }
+            }
+
+            GUILayout.Space(8);
+        }
+
+        EditorGUILayout.EndScrollView();
     }
 
     private void OpenSummonWindow(string monsterType)
