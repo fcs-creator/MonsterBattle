@@ -23,6 +23,13 @@ public enum SE
     WeaponDrawing,
     CollideBody,
     HitWall,
+    SwitchWeapon,
+    MagicFire,
+    MagicThunder,
+    MagicIce,
+    Reflect, 
+    MagicChant,
+    HitMagic
 }
 
 public class AudioManager : MonoBehaviour
@@ -50,7 +57,13 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip weaponDrawing;
     [SerializeField] AudioClip collideBody;
     [SerializeField] AudioClip hitWall;
-    
+    [SerializeField] AudioClip switchWeapon;
+    [SerializeField] AudioClip magicFire;
+    [SerializeField] AudioClip magicThunder;
+    [SerializeField] AudioClip magicIce;
+    [SerializeField] AudioClip reflect;
+    [SerializeField] AudioClip magicChant;
+    [SerializeField] AudioClip hitMagic;
 
     // AudioClipを管理するDictionary
     Dictionary<BGM, AudioClip> bgm;
@@ -87,7 +100,14 @@ public class AudioManager : MonoBehaviour
             { SE.WeaponShot, weaponShot },
             { SE.WeaponDrawing, weaponDrawing },
             { SE.CollideBody, collideBody },
-            { SE.HitWall, hitWall }
+            { SE.HitWall, hitWall },
+            { SE.SwitchWeapon, switchWeapon },
+            { SE.MagicFire, magicFire },
+            { SE.MagicThunder, magicThunder },
+            { SE.MagicIce, magicIce },
+            { SE.Reflect, reflect },
+            { SE.MagicChant, magicChant },
+            { SE.HitMagic, hitMagic }
 
         };
 

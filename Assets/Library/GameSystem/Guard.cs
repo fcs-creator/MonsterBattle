@@ -1,10 +1,14 @@
-﻿using NUnit.Framework.Internal;
+﻿using Codice.Client.BaseCommands;
+using NUnit.Framework.Internal;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Timeline;
+using static Codice.Client.Common.EventTracking.TrackFeatureUseEvent.Features.DesktopGUI.Filters;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.Rendering.DebugUI;
 
 public enum GuardType 
@@ -157,5 +161,80 @@ public class Guard : MonoBehaviour
         {
             //タスクがキャンセルされた時の処理
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameObject obj = collision.gameObject;
+
+        //魔法によるダメージ
+        if (HasComponent<Magic>(obj))
+        {
+            Magic magic = obj.GetComponent<Magic>();
+
+            if (magic.Owner != this)
+            {
+                if (collision.contactCount > 0)
+                {
+                    if (Owner.IsGuarding)
+                    {
+                        if(type == GuardType.Reflector)
+                        {
+                            magic.Owner = Owner;
+
+                            //反射音を再生
+                            AudioManager.Instance.PlaySE(Parameters.SE_REFLECT);
+
+                            var contact = collision.contacts;
+
+                            //ガードエフェクトの再生
+                            PlayGuardVFX(contact[0].point);
+
+                            //跳ね返す方向を計算
+                            Vector2 direction = (magic.transform.position - transform.position).normalized;
+
+                            if (!magic.hasReflected)
+                            {
+                                magic.hasReflected = true;
+
+                                magic.SetDamage(magic.Damage * Parameters.MAGIC_REFLECT_INCREACE_DAMAGE_RATE);
+
+                            }
+
+                            switch (magic.Type) 
+                            {
+                                case MagicType.FireBall:
+                                    var fireBall = magic.GetComponent<FireBall>();
+                                    var rb = fireBall.GetComponent<Rigidbody2D>();
+                                    //反射させる
+                                    var lv = rb.linearVelocity;
+                                    rb.linearVelocity = new Vector2(lv.x * -1, lv.y);
+                                    rb.AddForce(direction * Parameters.MAGIC_REFLECT_FORCE, ForceMode2D.Impulse);
+                                    break;
+                                case MagicType.Thunder:
+                                    var localScale = magic.transform.localScale;
+                                    magic.transform.localScale = new Vector2(-localScale.x, localScale.y);
+                                    Owner.HpBar.TakeDamage(magic.Damage);
+                                    break;
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ステージの壁のヒットエフェクトの再生
+    private void PlayGuardVFX(Vector3 collisionPoint)
+    {
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(Parameters.VFX_GUARD, collisionPoint, transform.rotation);
+    }
+
+    // コンポーネントの有無を確認
+    private bool HasComponent<T>(GameObject obj) where T : Component
+    {
+        return obj.GetComponent<T>() != null;
     }
 }

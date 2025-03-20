@@ -315,6 +315,8 @@ public class Weapon : MonoBehaviour
     {
         if (isDisable) return;
 
+        Owner.ActionBar.SendText("Weapon-Spin");
+
         float elapsed = 0f;
         float initialRotation = transform.rotation.eulerAngles.z;
         float targetRotation = initialRotation + angle;
@@ -523,6 +525,9 @@ public class Weapon : MonoBehaviour
             {
                 if (guard.type == GuardType.Shield)
                 {
+                    //パリィ音を再生
+                    AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
+
                     //ガードエフェクトの再生
                     PlayGuardVFX(obj, other);
 
@@ -531,7 +536,7 @@ public class Weapon : MonoBehaviour
                     Owner.GetComponent<Rigidbody2D>().AddForce(direction * Damage * Parameters.GUARD_FORCE_SCALE, ForceMode2D.Impulse);
 
                     //スタン状態を有効にする
-                    Owner.IsStunned = true;
+                    Owner.SetStun(true);
                 }
                 else if (guard.type == GuardType.Reflector)
                 {
@@ -539,6 +544,9 @@ public class Weapon : MonoBehaviour
                     {
                         //反射を有効にする
                         isReflect = true;
+
+                        //反射音を再生
+                        AudioManager.Instance.PlaySE(Parameters.SE_REFLECT);
 
                         //ガードエフェクトの再生
                         PlayGuardVFX(obj, other);
@@ -605,9 +613,6 @@ public class Weapon : MonoBehaviour
         // 自分の位置を基準にして衝突の法線ベクトルを計算
         Vector3 hitNormal = (weapon.transform.position - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(hitNormal);
-
-        //パリィ音を再生
-        AudioManager.Instance.PlaySE(Parameters.SE_PARRY);
 
         // ガードエフェクトの再生
         VFXManager.Instance.Play(Parameters.VFX_GUARD, collisionPoint, rotation);

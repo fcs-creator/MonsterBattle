@@ -1,10 +1,11 @@
-using Unity.VisualScripting;
+ï»¿using Unity.VisualScripting;
 using UnityEngine;
 
 public enum MagicType
 {
     FireBall,
     Thunder,
+    Ice,
 }
 
 public class Magic : MonoBehaviour
@@ -15,17 +16,21 @@ public class Magic : MonoBehaviour
     Collider2D[] colliders2D;
     Collider2D[] parentColliders2D;
 
+    public bool hasReflected = false;
+
     public float Damage { get; protected set; }
 
     void Awake()
     {
-        // eƒIƒuƒWƒFƒNƒg‚Ì‚·‚×‚Ä‚Ì2DƒRƒ‰ƒCƒ_[‚ğæ“¾‚µ‚ÄisTrigger‚ğİ’è
+        hasReflected = false;
+
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã™ã¹ã¦ã®2Dã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å–å¾—ã—ã¦isTriggerã‚’è¨­å®š
         parentColliders2D = GetComponents<Collider2D>();
 
-        // eƒIƒuƒWƒFƒNƒg‚Ì‚·‚×‚Ä‚ÌqƒIƒuƒWƒFƒNƒg‚ğƒ‹[ƒv
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã™ã¹ã¦ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ«ãƒ¼ãƒ—
         foreach (Transform child in transform)
         {     
-            // qƒIƒuƒWƒFƒNƒg‚Ì‚·‚×‚Ä‚Ì2DƒRƒ‰ƒCƒ_[‚ğæ“¾‚µ‚ÄisTrigger‚ğİ’è
+            // å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã™ã¹ã¦ã®2Dã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å–å¾—ã—ã¦isTriggerã‚’è¨­å®š
             colliders2D = child.GetComponents<Collider2D>();
         }
 
@@ -34,13 +39,13 @@ public class Magic : MonoBehaviour
 
     public void SetCollisionEnable(bool value) 
     {
-        // eƒIƒuƒWƒFƒNƒg‚Ì‚·‚×‚Ä‚Ì2DƒRƒ‰ƒCƒ_[‚ğæ“¾‚µ‚ÄisTrigger‚ğİ’è
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã™ã¹ã¦ã®2Dã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å–å¾—ã—ã¦isTriggerã‚’è¨­å®š
         foreach (Collider2D collider in parentColliders2D)
         {
             collider.isTrigger = !value;
         }
 
-        // eƒIƒuƒWƒFƒNƒg‚Ì‚·‚×‚Ä‚ÌqƒIƒuƒWƒFƒNƒg‚ğƒ‹[ƒv
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã™ã¹ã¦ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ«ãƒ¼ãƒ—
         foreach (Transform child in transform)
         {   
             foreach (Collider2D collider in colliders2D)
@@ -48,5 +53,10 @@ public class Magic : MonoBehaviour
                 collider.isTrigger = !value;
             }
         }
+    }
+
+    public void SetDamage(float value) 
+    {
+        Damage = value;    
     }
 }

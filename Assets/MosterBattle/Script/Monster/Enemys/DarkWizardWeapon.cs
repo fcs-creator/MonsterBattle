@@ -10,5 +10,7 @@ public class DarkWizardWeapon: Weapon
         await Move(3, 0, 0.5f);
 
         await Spin(720, 0.5f);
+
+        await Move(0, 0, 0.2f);
     }
 }

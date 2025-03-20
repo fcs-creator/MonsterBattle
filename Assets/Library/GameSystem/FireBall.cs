@@ -5,7 +5,7 @@ public class FireBall : Magic
     public Vector2 Direction { get; set; }
     public float Speed { get; set; }
 
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
 
     void Start()
     {
@@ -17,7 +17,7 @@ public class FireBall : Magic
         //集弾率を計算して発射
         float grouping = Parameters.FIREBALL_SHOT_GROUPING;
         float dirX = Direction.x + Random.Range(-grouping,grouping);
-        float dirY = Direction.x + Random.Range(-grouping, grouping);
-        rb.AddForce(new Vector2(dirX, dirY) * Speed, ForceMode2D.Impulse);
+        float dirY = Direction.y + Random.Range(-grouping, grouping);
+        rb.AddForce(new Vector2(dirX, dirY).normalized * Speed, ForceMode2D.Impulse);
     }
 }

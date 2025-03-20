@@ -20,17 +20,17 @@ public static class Parameters
     public const float DEAD_LINE_Y_DOWN = -20;                                  //死亡ライン下Y
     public const int ENEMY_CHECK_FREAKENCE = 10;                                //索敵の頻度
     public const int LAND_VELOCITY = 10;                                        //着地時に速度を0にするための閾値
-    public const float FLOATING_VELOCITY_RESISTANCE_RATE = 0.95f;               //浮遊時に速度を減少させる割合
+    public const float FLOATING_VELOCITY_RESISTANCE_RATE = 0.98f;               //浮遊時に速度を減少させる割合
 
-                                                                                
-
+                                                                               
     //アクション
     public const float START_INTERVAL = 1;                                      //アクション開始までの待ち時間
     public const float ACTION_INTERVAL_FORWARD = 1.5f;                          //前移動
     public const float ACTION_INTERVAL_BACKWARD = 1.5f;                         //後移動
     public const float ACTION_INTERVAL_JUMP = 1.5f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
-    public const float ACTION_INTERVAL_SHOT = 1.5f;                               //武器を投げる
+    public const float ACTION_INTERVAL_SHOT = 1.5f;                             //武器を投げる
+    public const float ACTION_INTERVAL_SWITCH_WEAPON = 0.25f;                   //武器を切り替える
     public const float ACTION_INTERVAL_GUARD = 1.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
     public const float ACTION_INTERVAL_MOVE = 1.0f;                             //自由移動
@@ -54,7 +54,7 @@ public static class Parameters
     public const float WEAPON_STRIKE_FORCE_REDUCATION_RATE_ON_GUARDING = 0.2f;  //ガード時の武器による吹き飛ばしの軽減率
     public const float WEAPON_STRIKE_FORCE = 360;                               //武器が当たったときに吹き飛ばす力
     public const float WEAPON_SHOT_FORCE_SCALE = 5;                             //武器を投げる力の補正倍率
-    public const float WEAPON_DAMAGE_SCALE = 2.5f;                              //武器のダメージ倍率
+    public const float WEAPON_DAMAGE_SCALE = 2.2f;                              //武器のダメージ倍率
     public const float WEAPON_GRAVITY_SCALE = 3;                                //武器にかかる重力
     public const float DEFAULT_RETURN_TIME= 0.5f;                               //初期位置に戻るのにかかる秒数
     public const float DEFAULT_RETURN_WAIT_TIME = 0.5f;                         //初期位置に戻った後の待ち時間
@@ -68,7 +68,7 @@ public static class Parameters
     public const float WEAPON_INTERVAL_CLONE = 3.0f;                            //クローン後の待ち時間
     public const float WEAPON_MAX_VELOCITY_X = 120;                              //武器の最高速度
     public const float WEAPON_MAX_VELOCITY_Y = 120;                              //武器の最高速度
-    public const float WEAPON_HIT_VELOCITY_REDUCATION_RATE = 0.5f;               //武器の当たった相手の速度を弱める倍率
+    public const float WEAPON_HIT_VELOCITY_REDUCATION_RATE = 0.6f;               //武器の当たった相手の速度を弱める倍率
 
     //ガード
     public const float GUARD_DURATION = 2f;                                               //ガードの継続時間
@@ -95,10 +95,24 @@ public static class Parameters
     public const float REFLECTOR_MIN_SCALE = 1;                                             //リフレクターの最小スケール
     public const float REFLECTOR_MAX_SCALE = 3;                                             //リフレクターの最大スケール
     public const float REFLECT_WEAPON_FORCE = 100;                                          //武器を反射した時の力の強さ
-    public const float REFLECT_DAMAGE_RATE = 2f;                                          //武器を反射した時基本ダメージ倍率
+    public const float REFLECT_DAMAGE_RATE = 2f;                                            //武器を反射した時基本ダメージ倍率
 
     //魔法
-    public const float FIREBALL_DAMAGE = 5;                                     //ファイアーボールダメージ値
+    public const float MAGIC_FORCE = 150;                                       //魔法が当たったとき吹き飛ばす力
+    public const float MAGIC_REFLECT_INCREACE_DAMAGE_RATE = 1.25f;              //魔法が反射した時のダメージ倍率
+    public const float MAGIC_REFLECT_FORCE = 100;                               //魔法が反射した時の力の強さ                    
+    public const float FIREBALL_CHANT_TIME = 3.0f;                              //炎魔法を撃つための詠唱時間
+    public const float FIREBALL_END_INTERBAL = 2.0f;                            //炎魔法を撃った後の隙
+
+    public const float THUNDER_CHANT_TIME = 3.0f;                               //雷魔法を撃つための詠唱時間
+    public const float THUNDER_END_INTERBAL = 2.0f;                             //雷魔法を撃った後の隙
+
+    public const float ICE_CHANT_TIME = 3.0f;                                   //氷魔法を撃つための詠唱時間
+    public const float ICE_END_INTERBAL = 2.0f;                                 //氷魔法を撃った後の隙
+
+    public const float FIREBALL_GEN_INTERVAL = 0.2f;                            //炎魔法のの生成間隔
+    public const int FIREBALL_MAX_NUM = 5;                                      //ファイヤーボールの生成最大数
+    public const float FIREBALL_DAMAGE = 7.5f;                                  //ファイアーボールダメージ値
     public const float FIREBALL_DESTOROY_WAIT_TIME = 0.75f;                     //発動後に破棄されるまでの待ち時間
     public const float FIREBALL_SHOT_GROUPING = 0.12f;                          //集弾率(小さいほど正確に狙う)
     public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //発射時のY軸の調整値
@@ -122,6 +136,7 @@ public static class Parameters
     public const VFX VFX_GUARD = VFX.Guard;                                     //ガード時に使用するVFX
     public const VFX VFX_DEAD = VFX.Dead;                                       //ガード時に使用するVFX
     public const VFX VFX_HIT_WALL = VFX.HitWall;                                //壁に当たった時に使用するVFX
+    public const VFX VFX_HIT_MAGIC = VFX.HitWall;                                //壁に当たった時に使用するVFX
 
     public static readonly Vector3 VFX_HIT_S_SCALE = new Vector3(10, 10, 1);    //弱ヒット時のVFXのスケール
     public static readonly Vector3 VFX_HIT_M_SCALE = new Vector3(10, 10, 1);    //中ヒット時のVFXのスケール
@@ -129,6 +144,7 @@ public static class Parameters
     public static readonly Vector3 VFX_GUARD_SCALE = new Vector3(20, 20, 1);    //ガード時のVFXのスケール
     public static readonly Vector3 VFX_DEAD_SCALE = new Vector3(10, 10, 1);     //死亡時のVFXのスケール
     public static readonly Vector3 VFX_WALL_SCALE = new Vector3(10, 10, 1);     //壁に当たった時のVFXのスケール
+    public static readonly Vector3 VFX_MAGIC_SCALE = new Vector3(20, 20, 1);    //魔法当たった時のVFXのスケール
 
     //BGM
     public const BGM BGM_BATTLE = BGM.Battle;                                   //バトルBGM
@@ -148,6 +164,14 @@ public static class Parameters
     public const SE SE_WEAPON_DRAWING = SE.WeaponDrawing;                       //武器を抜刀時のSE
     public const SE SE_COLLIDE_BODY = SE.CollideBody;                           //ボディ同士がぶつかった時のSE
     public const SE SE_HIT_WALL = SE.HitWall;                                   //ボディ同士がぶつかった時のSE
+    public const SE SE_SWITCH_WEAPON = SE.SwitchWeapon;                         //武器を切り替えた時のSE
+    public const SE SE_MAGIC_FIRE = SE.MagicFire;                               //魔法炎
+    public const SE SE_MAGIC_THUNDER = SE.MagicThunder;                         //魔法雷
+    public const SE SE_MAGIC_ICE = SE.MagicIce;                                 //魔法氷
+    public const SE SE_REFLECT = SE.Reflect;                                    //リフレクター
+    public const SE SE_MAGIC_CHANT = SE.MagicChant;                             //魔法詠唱
+    public const SE SE_HIT_MAGIC = SE.HitMagic;                                 //魔法に当たったとき
+
 }
 
 public class GameManager : MonoBehaviour
@@ -191,8 +215,12 @@ public class GameManager : MonoBehaviour
 
             //Awakeを呼ぶために一度全てアクティブ状態にする
             monster.transform.Find("Body").gameObject.SetActive(true);
-            monster.transform.Find("Weapon").gameObject.SetActive(true);
             monster.transform.Find("Guard").gameObject.SetActive(true);
+
+            foreach (var w in monster.Weapons) 
+            {
+                w.gameObject.SetActive(true);
+            }
 
             //カメラの追従のターゲットを設定
             //GameObject objCameraTartget = new GameObject();

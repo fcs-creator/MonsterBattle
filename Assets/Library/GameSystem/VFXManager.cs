@@ -9,6 +9,7 @@ public enum VFX
     Guard,
     Dead,
     HitWall,
+    HitMagic
 }
 
 public class VFXManager : MonoBehaviour
@@ -64,6 +65,10 @@ public class VFXManager : MonoBehaviour
             case VFX.HitWall:
                 PlayVFX(hitWallPrefab, position, GetRandomRotation(), Parameters.VFX_WALL_SCALE);
                 AudioManager.Instance.PlaySE(SE.HitWall);
+                break;
+            case VFX.HitMagic:
+                PlayVFX(hitWallPrefab, position, GetRandomRotation(), Parameters.VFX_MAGIC_SCALE);
+                AudioManager.Instance.PlaySE(SE.HitMagic);
                 break;
             default:
                 Debug.LogWarning("指定したVFXが存在しません！");

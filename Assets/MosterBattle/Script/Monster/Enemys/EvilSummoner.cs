@@ -5,21 +5,30 @@ public class EvilSummoner : Monster
 {
     protected override async Task ActionLoop()
     {
-        if (EnemyDistance < 12)
+        //ワーウルフによる攻撃
+        SwitchWeapon(0);
+
+        await Attack();
+
+        if (Mathf.Abs(Position.x) < 10)
         {
-            await Guard();
-
-            await LookAtEnemy();
-
-            await Attack();
+            await Backward(30);
         }
         else 
         {
-            await JumpForward(45);
-
-            await LookAtEnemy();
-
-            await Attack();
+            if (Enemy.Hp < Hp && EnemyDistance >15)
+            {
+                await Guard();
+            }
+            else 
+            {
+                await Forward(200);
+            } 
         }
+        
+        //フライングアイによる攻撃
+        SwitchWeapon(1);
+
+        await Attack();
     }
 }

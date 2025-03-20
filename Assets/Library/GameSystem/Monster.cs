@@ -8,6 +8,8 @@ using System;
 using UnityEditor.Experimental.GraphView;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
+using UnityEngine.Rendering;
+using Codice.Client.BaseCommands.BranchExplorer;
 
 public class Monster : MonoBehaviour
 {
@@ -32,9 +34,11 @@ public class Monster : MonoBehaviour
     public bool IsAirborne { get { return !IsGrounded; } private set { IsAirborne = value; } }  //空中にいるか
     public bool IsDead { get; private set; }                                                    //死んでいるか
     public bool IsFacingRight { get; private set; }                                             //右を向いているか
-    public bool IsStunned { get; set; }                                                         //スタン状態か
-    public bool IsFloating { get; set; }                                                        //浮遊状態か
+    public bool IsStunned { get; private set; }                                                 //スタン状態か
+    public bool IsFloating { get; private set; }                                                //浮遊状態か
+    public bool IsChanting { get; private set; }                                                //詠唱中か
     private bool IsStunable;                                                                    //スタン可能か
+    
 
     Body body;          //本体
     Weapon weapon;      //武器
@@ -75,11 +79,20 @@ public class Monster : MonoBehaviour
         // 武器の設定
         if (weapon == null)
         {
-            var w = transform.Find("Weapon").GetComponent<Weapon>();
+            // 子要素からWeaponスクリプトを取得する
+            Weapon w = GetComponentInChildren<Weapon>();
 
-            AddWeapon(w);
+            if (w != null)
+            {
+                AddWeapon(w);
+            }
+            else
+            {
+                Debug.LogError("Weaponスクリプトが見つかりませんでした。");
+            }
         }
-        SwitchWeapon(0);
+        //音を鳴らさないために分けた
+        InitSwitchWeapon(0);
 
         // 防具の設定
         guard = transform.GetComponent<Guard>();
@@ -110,12 +123,7 @@ public class Monster : MonoBehaviour
         IsDead = false;
         EnemyCheckCount = 0;
     }
-
-    /// <summary>
-    /// 武器を切り替える
-    /// </summary>
-    /// <param name="index">武器の番号（存在しない場合は切り替わらない）</param>
-    public void SwitchWeapon(int index)
+    private void InitSwitchWeapon(int index) 
     {
         if (index < 0 || index >= Weapons.Count) return;
 
@@ -128,8 +136,35 @@ public class Monster : MonoBehaviour
         weapon = Weapons[index];
         weapon.gameObject.SetActive(true);
         weapon.SetOwner(this);
-
     }
+
+
+    /// <summary>
+    /// 武器を切り替える
+    /// </summary>
+    /// <param name="index">武器の番号（存在しない場合は切り替わらない）</param>
+    public async Task SwitchWeapon(int index)
+    {
+        if (index < 0 || index >= Weapons.Count) return;
+
+        ActionBar.SendText("SwitchWeapon");
+
+        if (weapon != null)
+        {
+            weapon.ResetActions();
+            weapon.gameObject.SetActive(false);
+        }
+
+        weapon = Weapons[index];
+        weapon.gameObject.SetActive(true);
+        weapon.SetOwner(this);
+
+        AudioManager.Instance.PlaySE(Parameters.SE_SWITCH_WEAPON);
+
+        await Wait(Parameters.ACTION_INTERVAL_SWITCH_WEAPON);
+    }
+
+
 
     public void AddWeapon(Weapon weapon)
     {
@@ -148,6 +183,11 @@ public class Monster : MonoBehaviour
         UpdateEnemies();
 
         HpBar.Character = transform;
+
+        if (IsFloating)
+        {
+            rb.linearVelocity *= Parameters.FLOATING_VELOCITY_RESISTANCE_RATE;
+        }
 
         //最高速度を指定
         Vector2 maxVelocity = new Vector2(Parameters.MAX_VELOCITY_X, Parameters.MAX_VELOCITY_Y);
@@ -302,7 +342,7 @@ public class Monster : MonoBehaviour
     {
         if (canceler.IsCancel) return;
 
-        ActionBar.SendText("BackStep");
+        ActionBar.SendText("Backward");
 
         IsBackward = true;
 
@@ -395,6 +435,8 @@ public class Monster : MonoBehaviour
     // 浮遊状態の切り替え
     protected async Task Floating(bool value)
     {
+        ActionBar.SendText("Floating");
+
         IsFloating = value;
 
         if (IsFloating)
@@ -501,7 +543,17 @@ public class Monster : MonoBehaviour
 
             if (magic.Owner != this)
             {
-                HpBar.TakeDamage(magic.Damage);
+                if (collision.contactCount > 0)
+                {
+
+                    Debug.Log(magic.name);
+
+                    var contact = collision.contacts;
+                    PlayHitMagicVFX(contact[0].point);
+                    HpBar.TakeDamage(magic.Damage);
+                    Vector2 direction = (transform.position - obj.transform.position).normalized;
+                    rb?.AddForce(direction * Parameters.MAGIC_FORCE, ForceMode2D.Impulse);
+                }
             }
         }
     }
@@ -637,6 +689,14 @@ public class Monster : MonoBehaviour
         VFXManager.Instance.Play(Parameters.VFX_HIT_WALL, collisionPoint, transform.rotation);
     }
 
+    // ステージの壁のヒットエフェクトの再生
+    private void PlayHitMagicVFX(Vector3 collisionPoint)
+    {
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(Parameters.VFX_HIT_MAGIC, collisionPoint, transform.rotation);
+    }
+
+
     // ノックバック処理
     private void Knockback(GameObject enemy)
     {
@@ -703,4 +763,13 @@ public class Monster : MonoBehaviour
         return obj.GetComponent<T>() != null;
     }
 
+    public void SetStun(bool value) 
+    {
+        IsStunned = value;
+    }
+
+    public void SetChant(bool value) 
+    {
+        IsChanting = value;
+    }
 }

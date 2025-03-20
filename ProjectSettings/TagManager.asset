@@ -56,6 +56,9 @@ TagManager:
   - name: MagicBook
     uniqueID: 1253982843
     locked: 0
+  - name: MagicCircle
+    uniqueID: 117610291
+    locked: 0
   - name: Guard
     uniqueID: 43884335
     locked: 0
