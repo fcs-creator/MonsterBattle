@@ -24,7 +24,7 @@ public class MagicBook : MonoBehaviour
 
     async public Task FireBall(Monster monster, int num, float speed) 
     {
-        monster.LookAtEnemy();
+        await monster.LookAtEnemy();
 
         for (int i = 0; i < num; i++)
         {
@@ -42,7 +42,7 @@ public class MagicBook : MonoBehaviour
 
     async public Task Thunder(Monster monster)
     {
-        monster.LookAtEnemy();
+        await monster.LookAtEnemy();
 
         GameObject obj = Instantiate(thunderPrefab, monster.transform.position, Quaternion.identity);
         Thunder thunder = obj.GetComponent<Thunder>();

@@ -9,7 +9,13 @@ public class Braze : Monster
 
         //await Forward(3000);
 
-        await Forward(100);
+        await Forward(80);
+
+        await LookAtEnemy();
+
+        await Guard();
+
+        await Forward(200);
 
         await Attack();
     }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public enum BGM
@@ -52,13 +52,13 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip hitWall;
     
 
-    // AudioClip‚ğŠÇ—‚·‚éDictionary
+    // AudioClipã‚’ç®¡ç†ã™ã‚‹Dictionary
     Dictionary<BGM, AudioClip> bgm;
     Dictionary<SE, AudioClip> se;
 
     private void Awake()
     {
-        // ƒVƒ“ƒOƒ‹ƒgƒ“‚Ìİ’è
+        // ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã®è¨­å®š
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -94,7 +94,7 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // BGM‚ğÄ¶‚·‚éƒƒ\ƒbƒh
+    // BGMã‚’å†ç”Ÿã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void PlayBGM(BGM id)
     {
         if (bgmSource.clip == bgm[id]) return;
@@ -102,7 +102,7 @@ public class AudioManager : MonoBehaviour
         bgmSource.Play();
     }
 
-    // BGM‚Ì’â~
+    // BGMã®åœæ­¢
     public void StopBGM()
     {
         if (bgmSource.isPlaying)
@@ -111,11 +111,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Œø‰Ê‰¹‚ğÄ¶‚·‚éƒƒ\ƒbƒh
+    // åŠ¹æœéŸ³ã‚’å†ç”Ÿã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void PlaySE(SE id)
     {
-        if (id == SE.None) return;
-
-        seSource.PlayOneShot(se[id]);
+        if (id != SE.None) 
+        {
+            seSource.PlayOneShot(se[id]);
+        }
     }
 }

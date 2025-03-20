@@ -6,6 +6,7 @@ using System.Drawing;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
 using System.Threading;
+using System;
 
 
 public class Weapon : MonoBehaviour
@@ -255,7 +256,7 @@ public class Weapon : MonoBehaviour
     public async Task Drawing()
     {
         if (isDisable) return;
-
+       
         Owner.ActionBar.SendText("Weapon-Drawing");
 
         //SEを再生
@@ -431,7 +432,7 @@ public class Weapon : MonoBehaviour
     }
 
     //武器を指定方向に飛ばす
-    public async Task ShotDirection(Vector2 direction, float power) 
+    public async Task ShotDirection(Vector2 direction, float power)
     {
         if (isDisable) return;
 
@@ -493,7 +494,7 @@ public class Weapon : MonoBehaviour
             clones[i].isClone = true;
 
             // クローンが行動している間に消してしまうと止まる
-            //_ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
+            _ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
         }
 
         await Wait(Parameters.WEAPON_INTERVAL_CLONE);
@@ -515,9 +516,6 @@ public class Weapon : MonoBehaviour
 
             if (guard.Owner != Owner)
             {
-                Debug.Log(isShot);
-                Debug.Log(guard.type);
-
                 if (guard.type == GuardType.Shield)
                 {
                     //ガードエフェクトの再生
@@ -585,7 +583,7 @@ public class Weapon : MonoBehaviour
     //一定時間経過後にクローンを削除する処理
     private async Task DestroyCloneAfterDelay(GameObject cloneObj, float delay)
     {
-        await Task.Delay((int)(delay * 1000));
+        await Wait(Parameters.WEAPON_CLONE_DESTROY_DURATION);
 
         if (cloneObj != null)
         {
@@ -613,7 +611,14 @@ public class Weapon : MonoBehaviour
     //指定秒数待つ
     protected async Task Wait(float sec)
     {
-        await Task.Delay((int)(sec * 1000), canceler.Token);
+        try
+        {
+            await Task.Delay((int)(sec * 1000), canceler.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            //タスクがキャンセルされた時の処理
+        }      
     }
 
     //初期位置にワープ

@@ -33,7 +33,8 @@ public class Canceler : ICancellable
 
     public void Reset()
     {
-        cts?.Dispose();
+        cts.Cancel();
+        cts.Dispose();
         cts = new CancellationTokenSource();
     }
 

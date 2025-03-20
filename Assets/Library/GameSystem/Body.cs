@@ -16,6 +16,15 @@ public class Body : MonoBehaviour
     //タスクをキャンセル
     readonly Canceler canceler = new Canceler();
 
+    //無効な
+    bool isDisable
+    {
+        get
+        {
+            return canceler.IsCancel;
+        }
+    }
+
     void Awake()
     {
         //親のリジッドボディを取得
@@ -79,10 +88,14 @@ public class Body : MonoBehaviour
 
     public async Task Flash()
     {
+        if (isDisable) return;
+
         float elapsedTime = 0f;
 
-        while (elapsedTime < Parameters.GUARD_STUN_DURATION && canceler.IsNotCancel)
+        while (elapsedTime < Parameters.GUARD_STUN_DURATION)
         {
+            if (isDisable) break;
+
             // スプライトの色を変更
             sr.color = new Color(originalColor.r * 0.5f, originalColor.g * 0.5f, originalColor.b * 0.5f, 0.5f); // 半透明に設定
             await Wait(flashDuration);
@@ -101,9 +114,14 @@ public class Body : MonoBehaviour
 
     async protected Task Wait(float sec)
     {
-        if (canceler.IsCancel) return;
-
-        await Task.Delay((int)(sec * 1000), canceler.Token);
+        try
+        {
+            await Task.Delay((int)(sec * 1000), canceler.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            //タスクがキャンセルされた時の処理
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
