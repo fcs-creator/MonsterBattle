@@ -6,7 +6,7 @@ public class EvilSummoner : Monster
     protected override async Task ActionLoop()
     {
         //ワーウルフによる攻撃
-        SwitchWeapon(0);
+        await SwitchWeapon(0);
 
         await Attack();
 
@@ -27,7 +27,7 @@ public class EvilSummoner : Monster
         }
         
         //フライングアイによる攻撃
-        SwitchWeapon(1);
+        await SwitchWeapon(1);
 
         await Attack();
     }

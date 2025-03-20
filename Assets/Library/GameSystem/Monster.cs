@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
 using UnityEngine.Rendering;
 using Codice.Client.BaseCommands.BranchExplorer;
+using PlasticGui.WorkspaceWindow;
 
 public class Monster : MonoBehaviour
 {
@@ -138,7 +139,6 @@ public class Monster : MonoBehaviour
         weapon.SetOwner(this);
     }
 
-
     /// <summary>
     /// 武器を切り替える
     /// </summary>
@@ -163,8 +163,6 @@ public class Monster : MonoBehaviour
 
         await Wait(Parameters.ACTION_INTERVAL_SWITCH_WEAPON);
     }
-
-
 
     public void AddWeapon(Weapon weapon)
     {
@@ -521,7 +519,6 @@ public class Monster : MonoBehaviour
             }
         }
 
-
         //地面に接触時の処理
         if (obj.CompareTag(Tags.Platform))
         {
@@ -532,28 +529,6 @@ public class Monster : MonoBehaviour
             {
                 //着地音を再生
                 AudioManager.Instance.PlaySE(Parameters.SE_LAND);
-            }
-
-        }
-
-        //魔法によるダメージ
-        if (HasComponent<Magic>(obj))
-        {
-            Magic magic = obj.GetComponent<Magic>();
-
-            if (magic.Owner != this)
-            {
-                if (collision.contactCount > 0)
-                {
-
-                    Debug.Log(magic.name);
-
-                    var contact = collision.contacts;
-                    PlayHitMagicVFX(contact[0].point);
-                    HpBar.TakeDamage(magic.Damage);
-                    Vector2 direction = (transform.position - obj.transform.position).normalized;
-                    rb?.AddForce(direction * Parameters.MAGIC_FORCE, ForceMode2D.Impulse);
-                }
             }
         }
     }
@@ -597,21 +572,6 @@ public class Monster : MonoBehaviour
         {
             IsJumping = false;
             Knockback(obj);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        GameObject obj = other.gameObject;
-
-        if (HasComponent<Magic>(obj))
-        {
-            Magic magic = obj.GetComponent<Magic>();
-
-            if (magic.Owner == this)
-            {
-                magic.SetCollisionEnable(true);
-            }
         }
     }
 
@@ -668,6 +628,20 @@ public class Monster : MonoBehaviour
                 }
             }
         }
+
+        //魔法(ファイヤーボールによる)ダメージ
+        if (HasComponent<Magic>(obj))
+        {
+            Magic magic = obj.GetComponent<Magic>();
+
+            if ((magic.Owner != this) && (magic.Type == MagicType.FireBall) && !(IsGuarding && guard.type == GuardType.Reflector) )
+            {
+                PlayHitMagicVFX(other);
+                HpBar.TakeDamage(magic.Damage);
+                Vector2 direction = (transform.position - obj.transform.position).normalized;
+                rb?.AddForce(direction * Parameters.MAGIC_FORCE, ForceMode2D.Impulse);
+            }
+        }
     }
 
     //==============補助関数=================//
@@ -682,20 +656,22 @@ public class Monster : MonoBehaviour
         VFXManager.Instance.Play(Parameters.VFX_HIT_S, collisionPoint, transform.rotation);
     }
 
+    // 武器のヒットエフェクトの再生
+    private void PlayHitMagicVFX(Collider2D weaponCollider)
+    {
+        // 衝突点を取得
+        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
+
+        // ヒットエフェクトを再生
+        VFXManager.Instance.Play(Parameters.VFX_HIT_S, collisionPoint, transform.rotation);
+    }
+
     // ステージの壁のヒットエフェクトの再生
     private void PlayHitWallVFX(Vector3 collisionPoint)
     {
         // ヒットエフェクトを再生
         VFXManager.Instance.Play(Parameters.VFX_HIT_WALL, collisionPoint, transform.rotation);
     }
-
-    // ステージの壁のヒットエフェクトの再生
-    private void PlayHitMagicVFX(Vector3 collisionPoint)
-    {
-        // ヒットエフェクトを再生
-        VFXManager.Instance.Play(Parameters.VFX_HIT_MAGIC, collisionPoint, transform.rotation);
-    }
-
 
     // ノックバック処理
     private void Knockback(GameObject enemy)

@@ -13,9 +13,6 @@ public class Magic : MonoBehaviour
     public Monster Owner { get;  set; }
     public MagicType Type { get;  set; }
 
-    Collider2D[] colliders2D;
-    Collider2D[] parentColliders2D;
-
     public bool hasReflected = false;
 
     public float Damage { get; protected set; }
@@ -24,39 +21,23 @@ public class Magic : MonoBehaviour
     {
         hasReflected = false;
 
-        // 親オブジェクトのすべての2Dコライダーを取得してisTriggerを設定
-        parentColliders2D = GetComponents<Collider2D>();
-
-        // 親オブジェクトのすべての子オブジェクトをループ
-        foreach (Transform child in transform)
-        {     
-            // 子オブジェクトのすべての2Dコライダーを取得してisTriggerを設定
-            colliders2D = child.GetComponents<Collider2D>();
-        }
-
-        SetCollisionEnable(false);
-    }
-
-    public void SetCollisionEnable(bool value) 
-    {
-        // 親オブジェクトのすべての2Dコライダーを取得してisTriggerを設定
-        foreach (Collider2D collider in parentColliders2D)
-        {
-            collider.isTrigger = !value;
-        }
-
-        // 親オブジェクトのすべての子オブジェクトをループ
-        foreach (Transform child in transform)
-        {   
-            foreach (Collider2D collider in colliders2D)
-            {
-                collider.isTrigger = !value;
-            }
-        }
+        gameObject.tag = Tags.Magic;
     }
 
     public void SetDamage(float value) 
     {
         Damage = value;    
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        GameObject obj = other.gameObject;
+
+        if (obj.CompareTag(Tags.Guard)) 
+        {
+            var guard = obj.GetComponent<Guard>();
+
+            
+        }
     }
 }

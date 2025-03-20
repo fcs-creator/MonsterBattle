@@ -20,7 +20,7 @@ public static class Parameters
     public const float DEAD_LINE_Y_DOWN = -20;                                  //死亡ライン下Y
     public const int ENEMY_CHECK_FREAKENCE = 10;                                //索敵の頻度
     public const int LAND_VELOCITY = 10;                                        //着地時に速度を0にするための閾値
-    public const float FLOATING_VELOCITY_RESISTANCE_RATE = 0.98f;               //浮遊時に速度を減少させる割合
+    public const float FLOATING_VELOCITY_RESISTANCE_RATE = 0.985f;               //浮遊時に速度を減少させる割合
 
                                                                                
     //アクション
@@ -66,9 +66,13 @@ public static class Parameters
     public const float WEAPON_CLONE_SCALE_RATE = 0.5f;                          //クローンのスケール倍率
     public const float WEAPON_CLONE_DESTROY_DURATION = 5;                       //クローンの破棄までの時間
     public const float WEAPON_INTERVAL_CLONE = 3.0f;                            //クローン後の待ち時間
-    public const float WEAPON_MAX_VELOCITY_X = 120;                              //武器の最高速度
-    public const float WEAPON_MAX_VELOCITY_Y = 120;                              //武器の最高速度
-    public const float WEAPON_HIT_VELOCITY_REDUCATION_RATE = 0.6f;               //武器の当たった相手の速度を弱める倍率
+    public const float WEAPON_MAX_VELOCITY_X = 120;                             //武器の最高速度
+    public const float WEAPON_MAX_VELOCITY_Y = 120;                             //武器の最高速度
+    public const float WEAPON_HIT_VELOCITY_REDUCATION_RATE = 0.6f;              //武器の当たった相手の速度を弱める倍率
+    public const float WEAPON_MIN_USE_TIME = 0.1f;                              //武器の動作にかけることのできる最小時間
+    public const float WEAPON_MAX_USE_TIME = 15f;                               //武器の動作にかけることのできる最小時間
+
+
 
     //ガード
     public const float GUARD_DURATION = 2f;                                               //ガードの継続時間

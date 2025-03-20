@@ -281,10 +281,12 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    //武器を指定された(x, y)位置にs秒で移動させる
-    public async Task Move(float x, float y, float s)
+    //武器を指定された(x, y)位置にsecond秒で移動させる
+    public async Task Move(float x, float y, float second)
     {
         if (isDisable) return;
+
+        second = UseTimeClamp(second);
 
         Owner.ActionBar.SendText("Weapon-Move");
 
@@ -292,12 +294,12 @@ public class Weapon : MonoBehaviour
         Vector2 target = start + new Vector2(x, y);
         float elapsedTime = 0f;
 
-        while (elapsedTime < s)
+        while (elapsedTime < second)
         {
             if (isDisable) break;
 
             // 経過時間の割合を計算
-            float t = elapsedTime / s;
+            float t = elapsedTime / second;
             // 線形補間（Lerp）で位置を更新
             transform.localPosition = Vector2.Lerp(start, target, t);
             // 経過時間を更新
@@ -311,9 +313,11 @@ public class Weapon : MonoBehaviour
     }
 
     //武器をangle度s秒でその場回転させる
-    public async Task Spin(float angle, float s)
+    public async Task Spin(float angle, float second)
     {
         if (isDisable) return;
+
+        second = UseTimeClamp(second);
 
         Owner.ActionBar.SendText("Weapon-Spin");
 
@@ -321,12 +325,12 @@ public class Weapon : MonoBehaviour
         float initialRotation = transform.rotation.eulerAngles.z;
         float targetRotation = initialRotation + angle;
 
-        while (elapsed < s)
+        while (elapsed < second)
         {
             if (isDisable) break;
 
             elapsed += Time.deltaTime;
-            float t = elapsed / s;
+            float t = elapsed / second;
             float zRotation = Mathf.Lerp(initialRotation, targetRotation, t);
             // Z軸回りで回転させる
             transform.rotation = Quaternion.Euler(0, 0, zRotation);
@@ -342,6 +346,8 @@ public class Weapon : MonoBehaviour
     public async Task Rotate(float startAngle, float rotAngle, float second)
     {
         if (isDisable) return;
+
+        second = UseTimeClamp(second);
 
         Owner.ActionBar.SendText("Weapon-Rotate");
 
@@ -497,11 +503,11 @@ public class Weapon : MonoBehaviour
 
             // クローンの武器を取得
             clones[i] = cloneObj.transform.GetComponent<Weapon>();
-            clones[i].canceler.Reset();
+            //clones[i].canceler.Reset();
             clones[i].isClone = true;
 
             // クローンが行動している間に消してしまうと止まる
-            _ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
+            //_ = DestroyCloneAfterDelay(cloneObj, Parameters.WEAPON_CLONE_DESTROY_DURATION);
         }
 
         await Wait(Parameters.WEAPON_INTERVAL_CLONE);
@@ -738,4 +744,8 @@ public class Weapon : MonoBehaviour
         return obj.GetComponent<T>() != null;
     }
 
+    private float UseTimeClamp(float s) 
+    {
+        return Mathf.Clamp(s, Parameters.WEAPON_MIN_USE_TIME, Parameters.WEAPON_MAX_USE_TIME);
+    }
 }

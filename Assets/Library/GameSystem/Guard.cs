@@ -163,61 +163,61 @@ public class Guard : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        GameObject obj = collision.gameObject;
+        GameObject obj = other.gameObject;
 
         //魔法によるダメージ
         if (HasComponent<Magic>(obj))
         {
             Magic magic = obj.GetComponent<Magic>();
 
-            if (magic.Owner != this)
+            if (magic.Owner != Owner)
             {
-                if (collision.contactCount > 0)
+                if (Owner.IsGuarding)
                 {
-                    if (Owner.IsGuarding)
+                    if (type == GuardType.Reflector)
                     {
-                        if(type == GuardType.Reflector)
+                        //相手
+                        var Opponent = magic.Owner;
+
+                        magic.Owner = Owner;
+
+                        //反射音を再生
+                        AudioManager.Instance.PlaySE(Parameters.SE_REFLECT);
+
+                        //ガードエフェクトの再生
+                        PlayGuardVFX(other);
+
+                        //跳ね返す方向を計算
+                        Vector2 direction = (magic.transform.position - transform.position).normalized;
+
+                        if (!magic.hasReflected)
                         {
-                            magic.Owner = Owner;
+                            magic.hasReflected = true;
 
-                            //反射音を再生
-                            AudioManager.Instance.PlaySE(Parameters.SE_REFLECT);
+                            magic.SetDamage(magic.Damage * Parameters.MAGIC_REFLECT_INCREACE_DAMAGE_RATE);
 
-                            var contact = collision.contacts;
+                        }
 
-                            //ガードエフェクトの再生
-                            PlayGuardVFX(contact[0].point);
+                        switch (magic.Type)
+                        {
+                            case MagicType.FireBall:
+                                var fireBall = magic.GetComponent<FireBall>();
+                                var rb = fireBall.GetComponent<Rigidbody2D>();
+                                //反射させる
+                                var lv = rb.linearVelocity;
+                                rb.linearVelocity = new Vector2(lv.x * -1, lv.y);
+                                rb.AddForce(direction * Parameters.MAGIC_REFLECT_FORCE, ForceMode2D.Impulse);
+                                break;
+                            case MagicType.Thunder:
+                                var localScale = magic.transform.localScale;
+                                magic.transform.localScale = new Vector2(-localScale.x, localScale.y);
+                                Opponent.HpBar.TakeDamage(magic.Damage);
+                                break;
+                            default:
+                                break;
 
-                            //跳ね返す方向を計算
-                            Vector2 direction = (magic.transform.position - transform.position).normalized;
-
-                            if (!magic.hasReflected)
-                            {
-                                magic.hasReflected = true;
-
-                                magic.SetDamage(magic.Damage * Parameters.MAGIC_REFLECT_INCREACE_DAMAGE_RATE);
-
-                            }
-
-                            switch (magic.Type) 
-                            {
-                                case MagicType.FireBall:
-                                    var fireBall = magic.GetComponent<FireBall>();
-                                    var rb = fireBall.GetComponent<Rigidbody2D>();
-                                    //反射させる
-                                    var lv = rb.linearVelocity;
-                                    rb.linearVelocity = new Vector2(lv.x * -1, lv.y);
-                                    rb.AddForce(direction * Parameters.MAGIC_REFLECT_FORCE, ForceMode2D.Impulse);
-                                    break;
-                                case MagicType.Thunder:
-                                    var localScale = magic.transform.localScale;
-                                    magic.transform.localScale = new Vector2(-localScale.x, localScale.y);
-                                    Owner.HpBar.TakeDamage(magic.Damage);
-                                    break;
-                                
-                            }
                         }
                     }
                 }
@@ -225,9 +225,12 @@ public class Guard : MonoBehaviour
         }
     }
 
-    // ステージの壁のヒットエフェクトの再生
-    private void PlayGuardVFX(Vector3 collisionPoint)
+    // 武器のヒットエフェクトの再生
+    private void PlayGuardVFX(Collider2D weaponCollider)
     {
+        // 衝突点を取得
+        Vector3 collisionPoint = weaponCollider.ClosestPoint(transform.position);
+
         // ヒットエフェクトを再生
         VFXManager.Instance.Play(Parameters.VFX_GUARD, collisionPoint, transform.rotation);
     }

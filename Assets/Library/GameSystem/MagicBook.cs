@@ -28,8 +28,9 @@ public class MagicBook : MonoBehaviour
         startPosition = transform.position;
     }
 
-    async public Task FireBall(Monster monster, int num, float speed) 
+    async public Task FireBall(Monster monster, int num, float speed)
     {
+
         num = Mathf.Clamp(num, 1, Parameters.FIREBALL_MAX_NUM);
 
         await monster.LookAtEnemy();
@@ -43,14 +44,18 @@ public class MagicBook : MonoBehaviour
 
         for (int i = 0; i < num; i++)
         {
-            if (monster.IsDead) break;
+            if (monster.IsDead)
+            {
+                canceler.Dispose();
+                break;
+            }
           
             GameObject obj = Instantiate(fireBallPrefab, monster.transform.position, Quaternion.identity);
             FireBall fireBall = obj.GetComponent<FireBall>();
             fireBall.Owner = monster;
             fireBall.Direction = monster.EnemyDirection;
             // 方向ベクトルから角度を計算
-            float angle = Mathf.Atan2(fireBall.Direction.x, fireBall.Direction.y) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(fireBall.Direction.y, fireBall.Direction.x) * Mathf.Rad2Deg;
             fireBall.transform.rotation = Quaternion.Euler(0, 0, angle);
 
             fireBall.Speed = speed;
@@ -65,6 +70,12 @@ public class MagicBook : MonoBehaviour
 
     async public Task Thunder(Monster monster)
     {
+        if (monster.IsDead)
+        {
+            canceler.Dispose();
+            return;
+        }
+
         //魔法を詠唱
         await Chant(monster, Parameters.THUNDER_CHANT_TIME);
 
@@ -78,6 +89,12 @@ public class MagicBook : MonoBehaviour
         thunder.Direction = monster.EnemyDirection;
 
         AudioManager.Instance.PlaySE(Parameters.SE_MAGIC_THUNDER);
+
+        if (monster.IsDead)
+        {
+            canceler.Dispose();
+            return;
+        }
 
         await Wait(Parameters.THUNDER_END_INTERBAL);
     }
@@ -96,6 +113,8 @@ public class MagicBook : MonoBehaviour
 
         //詠唱の音を鳴らす
         AudioManager.Instance.PlaySE(Parameters.SE_MAGIC_CHANT);
+
+        if (owner.IsDead) canceler.Dispose();
 
         //詠唱時間だけ待つ
         await Wait(chantTime);
