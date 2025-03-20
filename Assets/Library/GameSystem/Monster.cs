@@ -56,15 +56,6 @@ public class Monster : MonoBehaviour
     public float EnemyDistance { get { return new Vector2(Enemy.transform.position.x - transform.position.x, Enemy.transform.position.y - transform.position.y).magnitude; } }
     public float EnemyHp { get { return Enemy.HpBar.Hp; } }
 
-    /*
-        public void UpdateCustomize()
-        {
-            var bodyObj = transform.Find("Body").gameObject;
-            bodyObj.transform.localPosition = Vector3.zero;
-            var sr = bodyObj.GetComponent<SpriteRenderer>();
-            sr.sprite = monsterSprite;
-        }
-    */
     //タスクをキャンセル
     readonly Canceler canceler = new Canceler();
 
@@ -85,6 +76,7 @@ public class Monster : MonoBehaviour
         if (weapon == null)
         {
             var w = transform.Find("Weapon").GetComponent<Weapon>();
+
             AddWeapon(w);
         }
         SwitchWeapon(0);

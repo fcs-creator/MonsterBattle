@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a4dd99de4e675a445b6ead846a35dcc4
+guid: 355b66cd9126e474e9d83ec4be8c271e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4421300922047078791
-    second: Wand_0
+      213: 2795918922283688919
+    second: DeathLightning_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wand_0
+      name: DeathLightning_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 0
         y: 0
-        width: 297
+        width: 300
         height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 97ed6488c3264a2c0800000000000000
-      internalID: -4421300922047078791
+      spriteID: 7d3238742791dc620800000000000000
+      internalID: 2795918922283688919
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 6d933a52898abb0418a1030e8a0bd768
+    spriteID: 9ec2324c2d59a114e8c0e001becaf1b9
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Wand_0: -4421300922047078791
+      DeathLightning_0: 2795918922283688919
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

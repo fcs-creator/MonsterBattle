@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Threading.Tasks;
 
-public class WeaponTemplate : Weapon
+public class Lv4イビルサモナー_Weapon_66cb18fe78594033a573fbba5116c62c : Weapon
 {
 	async protected override Task Attack(int number)
 	{

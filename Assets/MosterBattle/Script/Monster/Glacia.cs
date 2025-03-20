@@ -5,21 +5,17 @@ public class Glacia : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Wait(0.5f);
-
-        await Guard();
-
-        //if (EnemyDistance > 10)
-        //{
-        //    await Forward(80);
-        //}
-        //else 
-        //{
-        //    await Backward(80);
-        //
-        //    await Attack();
-        //
-        //    await Guard();
-        //}
+        if (EnemyDistance > 10)
+        {
+            await Forward(80);
+        }
+        else 
+        {
+            await Backward(80);
+        
+            await Attack();
+        
+            await Guard();
+        }
     }
 }

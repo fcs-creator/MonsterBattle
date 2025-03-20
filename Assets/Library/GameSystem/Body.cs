@@ -53,6 +53,13 @@ public class Body : MonoBehaviour
         UpdateMassBasedOnArea();
     }
 
+    //スタンが残るのを修正
+    //private void OnApplicationQuit()
+    //{
+    //    sr.color = new Color(1,1,1,1);
+    //    canceler.Dispose();
+    //}
+
     private void UpdateMassBasedOnArea()
     {
         if (bodyCollider != null)
