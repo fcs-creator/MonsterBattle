@@ -5,8 +5,6 @@ public class Slime : Monster
 {
     protected override async Task ActionLoop() 
     {
-        await Forward(75);
-
-        await Attack();
+        await Forward(70);
     }
 }

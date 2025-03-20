@@ -28,7 +28,7 @@ public class MonsterEditor : Editor
         serializedObjectRef.Update();
 
         // 元のインスペクターを描画
-        //DrawDefaultInspector();
+        DrawDefaultInspector();
 
         // Monsterクラスの参照
         Monster monster = (Monster)target;

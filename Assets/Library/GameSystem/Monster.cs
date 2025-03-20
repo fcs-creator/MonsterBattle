@@ -7,10 +7,11 @@ using System.Threading;
 using System;
 using UnityEditor.Experimental.GraphView;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.IO;
 
 public class Monster : MonoBehaviour
 {
-    [SerializeField] private Sprite monsterSprite;
+    [HideInInspector] public Sprite monsterSprite;
     public Sprite MonsterSprite => monsterSprite;
 
     public Monster Enemy { get; set; }                  //最も近い敵
@@ -260,7 +261,7 @@ public class Monster : MonoBehaviour
         IsForward = true;
 
         //相手を見る
-        LookAtEnemy();
+        await LookAtEnemy();
 
         //相手に向かって進む
         rb.AddForce(EnemyDirection.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
@@ -280,12 +281,12 @@ public class Monster : MonoBehaviour
         IsBackward = true;
 
         //相手を見る
-        LookAtEnemy();
+        await LookAtEnemy();
 
         //相手から離れる
         rb.AddForce(-EnemyDirection.normalized * force * Parameters.ACTION_FORCE_SCALE, ForceMode2D.Impulse);
         
-        await Wait(Parameters.ACTION_INTERVAL_BACKSTEP);
+        await Wait(Parameters.ACTION_INTERVAL_BACKWARD);
     }
 
     // 垂直ジャンプ
@@ -305,6 +306,8 @@ public class Monster : MonoBehaviour
 
         ActionBar.SendText("JumpForward");
 
+        await LookAtEnemy();
+
         //ジャンプ方向を計算
         Vector2 dir = Vector2.zero;
         dir = Parameters.FORWARD_JUMP_DIRECTION;
@@ -323,6 +326,8 @@ public class Monster : MonoBehaviour
         if (canceler.IsCancel) return;
 
         ActionBar.SendText("JumpBackward");
+
+        await LookAtEnemy();
 
         //ジャンプ方向を計算
         Vector2 dir = Vector2.zero;
@@ -381,23 +386,35 @@ public class Monster : MonoBehaviour
     // ジャンプの共通処理
     private async Task JumpCommon(Vector2 direction, float height)
     {
-        if (IsGrounded)
-        {
-            AudioManager.Instance.PlaySE(Parameters.SE_JUMP);
+        AudioManager.Instance.PlaySE(Parameters.SE_JUMP);
 
-            IsJumping = true;
+        IsJumping = true;
 
-            //相手を見る
-            LookAtEnemy();
+        //相手を見る
+        await LookAtEnemy();
 
-            //必要なジャンプ力を計算
-            float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
-            jumpForce *= Parameters.JUMP_FORCE_SCALE;
+        //必要なジャンプ力を計算
+        float jumpForce = Mathf.Sqrt(2 * height * Physics2D.gravity.magnitude * rb.mass * rb.gravityScale);
+        jumpForce *= Parameters.JUMP_FORCE_SCALE;
 
-            rb.AddForce(direction * jumpForce, ForceMode2D.Impulse);
-        }
+        rb.AddForce(direction * jumpForce, ForceMode2D.Impulse);
 
         await Wait(Parameters.ACTION_INTERVAL_JUMP);
+    }
+
+    // 相手の方を向く
+    public async Task LookAtEnemy()
+    {
+        if (EnemyDirection.x > 0 && !IsFacingRight)
+        {
+            Flip();
+        }
+        else if (EnemyDirection.x < 0 && IsFacingRight)
+        {
+            Flip();
+        }
+
+        await Task.Yield();
     }
 
     // スタン状態の処理
@@ -475,6 +492,16 @@ public class Monster : MonoBehaviour
             IsJumping = false;
             Knockback(obj);
         }
+
+        //ステージの壁との接触時の処理
+        if (obj.CompareTag(Tags.StageWall))
+        {
+            if (collision.contactCount > 0)
+            {
+                Vector2 direction = (transform.position - obj.transform.position).normalized;
+                rb?.AddForce(direction * Parameters.WALL_FORCE, ForceMode2D.Impulse);
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -542,6 +569,10 @@ public class Monster : MonoBehaviour
                     Vector2 direction = (transform.position - obj.transform.position).normalized;
                     direction = new Vector2(direction.x, direction.y + Parameters.WEAPON_ONHIT_ADD_DIRECTION_Y).normalized;
 
+                    var enemyRb = weapon.Owner.GetComponent<Rigidbody2D>();
+                    var enemyVelocity = enemyRb.linearVelocity;
+                    enemyRb.linearVelocity *= Parameters.WEAPON_HIT_VELOCITY_REDUCATION_RATE;
+
                     if (IsGuarding)
                     {
                         HpBar.TakeDamage(weapon.Damage * Parameters.WEAPON_DAMAGE_REDUCATION_RATE_ON_GUARDING);
@@ -587,10 +618,24 @@ public class Monster : MonoBehaviour
     {
         if (HasComponent<Rigidbody2D>(enemy) && HasComponent<Rigidbody2D>(gameObject))
         { 
-            Vector2 direction = (enemy.transform.position - gameObject.transform.position).normalized;
-            direction.x += UnityEngine.Random.Range(-Parameters.KNOCKBACK_RANDOM_RANGE_X, Parameters.KNOCKBACK_RANDOM_RANGE_X);
-            gameObject.GetComponent<Rigidbody2D>().AddForce(direction * -Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
-            enemy.GetComponent<Rigidbody2D>().AddForce(direction * Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
+            Vector2 dir = (enemy.transform.position - gameObject.transform.position).normalized;
+
+            float ownDirX;
+            float enemyDirX;
+            
+            if (dir.x < 0) 
+            {
+                ownDirX = dir.x;
+                enemyDirX = -dir.x;
+            }
+            else 
+            {
+                ownDirX = -dir.x;
+                enemyDirX = dir.x;
+            }
+
+            gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(ownDirX, dir.y) * Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
+            enemy.GetComponent<Rigidbody2D>().AddForce(new Vector2(enemyDirX, dir.y) * Parameters.KNOCKBACK_FORCE, ForceMode2D.Impulse);
         }
     }
 
@@ -601,19 +646,6 @@ public class Monster : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
-    }
-
-    // 相手の方を向く
-    public void LookAtEnemy() 
-    {
-        if (EnemyDirection.x > 0 && !IsFacingRight)
-        {
-            Flip();
-        }
-        else if (EnemyDirection.x < 0 && IsFacingRight)
-        {
-            Flip();
-        }
     }
 
     // 敵の情報の更新

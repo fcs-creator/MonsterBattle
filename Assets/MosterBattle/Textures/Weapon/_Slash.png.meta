@@ -1,31 +1,10 @@
 fileFormatVersion: 2
-guid: 1c0bcfd1c0370a44295a946d6c256425
+guid: d6d608d3568aea24bb899de40428da46
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 4176362632249098406
     second: Slash_0
-  - first:
-      213: -3696019449777573715
-    second: Slash_1
-  - first:
-      213: 6099374761294450104
-    second: Slash_2
-  - first:
-      213: -1817706105750108133
-    second: Slash_3
-  - first:
-      213: -1305193885933302247
-    second: Slash_4
-  - first:
-      213: 6922725289032308390
-    second: Slash_5
-  - first:
-      213: -4407079611941592608
-    second: Slash_6
-  - first:
-      213: -8542888516237818739
-    second: Slash_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -134,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SlashOld
+      name: _Slash
       rect:
         serializedVersion: 2
-        x: 63
-        y: 0
-        width: 149
-        height: 267
+        x: 91
+        y: 21
+        width: 113
+        height: 252
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 07f5afcaf08130447aafc333c0b9a76b
+    spriteID: 05445bc93849ecc4fa0b0afa6272d4ae
     internalID: 0
     vertices: []
     indices: 
@@ -169,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SlashOld: 4176362632249098406
+      _Slash: 4176362632249098406
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

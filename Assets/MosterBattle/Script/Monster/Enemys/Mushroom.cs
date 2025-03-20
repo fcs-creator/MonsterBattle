@@ -5,17 +5,8 @@ public class Mushroom : Monster
 {
     protected override async Task ActionLoop()
     {
-        if (EnemyDistance < 5)
-        {
-            await Guard();
+        await Attack();
 
-            await Attack();
-        }
-        else
-        { 
-
-        }
-
-        
+        await Forward(120);
     }
 }

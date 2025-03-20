@@ -1,25 +1,29 @@
 ﻿using UnityEngine;
 using System.Threading.Tasks;
 
-public class Nail: Weapon
+public class BrazeWeapon: Weapon
 {
     async protected override Task Attack(int number) 
     {
         await Drawing();
 
-        await Shot(0.2f, 25);
+        await Move(5, 0, 0.25f);
 
-        await Shot(0.2f, 50);
+        await Move(-5, 0, 0.25f);
 
-        await Shot(0.2f, 100);
-
-        await Shot(0.2f, 250);
-
-        await Shot(0.2f, 500);
-
-        await Shot(0.2f, 1000);
-
-        await Shot(0.2f, 10000);
+        //await Shot(0.2f, 25);
+        //
+        //await Shot(0.2f, 50);
+        //
+        //await Shot(0.2f, 100);
+        //
+        //await Shot(0.2f, 250);
+        //
+        //await Shot(0.2f, 500);
+        //
+        //await Shot(0.2f, 1000);
+        //
+        //await Shot(0.2f, 10000);
 
         //var clones = await Clone(10);
         //
