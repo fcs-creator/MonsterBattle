@@ -20,7 +20,12 @@ public class CreateNewWeaponScript
 		get
 		{
 			MonoScript weaponScript = AssetDatabase.LoadAssetAtPath<MonoScript>(weaponScriptName);
-			return weaponScript != null;
+			if (weaponScript != null)
+			{
+				Type scriptClass = weaponScript.GetClass();
+				return scriptClass != null && typeof(MonoBehaviour).IsAssignableFrom(scriptClass);
+			}
+			return false;
 		}
 	}
 
