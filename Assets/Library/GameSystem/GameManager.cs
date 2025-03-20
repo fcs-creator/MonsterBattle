@@ -18,8 +18,11 @@ public static class Parameters
     public const float DEAD_LINE_X = 40;                                        //死亡ラインX
     public const float DEAD_LINE_Y_UP = 40;                                     //死亡ライン上Y
     public const float DEAD_LINE_Y_DOWN = -20;                                  //死亡ライン下Y
-    public const int ENEMY_CHECK_FREAKENCE = 20;                                //索敵の頻度
+    public const int ENEMY_CHECK_FREAKENCE = 10;                                //索敵の頻度
     public const int LAND_VELOCITY = 10;                                        //着地時に速度を0にするための閾値
+    public const float FLOATING_VELOCITY_RESISTANCE_RATE = 0.95f;               //浮遊時に速度を減少させる割合
+
+                                                                                
 
     //アクション
     public const float START_INTERVAL = 1;                                      //アクション開始までの待ち時間

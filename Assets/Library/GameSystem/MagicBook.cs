@@ -34,6 +34,10 @@ public class MagicBook : MonoBehaviour
             FireBall fireBall = obj.GetComponent<FireBall>();
             fireBall.Owner = monster;
             fireBall.Direction = monster.EnemyDirection;
+            // 方向ベクトルから角度を計算
+            float angle = Mathf.Atan2(fireBall.Direction.x, fireBall.Direction.y) * Mathf.Rad2Deg;
+            fireBall.transform.rotation = Quaternion.Euler(0, 0, angle);
+
             fireBall.Speed = speed;
 
             await Task.Delay(200);

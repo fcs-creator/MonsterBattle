@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class FireBall : Magic
 {
@@ -14,9 +14,10 @@ public class FireBall : Magic
         rb = GetComponent<Rigidbody2D>();
         Destroy(gameObject, Parameters.FIREBALL_DESTOROY_WAIT_TIME);
         
-        //W’e—¦‚ğŒvZ‚µ‚Ä”­Ë
+        //é›†å¼¾ç‡ã‚’è¨ˆç®—ã—ã¦ç™ºå°„
         float grouping = Parameters.FIREBALL_SHOT_GROUPING;
-        float adjust_y = Parameters.FIREBALL_SHOT_ADJUST_Y;
-        rb.AddForce(new Vector2(Direction.x, Random.Range(-grouping, grouping)+ adjust_y) * Speed, ForceMode2D.Impulse);
+        float dirX = Direction.x + Random.Range(-grouping,grouping);
+        float dirY = Direction.x + Random.Range(-grouping, grouping);
+        rb.AddForce(new Vector2(dirX, dirY) * Speed, ForceMode2D.Impulse);
     }
 }

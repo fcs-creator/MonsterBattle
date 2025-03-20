@@ -15,6 +15,7 @@ TagManager:
   - StageWall
   - Reflector
   - Shield
+  - Attack
   layers:
   - Default
   - TransparentFX
@@ -63,6 +64,9 @@ TagManager:
     locked: 0
   - name: Body
     uniqueID: 930408577
+    locked: 0
+  - name: Magic
+    uniqueID: 1115972859
     locked: 0
   - name: VFXStatus
     uniqueID: 3479013963
