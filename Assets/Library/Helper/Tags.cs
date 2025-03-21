@@ -18,4 +18,5 @@ public static class Tags {
     public const string Reflector = "Reflector";
     public const string Shield = "Shield";
     public const string Attack = "Attack";
+    public const string Loof = "Loof";
 }

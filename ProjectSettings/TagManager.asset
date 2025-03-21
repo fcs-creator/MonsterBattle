@@ -16,6 +16,7 @@ TagManager:
   - Reflector
   - Shield
   - Attack
+  - Loof
   layers:
   - Default
   - TransparentFX
@@ -56,6 +57,12 @@ TagManager:
   - name: MagicBook
     uniqueID: 1253982843
     locked: 0
+  - name: Magic
+    uniqueID: 1115972859
+    locked: 0
+  - name: Platform
+    uniqueID: 811161137
+    locked: 0
   - name: MagicCircle
     uniqueID: 117610291
     locked: 0
@@ -67,9 +74,6 @@ TagManager:
     locked: 0
   - name: Body
     uniqueID: 930408577
-    locked: 0
-  - name: Magic
-    uniqueID: 1115972859
     locked: 0
   - name: VFXStatus
     uniqueID: 3479013963

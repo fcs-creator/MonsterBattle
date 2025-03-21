@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c81975e14499a4a4491bf33af76ecf9f
+guid: 7bffc5f9d28bc6a4692fac69605286c4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4112971899421048172
-    second: EnergyBall 2_0
+      213: 5505750054769024045
+    second: DeathHandP_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EnergyBall
+      name: DeathHandShort
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c6db72ca626341930800000000000000
-      internalID: 4112971899421048172
+      spriteID: d2c589c018a586c40800000000000000
+      internalID: 5505750054769024045
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 45d6a10277d031644aaea5f337f16afe
+    spriteID: 414cfac1e82f5684ab5945d33244dc76
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      EnergyBall: 4112971899421048172
+      DeathHandShort: 5505750054769024045
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

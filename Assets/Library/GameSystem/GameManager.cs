@@ -29,7 +29,7 @@ public static class Parameters
     public const float ACTION_INTERVAL_BACKWARD = 1.5f;                         //後移動
     public const float ACTION_INTERVAL_JUMP = 1.5f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
-    public const float ACTION_INTERVAL_SHOT = 1.5f;                             //武器を投げる
+    public const float ACTION_INTERVAL_SHOT = 0.5f;                             //武器を投げる
     public const float ACTION_INTERVAL_SWITCH_WEAPON = 0.25f;                   //武器を切り替える
     public const float ACTION_INTERVAL_GUARD = 1.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法
@@ -69,8 +69,9 @@ public static class Parameters
     public const float WEAPON_MAX_VELOCITY_X = 120;                             //武器の最高速度
     public const float WEAPON_MAX_VELOCITY_Y = 120;                             //武器の最高速度
     public const float WEAPON_HIT_VELOCITY_REDUCATION_RATE = 0.6f;              //武器の当たった相手の速度を弱める倍率
-    public const float WEAPON_MIN_USE_TIME = 0.1f;                              //武器の動作にかけることのできる最小時間
+    public const float WEAPON_MIN_USE_TIME = 0.2f;                              //武器の動作にかけることのできる最小時間
     public const float WEAPON_MAX_USE_TIME = 15f;                               //武器の動作にかけることのできる最小時間
+    public const float WEAPON_MOVE_MAX_DISTANCE = 5;
 
 
 
@@ -102,7 +103,7 @@ public static class Parameters
     public const float REFLECT_DAMAGE_RATE = 2f;                                            //武器を反射した時基本ダメージ倍率
 
     //魔法
-    public const float MAGIC_FORCE = 150;                                       //魔法が当たったとき吹き飛ばす力
+    public const float MAGIC_FORCE = 200;                                       //魔法が当たったとき吹き飛ばす力
     public const float MAGIC_REFLECT_INCREACE_DAMAGE_RATE = 1.25f;              //魔法が反射した時のダメージ倍率
     public const float MAGIC_REFLECT_FORCE = 100;                               //魔法が反射した時の力の強さ                    
     public const float FIREBALL_CHANT_TIME = 3.0f;                              //炎魔法を撃つための詠唱時間
@@ -111,8 +112,13 @@ public static class Parameters
     public const float THUNDER_CHANT_TIME = 3.0f;                               //雷魔法を撃つための詠唱時間
     public const float THUNDER_END_INTERBAL = 2.0f;                             //雷魔法を撃った後の隙
 
+    public const float ICE_MAX_NUM = 5;                                         //氷魔法の生成個数
+    public const float ICE_GEN_INTERVAL = 0.5f;                                 //氷魔法の生成間隔
     public const float ICE_CHANT_TIME = 3.0f;                                   //氷魔法を撃つための詠唱時間
     public const float ICE_END_INTERBAL = 2.0f;                                 //氷魔法を撃った後の隙
+    public const float ICE_BALL_DAMAGE = 25;                                    //氷魔法のボール状態のダメージ
+    public const float ICE_DAMAGE = 10;                                         //氷魔法のダメージ
+    public const float ICE_DESTROY_WAIT_TIME = 3;                               //氷魔法発動が破棄されるまでの待ち時間
 
     public const float FIREBALL_GEN_INTERVAL = 0.2f;                            //炎魔法のの生成間隔
     public const int FIREBALL_MAX_NUM = 5;                                      //ファイヤーボールの生成最大数
@@ -122,6 +128,7 @@ public static class Parameters
     public const float FIREBALL_SHOT_ADJUST_Y = 0.1f;                           //発射時のY軸の調整値
     public const float THUNDER_DAMAGE = 20;                                     //サンダーダメージ値
     public const float THUNDER_DESTOROY_WAIT_TIME = 0.5f;                       //発動後に破棄されるまでの待ち時間
+    
 
     //ステージの壁
     public const float WALL_FORCE = 150;                                        //壁に当たった時に受ける力
@@ -175,6 +182,7 @@ public static class Parameters
     public const SE SE_REFLECT = SE.Reflect;                                    //リフレクター
     public const SE SE_MAGIC_CHANT = SE.MagicChant;                             //魔法詠唱
     public const SE SE_HIT_MAGIC = SE.HitMagic;                                 //魔法に当たったとき
+    public const SE SE_ICE_SHOT = SE.WeaponShot;                                //氷魔法が放たれた時
 
 }
 

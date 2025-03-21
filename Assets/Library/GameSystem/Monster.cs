@@ -166,6 +166,8 @@ public class Monster : MonoBehaviour
 
     public void AddWeapon(Weapon weapon)
     {
+        if (Weapons.Contains(weapon)) return;
+
         Weapons.Add(weapon);
         weapon.gameObject.SetActive(false);
     }
@@ -629,12 +631,12 @@ public class Monster : MonoBehaviour
             }
         }
 
-        //魔法(ファイヤーボールによる)ダメージ
+        //魔法によるダメージ
         if (HasComponent<Magic>(obj))
         {
             Magic magic = obj.GetComponent<Magic>();
 
-            if ((magic.Owner != this) && (magic.Type == MagicType.FireBall) && !(IsGuarding && guard.type == GuardType.Reflector) )
+            if ((magic.Owner != this) && (magic.Type == MagicType.FireBall || magic.Type == MagicType.Ice) && !(IsGuarding && guard.type == GuardType.Reflector) )
             {
                 PlayHitMagicVFX(other);
                 HpBar.TakeDamage(magic.Damage);

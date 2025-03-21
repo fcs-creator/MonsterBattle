@@ -9,6 +9,8 @@ public class MagicBook : MonoBehaviour
 {
     [SerializeField] GameObject fireBallPrefab;     //ファイアーボールのプレハブ
     [SerializeField] GameObject thunderPrefab;      //サンダーのプレハブ
+    [SerializeField] GameObject icePrefab;          //アイスのプレハブ
+
     [SerializeField] GameObject magicCirclePrefab;  //魔法陣のプレハブ
     [SerializeField] bool isActiveRotating = false; //回転するかどうか
     [SerializeField] bool isActiveUpDowning = false; //上下するかどうか
@@ -30,7 +32,6 @@ public class MagicBook : MonoBehaviour
 
     async public Task FireBall(Monster monster, int num, float speed)
     {
-
         num = Mathf.Clamp(num, 1, Parameters.FIREBALL_MAX_NUM);
 
         await monster.LookAtEnemy();
@@ -66,6 +67,43 @@ public class MagicBook : MonoBehaviour
         }
 
         await Wait(Parameters.FIREBALL_END_INTERBAL);
+    }
+
+    async public Task IceNeedle(Monster owner, float dirX,  float speed) 
+    {
+        await owner.LookAtEnemy();
+
+        //魔法を詠唱
+        await Chant(owner, Parameters.FIREBALL_CHANT_TIME);
+
+        owner.ActionBar.SendText("Magic-IceNeedle");
+
+        await owner.LookAtEnemy();
+
+        for (int i = 0; i < Parameters.ICE_MAX_NUM; i++)
+        {
+            if (owner.IsDead)
+            {
+                canceler.Dispose();
+                break;
+            }
+
+            GameObject obj = Instantiate(icePrefab, owner.transform.position, Quaternion.identity);
+            IceNeedle ice = obj.GetComponent<IceNeedle>();
+            ice.Owner = owner;
+
+            Vector2 dir = Vector2.zero;
+            dirX = Mathf.Clamp(dirX, -1, 1);
+            dir.x = dirX+ UnityEngine.Random.Range(-0.5f,0.5f);
+            dir.y = 1 - dir.x;
+            ice.Direction = dir;
+            ice.Speed = speed;
+
+            AudioManager.Instance.PlaySE(Parameters.SE_ICE_SHOT);
+            await Wait(Parameters.ICE_GEN_INTERVAL);
+        }
+
+        await Wait(Parameters.ICE_END_INTERBAL);
     }
 
     async public Task Thunder(Monster monster)

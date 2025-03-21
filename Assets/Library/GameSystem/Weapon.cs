@@ -167,8 +167,12 @@ public class Weapon : MonoBehaviour
         isShot = false;
         isReflect = false;
 
-        // 最初は武器を隠しておく
-        SetActive(false);
+        if (!isClone) 
+        {
+            // 最初は武器を隠しておく
+            SetActive(false);
+        }
+        
     }
 
 
@@ -286,6 +290,8 @@ public class Weapon : MonoBehaviour
     {
         if (isDisable) return;
 
+        x = MoveDistanceClamp(x);
+        y = MoveDistanceClamp(y);
         second = UseTimeClamp(second);
 
         Owner.ActionBar.SendText("Weapon-Move");
@@ -625,11 +631,11 @@ public class Weapon : MonoBehaviour
     }
 
     //指定秒数待つ
-    protected async Task Wait(float sec)
+    protected async Task Wait(float second)
     {
         try
         {
-            await Task.Delay((int)(sec * 1000), canceler.Token);
+            await Task.Delay((int)(second * 1000), canceler.Token);
         }
         catch (OperationCanceledException)
         {
@@ -747,5 +753,10 @@ public class Weapon : MonoBehaviour
     private float UseTimeClamp(float s) 
     {
         return Mathf.Clamp(s, Parameters.WEAPON_MIN_USE_TIME, Parameters.WEAPON_MAX_USE_TIME);
+    }
+
+    private float MoveDistanceClamp(float distance)
+    {
+        return Mathf.Clamp(distance, -Parameters.WEAPON_MOVE_MAX_DISTANCE, Parameters.WEAPON_MOVE_MAX_DISTANCE);
     }
 }
