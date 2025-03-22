@@ -5,14 +5,8 @@ public class Braze : Monster
 {
     protected override async Task ActionLoop()
     {
-        await Forward(80);
+        //ここにプログラムを書く
 
-        await LookAtEnemy();
-
-        await Guard();
-
-        await Forward(200);
-
-        await Attack();
+        await Task.Yield();
     }
 }

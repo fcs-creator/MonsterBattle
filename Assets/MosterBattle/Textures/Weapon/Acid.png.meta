@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Acid
+      name: xAcid
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Acid: 5965689918614575448
+      xAcid: 5965689918614575448
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

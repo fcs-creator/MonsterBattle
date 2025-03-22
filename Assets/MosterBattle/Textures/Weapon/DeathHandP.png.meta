@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DeathHandShort
+      name: xDeathHandShort
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      DeathHandShort: 5505750054769024045
+      xDeathHandShort: 5505750054769024045
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

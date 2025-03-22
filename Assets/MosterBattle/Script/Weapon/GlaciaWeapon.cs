@@ -1,0 +1,20 @@
+﻿using UnityEngine;
+using System.Threading.Tasks;
+
+public class GlaciaWeapon : Weapon
+{
+    async protected override Task Attack(int number) 
+    {
+        await Rotate(0,100,0.5f);
+
+        await Rotate(100, -100, 0.5f);
+
+        await Rotate(0, 100, 0.5f);
+
+        await Rotate(100, -100, 0.5f);
+
+        await Drawing();
+
+        await Shot(0.6f, 40f);
+    }
+}

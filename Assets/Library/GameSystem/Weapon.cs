@@ -162,7 +162,11 @@ public class Weapon : MonoBehaviour
         float massMax = Parameters.MASS_WEAPON_MAX;
         float massMin = Parameters.MASS_WEAPON_MIN;
         rb.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // 質量を設定
-        Debug.Log("Weapon >> " + transform.parent.name + " : " + rb.mass + "kg");
+
+        if (Parameters.LOG_DAMAGE_VALUE) 
+        {
+            //Debug.Log("Weapon >> " + transform.parent.name + " : " + rb.mass + "kg");
+        }
 
         isShot = false;
         isReflect = false;

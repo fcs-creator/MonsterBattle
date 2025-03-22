@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EnergyBall
+      name: _EnergyBall
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      EnergyBall: 4112971899421048172
+      _EnergyBall: 4112971899421048172
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

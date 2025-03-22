@@ -34,7 +34,7 @@ public class Body : MonoBehaviour
         rbParent.freezeRotation = true;
 
         //物理マテリアルの設定
-        rbParent.sharedMaterial = Resources.Load<PhysicsMaterial2D>("MonsterPhysicsMaterial");
+        rbParent.sharedMaterial = Resources.Load<PhysicsMaterial2D>("Physics/MonsterPhysicsMaterial");
 
         //タグの設定
         gameObject.tag = Tags.Body;
@@ -69,7 +69,12 @@ public class Body : MonoBehaviour
             float massMax = Parameters.MASS_MAX;
             float massMin = Parameters.MASS_MIN;
             rbParent.mass = Mathf.Clamp(Mathf.Sqrt(area) * massMag + massMin, massMin, massMax);  // 質量を設定
-            Debug.Log(transform.parent.name + " : " + rbParent.mass + "kg");
+
+            if (Parameters.LOG_MONSTER_WEIGHTS) 
+            {
+                //Debug.Log(transform.parent.name + " : " + rbParent.mass + "kg");
+            }
+            
         }
     }
 

@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DeathHand_0
+      name: xDeathHand
       rect:
         serializedVersion: 2
         x: 65
@@ -121,7 +121,7 @@ TextureImporter:
         width: 179
         height: 293
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 1aff6f2ea1d24b44db431375c2d1b84a
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      DeathHand_0: -8230361881828365758
+      xDeathHand: -8230361881828365758
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

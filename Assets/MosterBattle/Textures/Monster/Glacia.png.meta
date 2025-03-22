@@ -139,7 +139,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Glacia
+      name: _Glacia
       rect:
         serializedVersion: 2
         x: 11
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Glacia: -8573772102263965959
+      _Glacia: -8573772102263965959
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

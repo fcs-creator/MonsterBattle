@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DeathLightning_0
+      name: xDeathLightning
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      DeathLightning_0: 2795918922283688919
+      xDeathLightning: 2795918922283688919
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

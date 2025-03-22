@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wand_0
+      name: xWand
       rect:
         serializedVersion: 2
         x: 3
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Wand_0: -4421300922047078791
+      xWand: -4421300922047078791
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

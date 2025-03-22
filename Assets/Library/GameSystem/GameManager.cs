@@ -73,8 +73,6 @@ public static class Parameters
     public const float WEAPON_MAX_USE_TIME = 15f;                               //武器の動作にかけることのできる最小時間
     public const float WEAPON_MOVE_MAX_DISTANCE = 5;
 
-
-
     //ガード
     public const float GUARD_DURATION = 2f;                                               //ガードの継続時間
     public const float GUARD_STUN_DURATION = 4f;                                            //ガードが決まった時のスタン時間
@@ -112,11 +110,11 @@ public static class Parameters
     public const float THUNDER_CHANT_TIME = 3.0f;                               //雷魔法を撃つための詠唱時間
     public const float THUNDER_END_INTERBAL = 2.0f;                             //雷魔法を撃った後の隙
 
-    public const float ICE_MAX_NUM = 5;                                         //氷魔法の生成個数
+    public const float ICE_MAX_NUM = 3;                                         //氷魔法の生成個数
     public const float ICE_GEN_INTERVAL = 0.5f;                                 //氷魔法の生成間隔
     public const float ICE_CHANT_TIME = 3.0f;                                   //氷魔法を撃つための詠唱時間
     public const float ICE_END_INTERBAL = 2.0f;                                 //氷魔法を撃った後の隙
-    public const float ICE_BALL_DAMAGE = 25;                                    //氷魔法のボール状態のダメージ
+    public const float ICE_BALL_DAMAGE = 18;                                    //氷魔法のボール状態のダメージ
     public const float ICE_DAMAGE = 10;                                         //氷魔法のダメージ
     public const float ICE_DESTROY_WAIT_TIME = 3;                               //氷魔法発動が破棄されるまでの待ち時間
 
@@ -183,6 +181,12 @@ public static class Parameters
     public const SE SE_MAGIC_CHANT = SE.MagicChant;                             //魔法詠唱
     public const SE SE_HIT_MAGIC = SE.HitMagic;                                 //魔法に当たったとき
     public const SE SE_ICE_SHOT = SE.WeaponShot;                                //氷魔法が放たれた時
+
+    //デバッグ
+    public const bool LOG_MONSTER_WEIGHTS = false;
+    public const bool LOG_WEAPON_WEIGHTS = false;
+    public const bool LOG_DAMAGE_VALUE = false;
+    public const bool LOG_WEAPON_DAMAGE_VALUE = false;
 
 }
 

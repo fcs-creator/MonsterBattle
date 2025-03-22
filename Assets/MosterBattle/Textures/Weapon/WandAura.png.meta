@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WandAura_0
+      name: xWandAura
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      WandAura_0: -3372645501667320210
+      xWandAura: -3372645501667320210
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

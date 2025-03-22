@@ -142,7 +142,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Nail
+      name: _Nail
       rect:
         serializedVersion: 2
         x: 0
@@ -177,7 +177,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Nail: -8718590350971602233
+      _Nail: -8718590350971602233
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

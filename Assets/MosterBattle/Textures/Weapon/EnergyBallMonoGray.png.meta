@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EnergyBall 1_0
+      name: _EnergyBall
       rect:
         serializedVersion: 2
         x: 4
@@ -121,7 +121,7 @@ TextureImporter:
         width: 289
         height: 279
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d38294a844882d9429ca8b31242073ba
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      EnergyBall 1_0: 8948428452365927131
+      _EnergyBall: 8948428452365927131
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

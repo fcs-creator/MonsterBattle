@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 44cd1cd27009a164d9f64945dfc9d954
+guid: abb0fcc905393ea44898e1acc2a48220
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 61506194941554554
-    second: Ninja_0
+      213: 4824589074031498221
+    second: Ninja 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ninja_0
+      name: _Ninja
       rect:
         serializedVersion: 2
-        x: 3
-        y: 3
-        width: 290
-        height: 290
+        x: 4
+        y: 1
+        width: 291
+        height: 291
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a7f2af4fe838ad000800000000000000
-      internalID: 61506194941554554
+      spriteID: de3d0e8733264f240800000000000000
+      internalID: 4824589074031498221
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: aceef351e4fb9934f896533ba9fd4146
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ninja_0: 61506194941554554
+      _Ninja: 4824589074031498221
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
