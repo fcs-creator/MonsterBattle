@@ -5,8 +5,16 @@ public class Braze : Monster
 {
     protected override async Task ActionLoop()
     {
-        //ここにプログラムを書く
+        await MagicBook.FireBall(this, 3, 30f);
 
-        await Task.Yield();
+        await Forward(100);
+
+        await Attack();
+
+        await Guard();
+
+        await MagicBook.FireBall(this, 3, 30f);
+
+        await JumpForward(30);
     }
 }

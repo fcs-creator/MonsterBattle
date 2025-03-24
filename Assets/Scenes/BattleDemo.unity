@@ -5965,8 +5965,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1058475248}
-  - {fileID: 1454607817}
   - {fileID: 1716269764}
+  - {fileID: 1454607817}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &666659427
@@ -7263,8 +7263,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1083003407}
-  - {fileID: 2070235469}
   - {fileID: 418483053}
+  - {fileID: 2070235469}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1488920993
@@ -13664,7 +13664,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1620033971
 Transform:
   m_ObjectHideFlags: 0
@@ -13674,8 +13674,8 @@ Transform:
   m_GameObject: {fileID: 1620033970}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.2857141, y: 0, z: 0}
-  m_LocalScale: {x: 1.1428572, y: 1.1428572, z: 0}
+  m_LocalPosition: {x: 2.1485715, y: 0, z: 0}
+  m_LocalScale: {x: 1.2571429, y: 1.2571429, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2055449300}
@@ -14340,8 +14340,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 38644327}
-  - {fileID: 883515268}
   - {fileID: 1620033971}
+  - {fileID: 883515268}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2055449301
@@ -14357,7 +14357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sprite: {fileID: 38644328}
-  ScriptFile: 
+  ScriptFile: Assets/MosterBattle/Script/Monster/Glacia.cs
   EnemyLevel: 0
   Weapons:
   - {fileID: 883515270}
@@ -14375,10 +14375,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   oldType: 2
-  offsetX: 4
+  offsetX: 3.76
   offsetY: 0
-  scale: 2
-  isDisplay: 0
+  scale: 2.2
+  isDisplay: 1
 --- !u!1 &2070235468
 GameObject:
   m_ObjectHideFlags: 0
@@ -14740,7 +14740,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 2.08, y: 2.97}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -15326,7 +15326,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.18, y: 0.18, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6683631345589408899}
@@ -15669,8 +15669,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4313746736134389181}
-  - {fileID: 7947635035663886661}
   - {fileID: 6874185827976004982}
+  - {fileID: 7947635035663886661}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6683631345589408900
@@ -15726,7 +15726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6874185827976004982
 Transform:
   m_ObjectHideFlags: 0
@@ -15947,7 +15947,7 @@ Transform:
   m_GameObject: {fileID: 6776571158862311457}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.7, y: 0.4, z: 0}
+  m_LocalPosition: {x: 5.4, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

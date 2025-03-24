@@ -96,6 +96,7 @@ public class MagicBook : MonoBehaviour
             dirX = Mathf.Clamp(dirX, -1, 1);
             dir.x = dirX+ UnityEngine.Random.Range(-0.5f,0.5f);
             dir.y = 1 - dir.x;
+
             ice.Direction = dir;
             ice.Speed = speed;
 

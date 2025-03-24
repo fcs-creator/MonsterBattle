@@ -29,7 +29,7 @@ public static class Parameters
     public const float ACTION_INTERVAL_BACKWARD = 1.5f;                         //後移動
     public const float ACTION_INTERVAL_JUMP = 1.5f;                             //ジャンプ
     public const float ACTION_INTERVAL_ATTACK = 1.0f;                           //武器で攻撃
-    public const float ACTION_INTERVAL_SHOT = 0.5f;                             //武器を投げる
+    public const float ACTION_INTERVAL_SHOT = 1.5f;                             //武器を投げる
     public const float ACTION_INTERVAL_SWITCH_WEAPON = 0.25f;                   //武器を切り替える
     public const float ACTION_INTERVAL_GUARD = 1.0f;                            //ガード
     public const float ACTION_INTERVAL_MAGIC = 1.0f;                            //魔法

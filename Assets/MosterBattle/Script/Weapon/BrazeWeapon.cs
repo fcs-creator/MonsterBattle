@@ -7,8 +7,12 @@ public class BrazeWeapon: Weapon
     {
         await Drawing();
 
-        await Move(5, 0, 0.25f);
+        await Move(2, 0, 0.2f);
 
-        await Move(5, 0, 0.25f);
+        await Move(-2, 0, 0.2f);
+
+        await Move(2, 0, 0.2f);
+
+        await Move(-2, 0, 0.2f);
     }
 }

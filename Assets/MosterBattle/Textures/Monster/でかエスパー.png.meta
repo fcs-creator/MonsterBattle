@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1a68e161358899d4f81bf3bf8b1f80ad
+guid: 5dddf158df1d43f47bc8fc0e9b3475ab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5655056311945329173
-    second: Nishikun_0
+      213: 7331014403264093070
+    second: "\u3067\u304B\u30A8\u30B9\u30D1\u30FC_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Nishikun_0
+      name: "\u3067\u304B\u30A8\u30B9\u30D1\u30FC_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 300
-        height: 300
+        x: 6
+        y: 14
+        width: 294
+        height: 248
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: be50badfe343581b0800000000000000
-      internalID: -5655056311945329173
+      spriteID: e8b14d522cefcb560800000000000000
+      internalID: 7331014403264093070
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 02a3ef8c3146feb42bf938ffa7cdbcc9
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Nishikun_0: -5655056311945329173
+      "\u3067\u304B\u30A8\u30B9\u30D1\u30FC_0": 7331014403264093070
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

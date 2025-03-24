@@ -16,6 +16,8 @@ public class Glacia : Monster
             await Attack();
         
             await Guard();
+
+            await MagicBook.IceNeedle(this, -0.3f, 35f);
         }
     }
 }

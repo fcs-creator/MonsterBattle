@@ -89,7 +89,7 @@ public class Monster : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Weaponスクリプトが見つかりませんでした。");
+                Debug.LogError(gameObject.name + "Weaponスクリプトが見つかりませんでした。");
             }
         }
         //音を鳴らさないために分けた
