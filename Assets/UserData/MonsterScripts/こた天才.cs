@@ -5,7 +5,7 @@ public class こた天才 : Monster
 {
 	protected override async Task ActionLoop()
 	{
-        await Floating(true);
+        //await Floating(true);
 
         await Forward(200);
 		await Jump(30);

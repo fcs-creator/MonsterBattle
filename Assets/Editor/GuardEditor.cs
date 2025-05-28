@@ -9,6 +9,8 @@ public class GuardEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        if (Application.isPlaying) return;
+
         // 元のインスペクターを描画
         //DrawDefaultInspector();
 

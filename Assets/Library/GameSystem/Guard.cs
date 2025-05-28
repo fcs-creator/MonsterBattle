@@ -26,7 +26,7 @@ public class Guard : MonoBehaviour
     [HideInInspector] public float offsetX;
     [HideInInspector] public float offsetY;
     [HideInInspector] public float scale;
-    [HideInInspector] public bool isDisplay = true;
+    [HideInInspector] public bool isDisplay = false;
 
     float defaultOffsetX;
 
@@ -34,7 +34,7 @@ public class Guard : MonoBehaviour
     GameObject instance;
     public GameObject Instance { get { return instance; } }
 
-    //跳ね返した時の
+    //跳ね返した時
     private float reflectionRate;
     public float ReflectionRate 
     {

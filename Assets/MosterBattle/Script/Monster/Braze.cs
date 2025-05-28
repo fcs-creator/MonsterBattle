@@ -5,7 +5,7 @@ public class Braze : Monster
 {
     protected override async Task ActionLoop()
     {
-        await MagicBook.FireBall(this, 3, 30f);
+        //await MagicBook.FireBall(this, 3, 30f);
 
         await Forward(100);
 
@@ -13,7 +13,7 @@ public class Braze : Monster
 
         await Guard();
 
-        await MagicBook.FireBall(this, 3, 30f);
+        //await MagicBook.FireBall(this, 3, 30f);
 
         await JumpForward(30);
     }

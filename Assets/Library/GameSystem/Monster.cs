@@ -89,10 +89,11 @@ public class Monster : MonoBehaviour
             }
             else
             {
-                Debug.LogError(gameObject.name + "Weaponスクリプトが見つかりませんでした。");
+                //Debug.LogError(gameObject.name + "Weaponスクリプトが見つかりませんでした。");
             }
         }
-        //音を鳴らさないために分けた
+
+        //最初に武器の持ち替え音を鳴らさないために分ける
         InitSwitchWeapon(0);
 
         // 防具の設定
@@ -116,9 +117,9 @@ public class Monster : MonoBehaviour
         actionBar.Character = transform;
         actionBar.Offset = Parameters.ACTIONBAR_OFFSET;
         actionBar.Owner = this;
-        ActionBar = actionBar;
         actionBar.transform.SetParent(GameObject.Find("UIPlay").transform);
         actionBar.transform.localScale = new Vector3(1, 1, 1);
+        ActionBar = actionBar;
 
         IsStunable = true;
         IsDead = false;
